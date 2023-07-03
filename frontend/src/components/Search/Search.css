@@ -1,0 +1,28 @@
+.stock-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.stock-search input{
+    padding: 10px;
+    width: 40%;
+    border: 3px solid var(--primary);
+}
+
+.stock-search button {
+    background: var(--primary);
+    border: none;
+}
+
+.stock-search i {
+    height: 39px;
+    width: 30px;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

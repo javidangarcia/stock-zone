@@ -1,3 +1,5 @@
 body {
     margin: 0px;
+    font-family: 'Comic Sans MS', sans-serif;
+    --primary: #49a078;
 }
