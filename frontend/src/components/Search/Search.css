@@ -1,22 +1,22 @@
-.search {
+.stock-search {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 500px;
+    margin-top: 20px;
 }
 
-.search input{
+.stock-search input{
     padding: 10px;
     width: 40%;
     border: 3px solid var(--primary);
 }
 
-.search button {
+.stock-search button {
     background: var(--primary);
     border: none;
 }
 
-.search i {
+.stock-search i {
     height: 39px;
     width: 30px;
     background: var(--primary);
