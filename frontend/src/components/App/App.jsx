@@ -7,7 +7,8 @@ export default function App() {
   const [searchInput, setSearchInput] = useState("");
   const [currentStock, setCurrentStock] = useState("");
 
-  function stockSearchSubmit() {
+  function handleSearchSubmit(event) {
+    event.preventDefault();
     setCurrentStock(searchInput);
   }
 
@@ -17,7 +18,7 @@ export default function App() {
       <Search 
           searchInput={searchInput} 
           setSearchInput={setSearchInput} 
-          stockSearchSubmit={stockSearchSubmit}
+          handleSearchSubmit={handleSearchSubmit}
           currentStock={currentStock}
       />
     </div>

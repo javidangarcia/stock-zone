@@ -1,28 +1,36 @@
-.stock-search {
+.search-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+    flex-direction: column;
+    margin: 25px 0px 25px 0px;
 }
 
-.stock-search input{
-    padding: 10px;
+.search-bar {
+    display: flex;
+    justify-content: center;
     width: 40%;
-    border: 3px solid var(--primary);
 }
 
-.stock-search button {
-    background: var(--primary);
-    border: none;
+.search-bar input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 3px solid var(--black);
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
 }
 
-.stock-search i {
-    height: 39px;
-    width: 30px;
+.search-bar button {
+    float: left;
+    width: 10%;
+    padding: 10px;
     background: var(--primary);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: white;
+    font-size: 17px;
+    border: 3px solid var(--black);
+    border-left: none;
     cursor: pointer;
+}
+
+.search-bar button:hover {
+    background: var(--secondary);
 }

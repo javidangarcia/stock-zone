@@ -1,23 +1,22 @@
-import './StockData.css'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import './StockData.css';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { ALPHA_API_KEY, FINNHUB_API_KEY } from "../../constants";
 
 export default function StockData({ currentStock }) {
-    const API_KEY_1 = "5DIHMIONQPZFEG6R";
-    const API_KEY_2 = "ciefl6pr01qmfas4d2hgciefl6pr01qmfas4d2i0";
     const [stockData, setStockData] = useState({});
     const [stockPrice, setStockPrice] = useState({});
 
     useEffect( () => {
         const fetchStockData = async () => {
             try {
-                const infoUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${API_KEY_1}`;
-                const priceUrl = `https://finnhub.io/api/v1/quote?symbol=${currentStock}&token=${API_KEY_2}`;
-                const responseInfo = await axios.get(infoUrl);
-                const responsePrice = await axios.get(priceUrl)
-                const infoData = responseInfo.data;
+                const stockOverviewURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${ALPHA_API_KEY}`;
+                const stockPriceURL = `https://finnhub.io/api/v1/quote?symbol=${currentStock}&token=${FINNHUB_API_KEY}`;
+                const responseOverview = await axios.get(stockOverviewURL);
+                const responsePrice = await axios.get(stockPriceURL);
+                const overviewData = responseOverview.data;
                 const priceData = responsePrice.data;
-                setStockData(infoData);
+                setStockData(overviewData);
                 setStockPrice(priceData);
             } catch(error) {
                 
