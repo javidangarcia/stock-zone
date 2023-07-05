@@ -23,4 +23,8 @@ export const Stock = sequelize.define('Stock', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
+    logo: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 });
