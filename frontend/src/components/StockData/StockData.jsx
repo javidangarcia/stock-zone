@@ -2,8 +2,10 @@ import "./StockData.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ALPHA_API_KEY, FINNHUB_API_KEY } from "../../constants";
+import { useParams } from "react-router-dom";
 
-export default function StockData({ currentStock }) {
+export default function StockData(props) {
+    const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [stockNotFound, setStockNotFound] = useState(false);
@@ -13,14 +15,14 @@ export default function StockData({ currentStock }) {
             try {
                 setIsLoading(true);
 
-                const databaseResponse = await axios.get(`http://localhost:3000/stocks/${currentStock}`);
+                const databaseResponse = await axios.get(`http://localhost:3000/stocks/${ticker}`);
                 const stockExistsInDatabase = databaseResponse.data ? true : false;
 
                 if (stockExistsInDatabase) {
                     setStockData(databaseResponse.data);
                 } else {
-                    const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${ALPHA_API_KEY}`;
-                    const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${currentStock}&token=${FINNHUB_API_KEY}`;
+                    const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${ALPHA_API_KEY}`;
+                    const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
                     const overviewResponse = await axios.get(stockOverviewUrl);
                     const priceResponse = await axios.get(stockPriceUrl);
                     const overviewData = overviewResponse.data;
@@ -52,7 +54,7 @@ export default function StockData({ currentStock }) {
             }
         };
         fetchStockData();
-    }, [currentStock]);
+    }, []);
 
     return (
         <div className="stock-data">
