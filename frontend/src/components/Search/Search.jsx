@@ -1,17 +1,19 @@
 import './Search.css'
 import StockData from '../StockData/StockData'
  
-export default function Search({ searchInput, setSearchInput, stockSearchSubmit, currentStock }) {
+export default function Search({ searchInput, setSearchInput, handleSearchSubmit, currentStock }) {
     return (
-        <div className="search">
-            <div className="stock-search">
+        <div className="search-container">
+            <form className="search-bar" onSubmit={handleSearchSubmit}>
                 <input  type="text" 
-                        placeholder="Search"
+                        placeholder="Search for a Stock..."
                         value={searchInput}
                         onChange={ (event) => setSearchInput(event.target.value) }
                 />
-                <button onClick={stockSearchSubmit}><i className="material-icons">search</i></button>
-            </div>
+                <button type="submit">
+                    <i className="material-icons">search</i>
+                </button>
+            </form>
 
             {currentStock && <StockData currentStock={currentStock}/>}
 

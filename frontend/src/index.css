@@ -1,5 +1,7 @@
 body {
     margin: 0px;
-    font-family: 'Comic Sans MS', sans-serif;
-    --primary: #49a078;
+    font-family: 'Arial';
+    --primary: #42a5f5;
+    --secondary: #1e88e5;
+    --black: #252422;
 }

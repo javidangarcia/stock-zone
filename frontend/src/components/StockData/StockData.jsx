@@ -1,38 +1,74 @@
-import './StockData.css'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import "./StockData.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ALPHA_API_KEY, FINNHUB_API_KEY } from "../../constants";
 
 export default function StockData({ currentStock }) {
-    const API_KEY_1 = "5DIHMIONQPZFEG6R";
-    const API_KEY_2 = "ciefl6pr01qmfas4d2hgciefl6pr01qmfas4d2i0";
     const [stockData, setStockData] = useState({});
-    const [stockPrice, setStockPrice] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [stockNotFound, setStockNotFound] = useState(false);
 
-    useEffect( () => {
+    useEffect(() => {
         const fetchStockData = async () => {
             try {
-                const infoUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${API_KEY_1}`;
-                const priceUrl = `https://finnhub.io/api/v1/quote?symbol=${currentStock}&token=${API_KEY_2}`;
-                const responseInfo = await axios.get(infoUrl);
-                const responsePrice = await axios.get(priceUrl)
-                const infoData = responseInfo.data;
-                const priceData = responsePrice.data;
-                setStockData(infoData);
-                setStockPrice(priceData);
-            } catch(error) {
-                
+                setIsLoading(true);
+
+                const databaseResponse = await axios.get(`http://localhost:3000/stocks/${currentStock}`);
+                const stockExistsInDatabase = databaseResponse.data ? true : false;
+
+                if (stockExistsInDatabase) {
+                    setStockData(databaseResponse.data);
+                } else {
+                    const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${ALPHA_API_KEY}`;
+                    const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${currentStock}&token=${FINNHUB_API_KEY}`;
+                    const overviewResponse = await axios.get(stockOverviewUrl);
+                    const priceResponse = await axios.get(stockPriceUrl);
+                    const overviewData = overviewResponse.data;
+                    const priceData = priceResponse.data;
+
+                    if (Object.keys(overviewData).length === 0) {
+                        throw new Error("Stock data not found");
+                    }
+
+                    const combinedStockData = {
+                        ticker: overviewData.Symbol,
+                        name: overviewData.Name,
+                        description: overviewData.Description,
+                        sector: overviewData.Sector,
+                        price: priceData.c,
+                    };
+
+                    setStockData(combinedStockData);
+
+                    // POST stock data to database for later use
+                    await axios.post("http://localhost:3000/stocks", combinedStockData);
+                }
+
+                setStockNotFound(false);
+            } catch (error) {
+                setStockNotFound(true);
+            } finally {
+                setIsLoading(false);
             }
-        }
+        };
         fetchStockData();
     }, [currentStock]);
-    
+
     return (
         <div className="stock-data">
-            <p>Ticker: {currentStock}</p>
-            <p>Name: {stockData.Name}</p>
-            <p>Description: {stockData.Description}</p>
-            <p>Sector: {stockData.Sector}</p>
-            <p>Price: {stockPrice.c}</p>
+            {isLoading ? (
+                <p>Loading...</p>
+            ) : stockNotFound ? (
+                <p>Stock Not Found...</p>
+            ) : (
+                <>
+                    <p>Ticker: {stockData.ticker}</p>
+                    <p>Name: {stockData.name}</p>
+                    <p>Description: {stockData.description}</p>
+                    <p>Sector: {stockData.sector}</p>
+                    <p>Price: {stockData.price}</p>
+                </>
+            )}
         </div>
-    )
+    );
 }
