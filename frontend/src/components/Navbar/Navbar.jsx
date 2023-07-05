@@ -1,4 +1,4 @@
-import './Navbar.css'
+import "./Navbar.css";
 
 export default function Navbar() {
     return (
@@ -7,5 +7,5 @@ export default function Navbar() {
             <a>Home</a>
             <a href="/search">Search</a>
         </nav>
-    )
+    );
 }

@@ -1,13 +1,13 @@
-import './StockData.css';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import "./StockData.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { ALPHA_API_KEY, FINNHUB_API_KEY } from "../../constants";
 
 export default function StockData({ currentStock }) {
     const [stockData, setStockData] = useState({});
     const [stockPrice, setStockPrice] = useState({});
 
-    useEffect( () => {
+    useEffect(() => {
         const fetchStockData = async () => {
             try {
                 const stockOverviewURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${currentStock}&apikey=${ALPHA_API_KEY}`;
@@ -18,13 +18,13 @@ export default function StockData({ currentStock }) {
                 const priceData = responsePrice.data;
                 setStockData(overviewData);
                 setStockPrice(priceData);
-            } catch(error) {
+            } catch (error) {
                 
             }
-        }
+        };
         fetchStockData();
     }, [currentStock]);
-    
+
     return (
         <div className="stock-data">
             <p>Ticker: {currentStock}</p>
@@ -33,5 +33,5 @@ export default function StockData({ currentStock }) {
             <p>Sector: {stockData.Sector}</p>
             <p>Price: {stockPrice.c}</p>
         </div>
-    )
+    );
 }
