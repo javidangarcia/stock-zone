@@ -12,7 +12,7 @@ export const Stock = sequelize.define('Stock', {
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(2000),
         allowNull: false
     },
     sector: {
