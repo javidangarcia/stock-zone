@@ -10,7 +10,7 @@
     width: 40%;
 }
 
-.search-bar input[type=text] {
+.search-bar input[type="text"] {
     padding: 10px;
     font-size: 17px;
     border: 3px solid var(--black);

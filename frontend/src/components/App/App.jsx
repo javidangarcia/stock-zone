@@ -14,7 +14,10 @@ export default function App() {
                     <Route path="/" element={<Home />}></Route>
                     <Route path="/home" element={<Home />}></Route>
                     <Route path="/search" element={<Search />}></Route>
-                    <Route path="/search/stocks/:ticker" element={<StockData />}></Route>
+                    <Route
+                        path="/search/stocks/:ticker"
+                        element={<StockData />}
+                    ></Route>
                 </Routes>
             </BrowserRouter>
         </div>

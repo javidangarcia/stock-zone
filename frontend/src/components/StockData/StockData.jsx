@@ -15,8 +15,12 @@ export default function StockData(props) {
             try {
                 setIsLoading(true);
 
-                const databaseResponse = await axios.get(`http://localhost:3000/stocks/${ticker}`);
-                const stockExistsInDatabase = databaseResponse.data ? true : false;
+                const databaseResponse = await axios.get(
+                    `http://localhost:3000/stocks/${ticker}`
+                );
+                const stockExistsInDatabase = databaseResponse.data
+                    ? true
+                    : false;
 
                 if (stockExistsInDatabase) {
                     setStockData(databaseResponse.data);
@@ -27,12 +31,13 @@ export default function StockData(props) {
                 const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${ALPHA_API_KEY}`;
                 const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
                 const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=ciefl6pr01qmfas4d2hgciefl6pr01qmfas4d2i0`;
-                
-                const [overviewResponse, priceResponse, logoResponse] = await Promise.all([
-                    axios.get(stockOverviewUrl),
-                    axios.get(stockPriceUrl),
-                    axios.get(stockLogoUrl)
-                ]);
+
+                const [overviewResponse, priceResponse, logoResponse] =
+                    await Promise.all([
+                        axios.get(stockOverviewUrl),
+                        axios.get(stockPriceUrl),
+                        axios.get(stockLogoUrl)
+                    ]);
 
                 const overviewData = overviewResponse.data;
                 const priceData = priceResponse.data;
@@ -55,7 +60,7 @@ export default function StockData(props) {
 
                 // POST stock data to database for later use
                 axios.post("http://localhost:3000/stocks", combinedStockData);
-                
+
                 setStockNotFound(false);
             } catch (error) {
                 setStockNotFound(true);
@@ -81,7 +86,10 @@ export default function StockData(props) {
                         <p>Sector: {stockData.sector}</p>
                         <p>Price: ${stockData.price}</p>
                     </div>
-                    <img src={stockData.logo} alt={`This is a logo of ${stockData.name}.`} />
+                    <img
+                        src={stockData.logo}
+                        alt={`This is a logo of ${stockData.name}.`}
+                    />
                 </>
             )}
         </div>
