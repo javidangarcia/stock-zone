@@ -1,26 +1,22 @@
 import "./App.css";
 import Navbar from "../Navbar/Navbar";
+import Home from "../Home/Home";
 import Search from "../Search/Search";
-import { useState } from "react";
+import StockData from "../StockData/StockData";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
-    const [searchInput, setSearchInput] = useState("");
-    const [currentStock, setCurrentStock] = useState("");
-
-    function handleSearchSubmit(event) {
-        event.preventDefault();
-        setCurrentStock(searchInput);
-    }
-
     return (
         <div className="app">
-            <Navbar />
-            <Search
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
-                handleSearchSubmit={handleSearchSubmit}
-                currentStock={currentStock}
-            />
+            <BrowserRouter>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />}></Route>
+                    <Route path="/home" element={<Home />}></Route>
+                    <Route path="/search" element={<Search />}></Route>
+                    <Route path="/search/stocks/:ticker" element={<StockData />}></Route>
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }

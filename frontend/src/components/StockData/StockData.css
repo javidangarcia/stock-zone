@@ -1,3 +1,9 @@
 .stock-data {
+    display: flex;
     margin-left: 20px;
+}
+
+.stock-data img {
+    height: 300px;
+    width: 300px;
 }

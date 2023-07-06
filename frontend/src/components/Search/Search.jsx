@@ -1,7 +1,17 @@
-import './Search.css'
-import StockData from '../StockData/StockData'
+import './Search.css';
+import StockData from '../StockData/StockData';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
  
-export default function Search({ searchInput, setSearchInput, handleSearchSubmit, currentStock }) {
+export default function Search(props) {
+    const [searchInput, setSearchInput] = useState("");
+    const navigate = useNavigate();
+
+    function handleSearchSubmit(event) {
+        event.preventDefault();
+        navigate(`stocks/${searchInput}`);
+    }
+
     return (
         <div className="search-container">
             <form className="search-bar" onSubmit={handleSearchSubmit}>
@@ -14,9 +24,6 @@ export default function Search({ searchInput, setSearchInput, handleSearchSubmit
                     <i className="material-icons">search</i>
                 </button>
             </form>
-
-            {currentStock && <StockData currentStock={currentStock}/>}
-
         </div>
     )
 }
