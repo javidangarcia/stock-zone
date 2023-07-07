@@ -1,9 +1,38 @@
 .stock-data {
     display: flex;
-    margin-left: 20px;
 }
 
-.stock-data img {
-    height: 300px;
-    width: 300px;
+.stock-details {
+    margin: 10px 0px 0px 10px;
+    max-width: 50%;
+    height: 80vh;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.stock-name {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.stock-price {
+    margin: 0px;
+    font-size: 25px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.stock-logo {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    margin: 10px 0px 0px 10px;
+}
+
+.stock-logo img {
+    height: auto;
+    width: auto;
 }

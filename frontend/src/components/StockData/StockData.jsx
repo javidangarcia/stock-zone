@@ -47,11 +47,13 @@ export default function StockData(props) {
                     throw new Error("Stock data not found");
                 }
 
+                const stockSector = overviewData.Sector.charAt(0).toUpperCase() + overviewData.Sector.slice(1).toLowerCase()
+
                 const combinedStockData = {
                     ticker: overviewData.Symbol,
                     name: overviewData.Name,
                     description: overviewData.Description,
-                    sector: overviewData.Sector,
+                    sector: stockSector,
                     price: priceData.c,
                     logo: logoData.logo
                 };
@@ -79,17 +81,18 @@ export default function StockData(props) {
                 <p>Stock Not Found...</p>
             ) : (
                 <>
-                    <div>
-                        <p>Ticker: {stockData.ticker}</p>
-                        <p>Name: {stockData.name}</p>
-                        <p>Description: {stockData.description}</p>
+                    <div className="stock-details">
+                        <p className="stock-name">{stockData.name} ({stockData.ticker})</p>
+                        <p className="stock-price">${stockData.price}</p>
+                        <p>{stockData.description}</p>
                         <p>Sector: {stockData.sector}</p>
-                        <p>Price: ${stockData.price}</p>
                     </div>
-                    <img
-                        src={stockData.logo}
-                        alt={`This is a logo of ${stockData.name}.`}
-                    />
+                    <div className="stock-logo">
+                        <img
+                            src={stockData.logo}
+                            alt={`This is a logo of ${stockData.name}.`}
+                        />
+                    </div>
                 </>
             )}
         </div>
