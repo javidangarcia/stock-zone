@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function SignUpForm() {
+export default function SignUpForm({ setUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
@@ -18,11 +18,18 @@ export default function SignUpForm() {
                 email
             };
 
-            await axios.post("http://localhost:3000/users", userData);
+            const response = await axios.post(
+                "http://localhost:3000/users/signup",
+                userData,
+                { withCredentials: true }
+            );
 
             setUsername("");
             setPassword("");
             setEmail("");
+
+            const user = response.data.user;
+            setUser(user);
 
             alert("Sign Up Successful.");
         } catch (error) {
@@ -65,8 +72,11 @@ export default function SignUpForm() {
                     />
                 </div>
                 <button type="submit">Sign Up</button>
-                <p>
-                    Already have an account? <Link to="/login">Log In</Link>
+                <p className="log-in-redirect">
+                    Already have an account?{" "}
+                    <Link to="/login" className="link">
+                        Log In
+                    </Link>
                 </p>
             </form>
         </div>

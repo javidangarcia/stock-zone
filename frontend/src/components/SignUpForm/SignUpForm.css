@@ -47,4 +47,18 @@
     background-color: var(--primary);
     color: white;
     cursor: pointer;
+    border-radius: 20px;
+}
+
+.log-in-redirect {
+    text-align: center;
+}
+
+.log-in-redirect Link {
+    color: var(--primary);
+}
+
+.link {
+    color: var(--primary);
+    text-decoration: none;
 }

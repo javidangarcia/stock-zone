@@ -21,10 +21,10 @@ export default function App() {
     return (
         <div className="app">
             <BrowserRouter>
-                <Navbar />
+                <Navbar user={user} />
                 <Routes>
                     <Route path="/" element={<Home user={user} />}></Route>
-                    <Route path="/home" element={<Home />}></Route>
+                    <Route path="/home" element={<Home user={user} />}></Route>
                     <Route path="/search" element={<Search />}></Route>
                     <Route
                         path="/search/stocks/:ticker"
@@ -34,7 +34,10 @@ export default function App() {
                         path="/login"
                         element={<LoginForm setUser={setUser} />}
                     ></Route>
-                    <Route path="/signup" element={<SignUpForm />}></Route>
+                    <Route
+                        path="/signup"
+                        element={<SignUpForm setUser={setUser} />}
+                    ></Route>
                 </Routes>
             </BrowserRouter>
         </div>

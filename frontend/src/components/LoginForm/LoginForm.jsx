@@ -19,15 +19,18 @@ export default function LoginForm({ setUser }) {
                 password
             };
 
-            const response = await axios.post("http://localhost:3000/users/login", userData);
+            const response = await axios.post(
+                "http://localhost:3000/users/login",
+                userData,
+                { withCredentials: true }
+            );
             const user = response.data.user;
 
             setUser(user);
 
             navigate("/");
-
         } catch (error) {
-            alert("Invalid username or password.")
+            alert("Invalid username or password.");
         }
     }
 
@@ -56,8 +59,11 @@ export default function LoginForm({ setUser }) {
                     />
                 </div>
                 <button type="submit">Login</button>
-                <p>
-                    New to the app? <Link to="/signup">Sign Up</Link>
+                <p className="sign-up-redirect">
+                    New to Stock Zone?{" "}
+                    <Link to="/signup" className="link">
+                        Sign Up
+                    </Link>
                 </p>
             </form>
         </div>

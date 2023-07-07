@@ -47,4 +47,14 @@
     background-color: var(--primary);
     color: white;
     cursor: pointer;
+    border-radius: 20px;
+}
+
+.sign-up-redirect {
+    text-align: center;
+}
+
+.link {
+    color: var(--primary);
+    text-decoration: none;
 }
