@@ -1,39 +1,37 @@
-import "./SignUpForm.css";
+import "./LoginForm.css";
 import { useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function SignUpForm() {
+export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
 
-    async function handleSubmit(event) {
+    const navigate = useNavigate();
+
+    async function handleLogin(event) {
         event.preventDefault();
 
         try {
             const userData = {
                 username,
-                password,
-                email
+                password
             };
 
-            await axios.post("http://localhost:3000/users", userData);
+            await axios.post("http://localhost:3000/users/login", userData);
 
-            setUsername("");
-            setPassword("");
-            setEmail("");
+            navigate("/");
 
-            alert("Sign Up Successful.");
         } catch (error) {
-            alert("Username or email already exists.");
+            alert("Invalid username or password.")
         }
     }
 
     return (
-        <div className="signup-form-container">
-            <form className="signup-form" onSubmit={handleSubmit}>
-                <h2>Sign Up</h2>
+        <div className="login-form-container">
+            <form className="login-form" onSubmit={handleLogin}>
+                <h2>Log In</h2>
                 <div className="form-group">
                     <label htmlFor="username">Username:</label>
                     <input
@@ -41,16 +39,6 @@ export default function SignUpForm() {
                         id="username"
                         value={username}
                         onChange={(event) => setUsername(event.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
                         required
                     />
                 </div>
@@ -64,9 +52,9 @@ export default function SignUpForm() {
                         required
                     />
                 </div>
-                <button type="submit">Sign Up</button>
+                <button type="submit">Login</button>
                 <p>
-                    Already have an account? <Link to="/login">Log In</Link>
+                    New to the app? <Link to="/signup">Sign Up</Link>
                 </p>
             </form>
         </div>
