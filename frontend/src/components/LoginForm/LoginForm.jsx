@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginForm() {
+export default function LoginForm({ setUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,7 +19,10 @@ export default function LoginForm() {
                 password
             };
 
-            await axios.post("http://localhost:3000/users/login", userData);
+            const response = await axios.post("http://localhost:3000/users/login", userData);
+            const user = response.data.user;
+
+            setUser(user);
 
             navigate("/");
 
