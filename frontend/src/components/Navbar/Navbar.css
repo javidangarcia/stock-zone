@@ -1,6 +1,7 @@
 .navbar {
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--black);
 }
 
@@ -10,4 +11,42 @@
     color: white;
     font-weight: 500;
     font-size: 25px;
+}
+
+.nav-pages {
+    display: flex;
+    justify-content: left;
+}
+
+.nav-profile {
+    display: flex;
+}
+
+.nav-profile p {
+    margin: 0px;
+    padding: 30px 0px 30px 30px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 25px;
+    user-select: none;
+}
+
+.nav-profile a {
+    color: var(--primary);
+    padding-left: 10px;
+}
+
+.log-in {
+    font-size: 25px;
+    width: 200px;
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.log-in:hover {
+    background-color: var(--secondary);
 }
