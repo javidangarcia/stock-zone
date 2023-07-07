@@ -6,6 +6,7 @@ export default function Navbar() {
             <a href="/home">Stock Zone</a>
             <a href="/home">Home</a>
             <a href="/search">Search</a>
+            <a href="/signup">Sign Up</a>
         </nav>
     );
 }

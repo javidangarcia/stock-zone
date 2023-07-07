@@ -4,6 +4,7 @@ import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignUpForm from "../SignUpForm/SignUpForm";
 
 export default function App() {
     return (
@@ -18,6 +19,7 @@ export default function App() {
                         path="/search/stocks/:ticker"
                         element={<StockData />}
                     ></Route>
+                    <Route path="/signup" element={<SignUpForm />}></Route>
                 </Routes>
             </BrowserRouter>
         </div>
