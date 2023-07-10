@@ -14,7 +14,6 @@
     font-size: 30px;
     font-weight: 600;
     margin: 0px 0px 15px 0px;
-    
 }
 
 .stock-price {
@@ -22,6 +21,10 @@
     font-size: 25px;
     font-weight: 600;
     color: var(--primary);
+}
+
+.stock-follow {
+    display: flex;
 }
 
 .stock-logo {

@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { sequelize } from "./database.js";
 import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
+import followRoutes from "./routes/follows.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
 
@@ -40,6 +41,7 @@ sessionStore.sync();
 
 app.use(stockRoutes);
 app.use(userRoutes);
+app.use(followRoutes);
 
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);

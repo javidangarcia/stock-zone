@@ -46,7 +46,7 @@ export default function SignUpForm({ setUser }) {
                     navigate("/");
                 }, 1000);
             }
-            
+
             if (response.status === 409) {
                 setError(response.data.error);
             }
@@ -101,18 +101,16 @@ export default function SignUpForm({ setUser }) {
                     </Link>
                 </p>
             </form>
-            {
-                success &&
+            {success && (
                 <div className="success">
                     <p>Account successfully created.</p>
                 </div>
-            }
-            {
-                error &&
+            )}
+            {error && (
                 <div className="error">
                     <p>{error}</p>
                 </div>
-            }
+            )}
         </div>
     );
 }
