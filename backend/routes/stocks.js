@@ -15,9 +15,10 @@ router.post("/stocks", async (req, res) => {
 
 // Get a specific stock from database
 router.get("/stocks/:ticker", async (req, res) => {
+    const ticker = req.params.ticker.toUpperCase();
     try {
         const stock = await Stock.findOne({
-            where: { ticker: req.params.ticker }
+            where: { ticker }
         });
         res.json(stock);
     } catch (error) {

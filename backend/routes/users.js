@@ -9,31 +9,37 @@ const router = express.Router();
 router.post("/users/signup", async (req, res) => {
     const { username, password, email } = req.body;
 
+    const userAlreadyExists = await User.findOne({
+        where: { [Op.or]: [{ username }, { email }] }
+    });
+
+    if (userAlreadyExists) {
+        return res.status(409).json({ error: "Username or email already exists." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     try {
-        const userAlreadyExists = await User.findOne({
-            where: { [Op.or]: [{ username }, { email }] }
-        });
-
-        if (userAlreadyExists) {
-            return res.status(400).json({ error: "Username or email already exists." })
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newUser = await User.create({ username, password: hashedPassword, email });
 
         req.session.user = newUser;
 
-        res.status(200).json({ user: newUser })
+        res.status(200).json({
+            user: {
+                username,
+                email
+            }
+        });
     } catch (error) {
-        res.status(500).json({ error: "Server error." });
+        res.status(400).json({ error: "Invalid request syntax." });
     }
 });
 
 router.post("/users/login", async (req, res) => {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ 
+        where: { username } });
 
     if (user === null) {
         return res.status(401).json({ error: "Invalid username or password." });
@@ -47,12 +53,19 @@ router.post("/users/login", async (req, res) => {
 
     req.session.user = user;
 
-    res.status(200).json({ user });
+    const email = user.email;
+
+    res.status(200).json({
+        user: {
+            username,
+            email
+        }
+    });
 });
 
 router.post("/users/logout", async (req, res) => {
     req.session.destroy();
-    res.status(200).send("Logout successful.");
+    res.status(200).json({ message: "Logout successful." });
 })
 
 export default router;

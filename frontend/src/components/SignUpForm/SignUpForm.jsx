@@ -2,14 +2,21 @@ import "./SignUpForm.css";
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpForm({ setUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState(false);
+
+    const navigate = useNavigate();
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        setError("");
 
         try {
             const userData = {
@@ -21,19 +28,34 @@ export default function SignUpForm({ setUser }) {
             const response = await axios.post(
                 "http://localhost:3000/users/signup",
                 userData,
-                { withCredentials: true }
+                { withCredentials: true, validateStatus: () => true }
             );
 
-            setUsername("");
-            setPassword("");
-            setEmail("");
+            if (response.status === 200) {
+                setUsername("");
+                setPassword("");
+                setEmail("");
 
-            const user = response.data.user;
-            setUser(user);
+                const user = response.data.user;
+                setUser(user);
 
-            alert("Sign Up Successful.");
+                setSuccess(true);
+
+                setTimeout(() => {
+                    setSuccess(false);
+                    navigate("/");
+                }, 1000);
+            }
+            
+            if (response.status === 409) {
+                setError(response.data.error);
+            }
+
+            if (response.status === 400) {
+                setError(response.data.error);
+            }
         } catch (error) {
-            alert("Username or email already exists.");
+            setError(`${error.message}: Please try again later.`);
         }
     }
 
@@ -79,6 +101,18 @@ export default function SignUpForm({ setUser }) {
                     </Link>
                 </p>
             </form>
+            {
+                success &&
+                <div className="success">
+                    <p>Account successfully created.</p>
+                </div>
+            }
+            {
+                error &&
+                <div className="error">
+                    <p>{error}</p>
+                </div>
+            }
         </div>
     );
 }
