@@ -2,6 +2,7 @@ import "./StockData.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Follow from "../Follow/Follow";
 
 export default function StockData(props) {
     const { ticker } = useParams();
@@ -16,20 +17,28 @@ export default function StockData(props) {
                 setStockNotFound(false);
 
                 const databaseResponse = await axios.get(
-                    `http://localhost:3000/stocks/${ticker}`
+                    `http://localhost:3000/stocks/${ticker}`,
+                    { withCredentials: true }
                 );
-                const stockExistsInDatabase = databaseResponse.data
+
+                const stockExistsInDatabase = databaseResponse.data.stock
                     ? true
                     : false;
 
                 if (stockExistsInDatabase) {
-                    setStockData(databaseResponse.data);
+                    setStockData(databaseResponse.data.stock);
                     return;
                 }
 
-                const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${import.meta.env.VITE_ALPHA}`;
-                const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${import.meta.env.VITE_FINNHUB}`;
-                const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${import.meta.env.VITE_FINNHUB}`;
+                const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${
+                    import.meta.env.VITE_ALPHA
+                }`;
+                const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${
+                    import.meta.env.VITE_FINNHUB
+                }`;
+                const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${
+                    import.meta.env.VITE_FINNHUB
+                }`;
 
                 const [overviewResponse, priceResponse, logoResponse] =
                     await Promise.all([
@@ -46,7 +55,9 @@ export default function StockData(props) {
                     throw new Error("Stock data not found");
                 }
 
-                const stockSector = overviewData.Sector.charAt(0).toUpperCase() + overviewData.Sector.slice(1).toLowerCase()
+                const stockSector =
+                    overviewData.Sector.charAt(0).toUpperCase() +
+                    overviewData.Sector.slice(1).toLowerCase();
 
                 const combinedStockData = {
                     ticker: overviewData.Symbol,
@@ -61,7 +72,6 @@ export default function StockData(props) {
 
                 // POST stock data to database for later use
                 axios.post("http://localhost:3000/stocks", combinedStockData);
-
             } catch (error) {
                 setStockNotFound(true);
             } finally {
@@ -87,8 +97,17 @@ export default function StockData(props) {
             ) : (
                 <>
                     <div className="stock-details">
-                        <p className="stock-name">{stockData.name} ({stockData.ticker})</p>
-                        <p className="stock-price">${stockData.price}</p>
+                        <p className="stock-name">
+                            {stockData.name} ({stockData.ticker})
+                        </p>
+                        <div className="stock-follow">
+                            <p className="stock-price">${stockData.price}</p>
+                            <Follow
+                                ticker={ticker}
+                                stockData={stockData}
+                                setStockData={setStockData}
+                            />
+                        </div>
                         <p>{stockData.description}</p>
                         <p>Sector: {stockData.sector}</p>
                     </div>

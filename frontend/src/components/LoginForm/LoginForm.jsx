@@ -76,12 +76,11 @@ export default function LoginForm({ setUser }) {
                     </Link>
                 </p>
             </form>
-            {
-                error &&
+            {error && (
                 <div className="error">
                     <p>{error}</p>
                 </div>
-            }
+            )}
         </div>
     );
 }

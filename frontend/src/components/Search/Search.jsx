@@ -2,6 +2,7 @@ import "./Search.css";
 import StockData from "../StockData/StockData";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Search(props) {
     const [searchInput, setSearchInput] = useState("");
