@@ -7,11 +7,14 @@ import { useNavigate } from "react-router-dom";
 export default function LoginForm({ setUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
     async function handleLogin(event) {
         event.preventDefault();
+
+        setError("");
 
         try {
             const userData = {
@@ -22,15 +25,22 @@ export default function LoginForm({ setUser }) {
             const response = await axios.post(
                 "http://localhost:3000/users/login",
                 userData,
-                { withCredentials: true }
+                { withCredentials: true, validateStatus: () => true }
             );
-            const user = response.data.user;
 
-            setUser(user);
+            if (response.status === 200) {
+                const user = response.data.user;
 
-            navigate("/");
+                setUser(user);
+
+                navigate("/");
+            }
+
+            if (response.status === 401) {
+                setError(response.data.error);
+            }
         } catch (error) {
-            alert("Invalid username or password.");
+            setError(`${error.message}: Please try again later.`);
         }
     }
 
@@ -66,6 +76,12 @@ export default function LoginForm({ setUser }) {
                     </Link>
                 </p>
             </form>
+            {
+                error &&
+                <div className="error">
+                    <p>{error}</p>
+                </div>
+            }
         </div>
     );
 }

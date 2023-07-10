@@ -1,7 +1,6 @@
 import "./StockData.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ALPHA_API_KEY, FINNHUB_API_KEY } from "../../constants";
 import { useParams } from "react-router-dom";
 
 export default function StockData(props) {
@@ -14,6 +13,7 @@ export default function StockData(props) {
         const fetchStockData = async () => {
             try {
                 setIsLoading(true);
+                setStockNotFound(false);
 
                 const databaseResponse = await axios.get(
                     `http://localhost:3000/stocks/${ticker}`
@@ -24,13 +24,12 @@ export default function StockData(props) {
 
                 if (stockExistsInDatabase) {
                     setStockData(databaseResponse.data);
-                    setStockNotFound(false);
                     return;
                 }
 
-                const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${ALPHA_API_KEY}`;
-                const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
-                const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=ciefl6pr01qmfas4d2hgciefl6pr01qmfas4d2i0`;
+                const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${import.meta.env.VITE_ALPHA}`;
+                const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${import.meta.env.VITE_FINNHUB}`;
+                const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${import.meta.env.VITE_FINNHUB}`;
 
                 const [overviewResponse, priceResponse, logoResponse] =
                     await Promise.all([
@@ -63,11 +62,12 @@ export default function StockData(props) {
                 // POST stock data to database for later use
                 axios.post("http://localhost:3000/stocks", combinedStockData);
 
-                setStockNotFound(false);
             } catch (error) {
                 setStockNotFound(true);
             } finally {
-                setIsLoading(false);
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 500);
             }
         };
         fetchStockData();
@@ -76,9 +76,14 @@ export default function StockData(props) {
     return (
         <div className="stock-data">
             {isLoading ? (
-                <p>Loading...</p>
+                <div className="loading">
+                    <div className="ball"></div>
+                    <p>Loading...</p>
+                </div>
             ) : stockNotFound ? (
-                <p>Stock Not Found...</p>
+                <div className="stock-not-found">
+                    <p>Stock Not Found...</p>
+                </div>
             ) : (
                 <>
                     <div className="stock-details">
