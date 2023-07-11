@@ -1,0 +1,18 @@
+.error {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #e63946;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    z-index: 999;
+}
+
+.hidden {
+    display: none;
+}

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Search(props) {
+export default function Search() {
     const [searchInput, setSearchInput] = useState("");
     const navigate = useNavigate();
 
