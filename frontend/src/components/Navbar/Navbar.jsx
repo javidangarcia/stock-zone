@@ -1,15 +1,22 @@
 import "./Navbar.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { UserContext } from "../App/App";
+import { useContext } from "react";
 
-export default function Navbar({ user }) {
+export default function Navbar() {
+    const { user, setError } = useContext(UserContext);
+
     async function handleLogout() {
         try {
             await axios.post("http://localhost:3000/users/logout", {
                 withCredentials: true
             });
             localStorage.clear();
-        } catch (error) {}
+
+        } catch (error) {
+            setError(`${error.message}: Please try again later.`);
+        }
     }
 
     return (

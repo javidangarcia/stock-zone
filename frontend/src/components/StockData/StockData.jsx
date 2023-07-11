@@ -18,14 +18,10 @@ export default function StockData(props) {
 
                 const databaseResponse = await axios.get(
                     `http://localhost:3000/stocks/${ticker}`,
-                    { withCredentials: true }
+                    { withCredentials: true, validateStatus: () => true }
                 );
 
-                const stockExistsInDatabase = databaseResponse.data.stock
-                    ? true
-                    : false;
-
-                if (stockExistsInDatabase) {
+                if (databaseResponse.status === 200) {
                     setStockData(databaseResponse.data.stock);
                     return;
                 }
@@ -87,7 +83,6 @@ export default function StockData(props) {
         <div className="stock-data">
             {isLoading ? (
                 <div className="loading">
-                    <div className="ball"></div>
                     <p>Loading...</p>
                 </div>
             ) : stockNotFound ? (

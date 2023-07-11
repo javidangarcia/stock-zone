@@ -6,9 +6,13 @@ import StockData from "../StockData/StockData";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUpForm from "../SignUpForm/SignUpForm";
 import LoginForm from "../LoginForm/LoginForm";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
+import Error from "../Error/Error";
+
+export const UserContext = createContext();
 
 export default function App() {
+    const [error, setError] = useState("");
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
         return storedUser ? JSON.parse(storedUser) : null;
@@ -20,26 +24,29 @@ export default function App() {
 
     return (
         <div className="app">
-            <BrowserRouter>
-                <Navbar user={user} />
-                <Routes>
-                    <Route path="/" element={<Home user={user} />}></Route>
-                    <Route path="/home" element={<Home user={user} />}></Route>
-                    <Route path="/search" element={<Search />}></Route>
-                    <Route
-                        path="/search/stocks/:ticker"
-                        element={<StockData />}
-                    ></Route>
-                    <Route
-                        path="/login"
-                        element={<LoginForm setUser={setUser} />}
-                    ></Route>
-                    <Route
-                        path="/signup"
-                        element={<SignUpForm setUser={setUser} />}
-                    ></Route>
-                </Routes>
-            </BrowserRouter>
+            <UserContext.Provider value={{ user, setUser, setError }}>
+                <BrowserRouter>
+                    <Error error={error} />
+                    <Navbar />
+                    <Routes>
+                        <Route path="/" element={<Home />}></Route>
+                        <Route path="/home" element={<Home />}></Route>
+                        <Route path="/search" element={<Search />}></Route>
+                        <Route
+                            path="/search/stocks/:ticker"
+                            element={<StockData />}
+                        ></Route>
+                        <Route
+                            path="/login"
+                            element={<LoginForm />}
+                        ></Route>
+                        <Route
+                            path="/signup"
+                            element={<SignUpForm />}
+                        ></Route>
+                    </Routes>
+                </BrowserRouter>
+            </UserContext.Provider>
         </div>
     );
 }

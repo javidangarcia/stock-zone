@@ -13,3 +13,5 @@ export const Follow = sequelize.define("Follow", {
 
 User.belongsToMany(Stock, { through: Follow });
 Stock.belongsToMany(User, { through: Follow });
+Follow.belongsTo(Stock);
+Stock.hasMany(Follow);

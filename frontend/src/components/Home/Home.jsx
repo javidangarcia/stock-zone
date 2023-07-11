@@ -1,9 +1,13 @@
 import "./Home.css";
+import StockNews from "../StockNews/StockNews";
+import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 
-export default function Home({ user }) {
+export default function Home() {
+
     return (
         <div className="home">
-            <p>Hi there, {user?.username ?? "guest"}.</p>
+            <StockNews />
+            <StocksYouFollow />
         </div>
     );
 }

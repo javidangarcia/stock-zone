@@ -1,0 +1,43 @@
+.stocks-you-follow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+.stocks {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.stock-margin {
+    margin-bottom: 20px;
+}
+
+.stock {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary);
+    border-radius: 20px;
+    color: white;
+    padding: 10px;
+    border: 3px solid black;
+}
+
+.stock img {
+    margin-right: 10px;
+    border-radius: 20px;
+    height: 50px;
+    width: 50px;
+}
+
+.stock p {
+    margin: 0px;
+    font-size: 30px;
+}
+
+.stock-link {
+    text-decoration: none;
+    color: inherit;
+}

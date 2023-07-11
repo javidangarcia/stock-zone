@@ -1,22 +1,21 @@
 import "./SignUpForm.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../App/App";
 
-export default function SignUpForm({ setUser }) {
+export default function SignUpForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const { setUser, setError } = useContext(UserContext);
 
     const navigate = useNavigate();
 
     async function handleSubmit(event) {
         event.preventDefault();
-
-        setError("");
 
         try {
             const userData = {
@@ -36,7 +35,7 @@ export default function SignUpForm({ setUser }) {
                 setPassword("");
                 setEmail("");
 
-                const user = response.data.user;
+                const user = response.data?.user;
                 setUser(user);
 
                 setSuccess(true);
@@ -47,11 +46,7 @@ export default function SignUpForm({ setUser }) {
                 }, 1000);
             }
 
-            if (response.status === 409) {
-                setError(response.data.error);
-            }
-
-            if (response.status === 400) {
+            if (response.status === 409 || response.status === 400) {
                 setError(response.data.error);
             }
         } catch (error) {
@@ -104,11 +99,6 @@ export default function SignUpForm({ setUser }) {
             {success && (
                 <div className="success">
                     <p>Account successfully created.</p>
-                </div>
-            )}
-            {error && (
-                <div className="error">
-                    <p>{error}</p>
                 </div>
             )}
         </div>

@@ -1,0 +1,11 @@
+.stock-news {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    margin: 25px;
+}
+
+.stock-news h1 {
+    margin: 0px;
+    font-size: 30px;
+}

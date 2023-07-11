@@ -1,20 +1,19 @@
 import "./LoginForm.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../App/App";
 
-export default function LoginForm({ setUser }) {
+export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const { setUser, setError } = useContext(UserContext);
 
     const navigate = useNavigate();
 
     async function handleLogin(event) {
         event.preventDefault();
-
-        setError("");
 
         try {
             const userData = {
@@ -29,7 +28,7 @@ export default function LoginForm({ setUser }) {
             );
 
             if (response.status === 200) {
-                const user = response.data.user;
+                const user = response.data?.user;
 
                 setUser(user);
 
@@ -76,11 +75,6 @@ export default function LoginForm({ setUser }) {
                     </Link>
                 </p>
             </form>
-            {error && (
-                <div className="error">
-                    <p>{error}</p>
-                </div>
-            )}
         </div>
     );
 }
