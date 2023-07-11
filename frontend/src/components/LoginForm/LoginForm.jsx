@@ -28,7 +28,7 @@ export default function LoginForm() {
             );
 
             if (response.status === 200) {
-                const user = response.data.user;
+                const user = response.data?.user;
 
                 setUser(user);
 

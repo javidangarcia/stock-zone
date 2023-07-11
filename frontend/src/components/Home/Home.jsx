@@ -1,13 +1,13 @@
 import "./Home.css";
-import { UserContext } from "../App/App";
-import { useContext } from "react";
+import StockNews from "../StockNews/StockNews";
+import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 
 export default function Home() {
-    const { user } = useContext(UserContext);
 
     return (
         <div className="home">
-            <p>Hi there, {user?.username ?? "guest"}.</p>
+            <StockNews />
+            <StocksYouFollow />
         </div>
     );
 }

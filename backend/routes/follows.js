@@ -1,9 +1,21 @@
 import express from "express";
 import { Follow } from "../models/follow.js";
-import { User } from "../models/user.js";
 import { Stock } from "../models/stock.js";
 
 const router = express.Router();
+
+router.get("/follows", async (req, res) => {
+    const user = req.session.user;
+
+    const follows = await Follow.findAll({
+        where: { UserId: user.id },
+        include: [{ model: Stock }]
+    });
+
+    const stocks = follows.map((follow) => follow.Stock);
+
+    res.status(200).json({ stocks });
+});
 
 router.post("/follow", async (req, res) => {
     const ticker = req.body.ticker.toUpperCase();

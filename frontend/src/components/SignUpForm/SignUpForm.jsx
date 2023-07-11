@@ -35,7 +35,7 @@ export default function SignUpForm() {
                 setPassword("");
                 setEmail("");
 
-                const user = response.data.user;
+                const user = response.data?.user;
                 setUser(user);
 
                 setSuccess(true);
