@@ -70,3 +70,7 @@
     text-decoration: none;
     color: inherit;
 }
+
+.stock-news select {
+    text-align: center;
+}

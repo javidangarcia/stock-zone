@@ -18,7 +18,7 @@ router.get("/follows", async (req, res) => {
 });
 
 router.post("/follow", async (req, res) => {
-    const ticker = req.body.ticker.toUpperCase();
+    const ticker = req.body.ticker?.toUpperCase();
 
     const user = req.session.user;
     const stock = await Stock.findOne({ where: { ticker } });

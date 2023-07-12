@@ -3,7 +3,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
-import { capitalize } from "../../utils.js";
+import {
+    getStockOverviewUrl,
+    getStockPriceUrl,
+    getStockLogoUrl,
+    capitalize
+} from "../../utils.js";
 
 export default function StockData(props) {
     const { ticker } = useParams();
@@ -27,15 +32,9 @@ export default function StockData(props) {
                     return;
                 }
 
-                const stockOverviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${
-                    import.meta.env.VITE_ALPHA
-                }`;
-                const stockPriceUrl = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${
-                    import.meta.env.VITE_FINNHUB
-                }`;
-                const stockLogoUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${
-                    import.meta.env.VITE_FINNHUB
-                }`;
+                const stockOverviewUrl = getStockOverviewUrl(ticker);
+                const stockPriceUrl = getStockPriceUrl(ticker);
+                const stockLogoUrl = getStockLogoUrl(ticker);
 
                 const [overviewResponse, priceResponse, logoResponse] =
                     await Promise.all([

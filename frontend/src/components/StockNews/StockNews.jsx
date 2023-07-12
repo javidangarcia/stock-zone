@@ -11,28 +11,49 @@ export default function StockNews({ stocks }) {
 
     useEffect(() => {
         const fetchStockNews = async () => {
-            if (currentStock) {
+            if (currentStock != null) {
                 try {
                     const searchTerm = firstWord(currentStock.name);
-                    const url = `https://newsapi.org/v2/everything?q=${searchTerm}&sortBy=relevancy&pageSize=5&apiKey=${import.meta.env.VITE_NEWS}`;
-                    const response = await axios.get(url);
-                    setStockNews(response.data.articles);
+                    const newsUrl = new URL("https://newsapi.org/v2/everything");
+                    newsUrl.searchParams.append("q", searchTerm);
+                    newsUrl.searchParams.append("sortBy", "relevancy");
+                    newsUrl.searchParams.append("pageSize", "5");
+                    newsUrl.searchParams.append("apiKey", import.meta.env.VITE_NEWS);
+                    const response = await axios.get(newsUrl);
+
+                    if (response.data.status === "ok") {
+                        setStockNews(response.data.articles);
+                    }
+
+                    if (response.data.status === "error") {
+                        setError(`{response.code}: {response.message}`);
+                    }
                 } catch (error) {
-                    setError(`${error.message}: Please try again later.`);
+                    setError(`System Error: ${error.message}`);
                 }
             }
         };
         fetchStockNews();
     }, [currentStock]);
 
+    const handleOptions = (event) => {
+        const ticker = event.target.value;
+        stocks.map((stock) => {
+            if (stock.ticker === ticker) {
+                setCurrentStock(stock);
+                return;
+            }
+        })
+    }
+
     return (
         <div className="stock-news">
             <h1>Related News</h1>
-            <select className="stock-options" value={currentStock?.ticker || ""} onChange={(event) => setCurrentStock(JSON.parse(event.target.value))}>
+            <select className="stock-options" value={currentStock?.ticker || ""} onChange={handleOptions}>
                 <option value="" disabled defaultValue>Select a Stock You Follow</option>
                 {
                     stocks?.map((stock) => (
-                        <option key={stock.ticker} value={JSON.stringify(stock)}>{stock.ticker}</option>
+                        <option key={stock.ticker} value={stock.ticker}>{stock.ticker}</option>
                     ))
                 }
             </select>
@@ -44,7 +65,7 @@ export default function StockNews({ stocks }) {
                                 <div className="article-logo">
                                     <img
                                         src={currentStock.logo}
-                                        alt=""
+                                        alt={`This is a logo of ${currentStock.name}.`}
                                     />
                                 </div>
                                 <div className="article-content">
