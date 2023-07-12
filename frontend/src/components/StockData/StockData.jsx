@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
+import { capitalize } from "../../utils.js";
 
 export default function StockData(props) {
     const { ticker } = useParams();
@@ -51,9 +52,7 @@ export default function StockData(props) {
                     throw new Error("Stock data not found");
                 }
 
-                const stockSector =
-                    overviewData.Sector.charAt(0).toUpperCase() +
-                    overviewData.Sector.slice(1).toLowerCase();
+                const stockSector = capitalize(overviewData.Sector);
 
                 const combinedStockData = {
                     ticker: overviewData.Symbol,
