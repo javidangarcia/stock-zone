@@ -19,14 +19,14 @@ export default function StockNews({ stocks }) {
                     newsUrl.searchParams.append("sortBy", "relevancy");
                     newsUrl.searchParams.append("pageSize", "5");
                     newsUrl.searchParams.append("apiKey", import.meta.env.VITE_NEWS);
-                    const response = await axios.get(newsUrl);
+                    const response = await axios.get(newsUrl, { validateStatus: () => true });
 
                     if (response.data.status === "ok") {
                         setStockNews(response.data.articles);
                     }
 
                     if (response.data.status === "error") {
-                        setError(`{response.code}: {response.message}`);
+                        setError(`${response.data.code}: ${response.data.message}`);
                     }
                 } catch (error) {
                     setError(`System Error: ${error.message}`);

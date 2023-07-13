@@ -21,8 +21,12 @@ export default function Follow({ ticker, stockData, setStockData }) {
                 setStockData({ ...stockData, following: !stockData.following });
             }
 
-            if (response.status === 409) {
+            if (response.status === 400 || response.status === 401 || response.status === 404 || response.status === 409) {
                 setError(response.data.error);
+            }
+
+            if (response.status === 500) {
+                setError(`${response.statusText}: Please try again later.`);
             }
         } catch (error) {
             setError(`${error.message}: Please try again later.`);

@@ -1,5 +1,5 @@
 import "./StockData.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
@@ -9,12 +9,14 @@ import {
     getStockLogoUrl,
     capitalize
 } from "../../utils.js";
+import { UserContext } from "../App/App";
 
-export default function StockData(props) {
+export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [stockNotFound, setStockNotFound] = useState(false);
+    const { setError } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStockData = async () => {
@@ -29,7 +31,12 @@ export default function StockData(props) {
 
                 if (databaseResponse.status === 200) {
                     setStockData(databaseResponse.data.stock);
+                    setIsLoading(false);
                     return;
+                }
+
+                if (databaseResponse.status === 500) {
+                    setError(`${response.statusText}: Please try again later.`);
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
@@ -46,9 +53,11 @@ export default function StockData(props) {
                 const overviewData = overviewResponse.data;
                 const priceData = priceResponse.data;
                 const logoData = logoResponse.data;
+                setIsLoading(false);
 
                 if (Object.keys(overviewData).length === 0) {
-                    throw new Error("Stock data not found");
+                    setStockNotFound(true);
+                    return;
                 }
 
                 const stockSector = capitalize(overviewData.Sector);
@@ -67,11 +76,9 @@ export default function StockData(props) {
                 // POST stock data to database for later use
                 axios.post("http://localhost:3000/stocks", combinedStockData);
             } catch (error) {
+                setError(`${error.message}: Please try again later.`);
+                setIsLoading(false);
                 setStockNotFound(true);
-            } finally {
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 500);
             }
         };
         fetchStockData();
@@ -83,11 +90,15 @@ export default function StockData(props) {
                 <div className="loading">
                     <p>Loading...</p>
                 </div>
-            ) : stockNotFound ? (
+            ) : null}
+
+            {!isLoading && stockNotFound ? (
                 <div className="stock-not-found">
                     <p>Stock Not Found...</p>
                 </div>
-            ) : (
+            ) : null}
+
+            {!isLoading && !stockNotFound ? (
                 <>
                     <div className="stock-details">
                         <p className="stock-name">
@@ -111,7 +122,7 @@ export default function StockData(props) {
                         />
                     </div>
                 </>
-            )}
+            ) : null}
         </div>
     );
 }
