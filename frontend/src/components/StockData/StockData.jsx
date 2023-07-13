@@ -1,5 +1,5 @@
 import "./StockData.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
@@ -9,12 +9,14 @@ import {
     getStockLogoUrl,
     capitalize
 } from "../../utils.js";
+import { UserContext } from "../App/App";
 
 export default function StockData(props) {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [stockNotFound, setStockNotFound] = useState(false);
+    const { setError } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStockData = async () => {
@@ -67,6 +69,7 @@ export default function StockData(props) {
                 // POST stock data to database for later use
                 axios.post("http://localhost:3000/stocks", combinedStockData);
             } catch (error) {
+                setError("Stock Not Found.")
                 setStockNotFound(true);
             } finally {
                 setTimeout(() => {

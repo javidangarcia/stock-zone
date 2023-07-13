@@ -4,56 +4,113 @@ import { Stock } from "../models/stock.js";
 
 const router = express.Router();
 
+const checkSession = (req, res, next) => {
+    const user = req.session.user;
+    if (!user) {
+        res.status(401).json({ error: "Missing Session." });
+    } else {
+        next();
+    }
+};
+
+router.use(checkSession);
+
 router.get("/follows", async (req, res) => {
     const user = req.session.user;
 
-    const follows = await Follow.findAll({
-        where: { UserId: user.id },
-        include: [{ model: Stock }]
-    });
+    try {
+        const follows = await Follow.findAll({
+            where: { UserId: user.id },
+            include: [{ model: Stock }]
+        });
 
-    const stocks = follows.map((follow) => follow.Stock);
+        if (follows.length === 0) {
+            return res
+                .status(404)
+                .json({ error: "This user doesn't follow any stocks." });
+        }
 
-    res.status(200).json({ stocks });
+        const stocks = follows.map((follow) => follow.Stock);
+
+        res.status(200).json({ stocks });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
 });
 
 router.post("/follow", async (req, res) => {
+    const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 
-    const user = req.session.user;
-    const stock = await Stock.findOne({ where: { ticker } });
-
-    const followData = {
-        UserId: user.id,
-        StockId: stock.id
-    };
+    if (!ticker) {
+        return res.status(400).json({ error: "Invalid request body." });
+    }
 
     try {
-        const follow = await Follow.create(followData);
-        res.status(200).json({ follow });
+        const stock = await Stock.findOne({ where: { ticker } });
+
+        if (stock === null) {
+            return res
+                .status(404)
+                .json({ error: "This stock does not exist in database." });
+        }
+
+        const followData = {
+            UserId: user.id,
+            StockId: stock.id
+        };
+
+        const follow = await Follow.findOne({ where: followData });
+
+        if (follow != null) {
+            return res
+                .status(409)
+                .json({ error: "This user already follows this stock." });
+        }
+
+        const newFollow = await Follow.create(followData);
+
+        res.status(200).json({ follow: newFollow });
     } catch (error) {
-        res.status(409).json({ error: "You already follow this stock." });
+        res.status(500).json({ error });
     }
 });
 
 router.post("/unfollow", async (req, res) => {
-    const ticker = req.body.ticker.toUpperCase();
-
     const user = req.session.user;
-    const stock = await Stock.findOne({ where: { ticker } });
+    const ticker = req.body.ticker?.toUpperCase();
 
-    const followData = {
-        UserId: user.id,
-        StockId: stock.id
-    };
+    if (!ticker) {
+        return res.status(400).json({ error: "Invalid request body." });
+    }
 
-    const follow = await Follow.findOne({ where: followData });
+    try {
+        const stock = await Stock.findOne({ where: { ticker } });
 
-    if (follow) {
+        if (stock === null) {
+            return res
+                .status(404)
+                .json({ error: "This stock does not exist in database." });
+        }
+
+        const followData = {
+            UserId: user.id,
+            StockId: stock.id
+        };
+
+        const follow = await Follow.findOne({ where: followData });
+
+        if (follow === null) {
+            return res
+                .status(409)
+                .json({ error: "This user does not follow this stock." });
+        }
+
         await follow.destroy();
+
         res.status(200).json({ follow });
-    } else {
-        res.status(404).json({ error: "You are not following this stock." });
+    } catch (error) {
+        res.status(500).json({ error });
     }
 });
 

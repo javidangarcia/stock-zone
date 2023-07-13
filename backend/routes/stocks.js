@@ -24,16 +24,20 @@ router.get("/stocks/:ticker", async (req, res) => {
     if (stock) {
         const user = req.session.user;
 
-        const StockId = stock.id;
-        const UserId = user.id;
+        if (user) {
+            const StockId = stock.id;
+            const UserId = user.id;
 
-        const following = await Follow.findOne({ where: { UserId, StockId } });
+            const following = await Follow.findOne({ where: { UserId, StockId } });
 
-        following
-            ? (stock.dataValues.following = true)
-            : (stock.dataValues.following = false);
+            following
+                ? (stock.dataValues.following = true)
+                : (stock.dataValues.following = false);
 
-        res.status(200).json({ stock });
+            return res.status(200).json({ stock });
+        }
+
+        return res.status(200).json({ stock });
     } else {
         res.status(404).json({ error: "Stock not in database." });
     }

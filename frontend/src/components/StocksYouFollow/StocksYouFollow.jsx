@@ -10,8 +10,19 @@ export default function StocksYouFollow({ stocks, setStocks }) {
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/follows", { withCredentials: true });
-                setStocks(response.data.stocks);
+                const response = await axios.get("http://localhost:3000/follows", { withCredentials: true, validateStatus: () => true });
+
+                if (response.status === 200) {
+                    setStocks(response.data.stocks);
+                }
+
+                if (response.status === 404) {
+                    setError(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    setError(`${response.statusText}: Please try again later.`);
+                }
             } catch (error) {
                 setError(`${error.message}: Please try again later.`);
             }
