@@ -10,25 +10,34 @@ router.post("/stocks", async (req, res) => {
         const stock = await Stock.create(req.body);
         res.json({ stock });
     } catch (error) {
-        res.send({ error });
+        res.json({ error });
     }
 });
 
 // Get a specific stock from database
 router.get("/stocks/:ticker", async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
-    const stock = await Stock.findOne({
-        where: { ticker }
-    });
 
-    if (stock) {
+    try {
+        const stock = await Stock.findOne({
+            where: { ticker }
+        });
+
+        if (stock === null) {
+            return res
+                .status(404)
+                .json({ error: "This stock does not exist in database." });
+        }
+
         const user = req.session.user;
 
-        if (user) {
+        if (user != null) {
             const StockId = stock.id;
             const UserId = user.id;
 
-            const following = await Follow.findOne({ where: { UserId, StockId } });
+            const following = await Follow.findOne({
+                where: { UserId, StockId }
+            });
 
             following
                 ? (stock.dataValues.following = true)
@@ -38,8 +47,8 @@ router.get("/stocks/:ticker", async (req, res) => {
         }
 
         return res.status(200).json({ stock });
-    } else {
-        res.status(404).json({ error: "Stock not in database." });
+    } catch (error) {
+        res.status(500).json({ error });
     }
 });
 

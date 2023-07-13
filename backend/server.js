@@ -1,22 +1,22 @@
 import express from "express";
 import cors from "cors";
-import morgan from "morgan";
 import { sequelize } from "./database.js";
 import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
 import followRoutes from "./routes/follows.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }));
 app.use(express.json());
-app.use(morgan());
 
 const SequelizeStore = SequelizeStoreInit(session.Store);
 const sessionStore = new SequelizeStore({
