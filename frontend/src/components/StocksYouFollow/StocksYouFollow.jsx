@@ -1,11 +1,10 @@
 import "./StocksYouFollow.css";
 import { UserContext } from "../App/App";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function StocksYouFollow() {
-    const [stocks, setStocks] = useState([]);
+export default function StocksYouFollow({ stocks, setStocks }) {
     const { setError } = useContext(UserContext);
 
     useEffect(() => {
@@ -26,11 +25,11 @@ export default function StocksYouFollow() {
             <h1>Stocks You Follow</h1>
             <div className="stocks">
                 {
-                    stocks && stocks.map((stock) => {
+                    stocks?.map((stock) => {
                         return (
-                            <div className="stock-margin">
+                            <div key={stock.ticker} className="stock-margin">
                                 <Link key={stock.name} to={`/search/stocks/${stock.ticker}`} className="stock-link">
-                                    <div className="stock" key={stock.ticker}>
+                                    <div className="stock">
                                         <img src={stock.logo} alt={`This is a logo of ${stock.name}.`} />
                                         <p>{stock.ticker}</p>
                                     </div>

@@ -3,12 +3,19 @@
     flex-direction: column;
     align-items: center;
     width: 50%;
+    margin: 25px 25px 25px 150px;
+}
+
+.stocks-you-follow h1 {
+    margin: 0px;
+    font-size: 30px;
 }
 
 .stocks {
     display: flex;
     flex-direction: column;
     justify-content: left;
+    margin-top: 20px;
 }
 
 .stock-margin {
