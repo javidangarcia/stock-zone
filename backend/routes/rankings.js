@@ -4,17 +4,6 @@ import { Stock } from "../models/stock.js";
 
 const router = express.Router();
 
-const checkSession = (req, res, next) => {
-    const user = req.session.user;
-    if (!user) {
-        res.status(401).json({ error: "Missing Session." });
-    } else {
-        next();
-    }
-};
-
-router.use(checkSession);
-
 router.get("/ranking", async (req, res) => {
     const user = req.session.user;
 

@@ -3,7 +3,7 @@ import { sequelize } from "../database.js";
 import { User } from "./user.js";
 import { Stock } from "./stock.js";
 
-export const Follow = sequelize.define("Follow", {
+export const Dislike = sequelize.define("Dislike", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -11,9 +11,9 @@ export const Follow = sequelize.define("Follow", {
     }
 });
 
-User.belongsToMany(Stock, { through: Follow });
-Stock.belongsToMany(User, { through: Follow });
-Follow.belongsTo(Stock);
-Stock.hasMany(Follow);
-Follow.belongsTo(User);
-User.hasMany(Follow);
+User.belongsToMany(Stock, { through: Dislike });
+Stock.belongsToMany(User, { through: Dislike });
+Dislike.belongsTo(Stock);
+Stock.hasMany(Dislike);
+Dislike.belongsTo(User);
+User.hasMany(Dislike);
