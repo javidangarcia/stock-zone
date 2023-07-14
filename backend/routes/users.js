@@ -79,7 +79,6 @@ router.post("/users/login", async (req, res) => {
 });
 
 router.post("/users/logout", async (req, res) => {
-    console.log("Cookies:", req.cookies);
     req.session.destroy();
     res.status(200).json({ message: "Logout successful." });
 });

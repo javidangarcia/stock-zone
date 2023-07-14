@@ -60,6 +60,11 @@ export default function StockData() {
                     return;
                 }
 
+                if (overviewData.Note != null) {
+                    setError(overviewData.Note);
+                    return;
+                }
+                
                 const stockSector = capitalize(overviewData.Sector);
 
                 const combinedStockData = {
@@ -105,7 +110,7 @@ export default function StockData() {
                             {stockData.name} ({stockData.ticker})
                         </p>
                         <div className="stock-follow">
-                            <p className="stock-price">${stockData.price}</p>
+                            <p className="stock-price">${stockData.price?.toFixed(2)}</p>
                             <Follow
                                 ticker={ticker}
                                 stockData={stockData}

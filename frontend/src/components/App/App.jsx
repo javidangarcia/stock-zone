@@ -8,6 +8,7 @@ import SignUpForm from "../SignUpForm/SignUpForm";
 import LoginForm from "../LoginForm/LoginForm";
 import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
+import Ranking from "../Ranking/Ranking";
 
 export const UserContext = createContext();
 
@@ -32,6 +33,7 @@ export default function App() {
                         <Route path="/" element={<Home />}></Route>
                         <Route path="/home" element={<Home />}></Route>
                         <Route path="/search" element={<Search />}></Route>
+                        <Route path="/ranking" element={<Ranking />}></Route>
                         <Route
                             path="/search/stocks/:ticker"
                             element={<StockData />}
