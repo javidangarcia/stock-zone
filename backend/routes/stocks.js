@@ -1,6 +1,8 @@
 import express from "express";
 import { Stock } from "../models/stock.js";
 import { Follow } from "../models/follow.js";
+import { Like } from "../models/like.js";
+import { Dislike } from "../models/dislike.js";
 
 const router = express.Router();
 
@@ -42,6 +44,22 @@ router.get("/stocks/:ticker", async (req, res) => {
             following
                 ? (stock.dataValues.following = true)
                 : (stock.dataValues.following = false);
+
+            const liking = await Like.findOne({
+                where: { UserId, StockId }
+            });
+
+            liking
+                ? (stock.dataValues.liking = true)
+                : (stock.dataValues.liking = false);
+            
+            const disliking = await Dislike.findOne({
+                where: { UserId, StockId }
+            });
+
+            disliking
+                ? (stock.dataValues.disliking = true)
+                : (stock.dataValues.disliking = false);
 
             return res.status(200).json({ stock });
         }

@@ -1,33 +1,11 @@
 import express from "express";
-import { Follow } from "../models/follow.js";
+import { Dislike } from "../models/dislike.js";
 import { Stock } from "../models/stock.js";
+import { Like } from "../models/like.js";
 
 const router = express.Router();
 
-router.get("/follows", async (req, res) => {
-    const user = req.session.user;
-
-    try {
-        const follows = await Follow.findAll({
-            where: { UserId: user.id },
-            include: [{ model: Stock }]
-        });
-
-        if (follows.length === 0) {
-            return res
-                .status(404)
-                .json({ error: "This user doesn't follow any stocks." });
-        }
-
-        const stocks = follows.map((follow) => follow.Stock);
-
-        res.status(200).json({ stocks });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.post("/follow", async (req, res) => {
+router.post("/dislike", async (req, res) => {
     const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 
@@ -44,28 +22,34 @@ router.post("/follow", async (req, res) => {
                 .json({ error: "This stock does not exist in database." });
         }
 
-        const followData = {
+        const dislikeData = {
             UserId: user.id,
             StockId: stock.id
         };
 
-        const follow = await Follow.findOne({ where: followData });
-
-        if (follow !== null) {
-            return res
-                .status(409)
-                .json({ error: "This user already follows this stock." });
+        // Check if user is liking stock and unlike if they are
+        const like = await Like.findOne({ where: dislikeData });
+        if (like !== null) {
+            await like.destroy();
         }
 
-        const newFollow = await Follow.create(followData);
+        const dislike = await Dislike.findOne({ where: dislikeData });
 
-        res.status(200).json({ follow: newFollow });
+        if (dislike !== null) {
+            return res
+                .status(409)
+                .json({ error: "This user already dislikes this stock." });
+        }
+
+        const newDislike = await Dislike.create(dislikeData);
+
+        res.status(200).json({ dislike: newDislike });
     } catch (error) {
         res.status(500).json({ error });
     }
 });
 
-router.post("/unfollow", async (req, res) => {
+router.post("/undislike", async (req, res) => {
     const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 
@@ -82,22 +66,22 @@ router.post("/unfollow", async (req, res) => {
                 .json({ error: "This stock does not exist in database." });
         }
 
-        const followData = {
+        const dislikeData = {
             UserId: user.id,
             StockId: stock.id
         };
 
-        const follow = await Follow.findOne({ where: followData });
+        const dislike = await Dislike.findOne({ where: dislikeData });
 
-        if (follow === null) {
+        if (dislike === null) {
             return res
                 .status(409)
-                .json({ error: "This user does not follow this stock." });
+                .json({ error: "This user does not dislike this stock." });
         }
 
-        await follow.destroy();
+        await dislike.destroy();
 
-        res.status(200).json({ follow });
+        res.status(200).json({ dislike });
     } catch (error) {
         res.status(500).json({ error });
     }

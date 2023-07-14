@@ -3,6 +3,8 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
+import Like from "../Like/Like";
+import Dislike from "../Dislike/Dislike";
 import {
     getStockOverviewUrl,
     getStockPriceUrl,
@@ -112,6 +114,16 @@ export default function StockData() {
                         <div className="stock-follow">
                             <p className="stock-price">${stockData.price?.toFixed(2)}</p>
                             <Follow
+                                ticker={ticker}
+                                stockData={stockData}
+                                setStockData={setStockData}
+                            />
+                            <Like
+                                ticker={ticker}
+                                stockData={stockData}
+                                setStockData={setStockData}
+                            />
+                            <Dislike
                                 ticker={ticker}
                                 stockData={stockData}
                                 setStockData={setStockData}
