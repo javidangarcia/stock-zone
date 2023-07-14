@@ -6,7 +6,7 @@ const router = express.Router();
 
 const checkSession = (req, res, next) => {
     const user = req.session.user;
-    if (!user) {
+    if (user == null) {
         res.status(401).json({ error: "Missing Session." });
     } else {
         next();
@@ -42,7 +42,7 @@ router.post("/follow", async (req, res) => {
     const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 
-    if (!ticker) {
+    if (ticker == null) {
         return res.status(400).json({ error: "Invalid request body." });
     }
 
@@ -62,7 +62,7 @@ router.post("/follow", async (req, res) => {
 
         const follow = await Follow.findOne({ where: followData });
 
-        if (follow != null) {
+        if (follow !== null) {
             return res
                 .status(409)
                 .json({ error: "This user already follows this stock." });
@@ -80,7 +80,7 @@ router.post("/unfollow", async (req, res) => {
     const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 
-    if (!ticker) {
+    if (ticker == null) {
         return res.status(400).json({ error: "Invalid request body." });
     }
 

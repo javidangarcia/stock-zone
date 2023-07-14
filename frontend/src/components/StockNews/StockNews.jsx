@@ -38,13 +38,9 @@ export default function StockNews({ stocks }) {
 
     const handleOptions = (event) => {
         const ticker = event.target.value;
-        stocks.map((stock) => {
-            if (stock.ticker === ticker) {
-                setCurrentStock(stock);
-                return;
-            }
-        })
-    }
+        const selectedStock = stocks.find((stock) => stock.ticker === ticker);
+        setCurrentStock(selectedStock);
+    };
 
     return (
         <div className="stock-news">

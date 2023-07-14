@@ -25,6 +25,7 @@ export default function Navbar() {
                 <Link to="/home">Stock Zone</Link>
                 <Link to="/home">Home</Link>
                 <Link to="/search">Search</Link>
+                <Link to="/ranking">Ranking</Link>
             </div>
             <div className="nav-profile">
                 {user ? (

@@ -4,6 +4,7 @@ import { sequelize } from "./database.js";
 import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
 import followRoutes from "./routes/follows.js";
+import rankingRoutes from "./routes/rankings.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
 import cookieParser from "cookie-parser";
@@ -42,6 +43,7 @@ sessionStore.sync();
 app.use(stockRoutes);
 app.use(userRoutes);
 app.use(followRoutes);
+app.use(rankingRoutes);
 
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
