@@ -1,6 +1,7 @@
 import express from "express";
 import { Dislike } from "../models/dislike.js";
 import { Stock } from "../models/stock.js";
+import { Like } from "../models/like.js";
 
 const router = express.Router();
 
@@ -26,7 +27,13 @@ router.post("/dislike", async (req, res) => {
             StockId: stock.id
         };
 
-        const dislike = await Dislike.findOne({ where: likeData });
+        // Check if user is liking stock and unlike if they are
+        const like = await Like.findOne({ where: dislikeData });
+        if (like !== null) {
+            await like.destroy();
+        }
+
+        const dislike = await Dislike.findOne({ where: dislikeData });
 
         if (dislike !== null) {
             return res
@@ -42,7 +49,7 @@ router.post("/dislike", async (req, res) => {
     }
 });
 
-router.post("/unlike", async (req, res) => {
+router.post("/undislike", async (req, res) => {
     const user = req.session.user;
     const ticker = req.body.ticker?.toUpperCase();
 

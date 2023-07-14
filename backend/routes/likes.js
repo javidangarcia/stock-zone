@@ -1,6 +1,7 @@
 import express from "express";
 import { Like } from "../models/like.js";
 import { Stock } from "../models/stock.js";
+import { Dislike } from "../models/dislike.js";
 
 const router = express.Router();
 
@@ -25,6 +26,12 @@ router.post("/like", async (req, res) => {
             UserId: user.id,
             StockId: stock.id
         };
+
+        // Check if user is disliking stock and undislike if they are
+        const dislike = await Dislike.findOne({ where: likeData });
+        if (dislike !== null) {
+            await dislike.destroy();
+        }
 
         const like = await Like.findOne({ where: likeData });
 
