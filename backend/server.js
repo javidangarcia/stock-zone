@@ -7,6 +7,7 @@ import followRoutes from "./routes/follows.js";
 import rankingRoutes from "./routes/rankings.js";
 import likeRoutes from "./routes/likes.js";
 import dislikeRoutes from "./routes/dislikes.js";
+import commentRoutes from "./routes/comments.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
 import cookieParser from "cookie-parser";
@@ -59,6 +60,7 @@ app.use(followRoutes);
 app.use(rankingRoutes);
 app.use(likeRoutes);
 app.use(dislikeRoutes);
+app.use(commentRoutes);
 
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
