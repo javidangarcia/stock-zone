@@ -6,13 +6,39 @@ import { Dislike } from "../models/dislike.js";
 
 const router = express.Router();
 
+router.get("/stocks", async (req, res) => {
+    try {
+        const stocks = await Stock.findAll();
+
+        if (stocks.length === 0) {
+            return res.status(404).json({ error: "There are no stocks in the database." });
+        }
+
+        res.status(200).json({ stocks });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
 // Create a new stock in database
 router.post("/stocks", async (req, res) => {
+    const { ticker } = req.body;
+
     try {
-        const stock = await Stock.create(req.body);
-        res.json({ stock });
+        const stock = await Stock.findOne({
+            where: { ticker }
+        });
+
+        if (stock !== null) {
+            return res
+                .status(409)
+                .json({ error: "This stock already exists in the database." });
+        }
+
+        const newStock = await Stock.create(req.body);
+        res.status(200).json({ stock: newStock });
     } catch (error) {
-        res.json({ error });
+        res.status(500).json({ error });
     }
 });
 
