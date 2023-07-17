@@ -81,7 +81,20 @@ export default function StockData() {
                 setStockData(combinedStockData);
 
                 // POST stock data to database for later use
-                axios.post("http://localhost:3000/stocks", combinedStockData);
+                const response = axios.post(
+                    "http://localhost:3000/stocks", 
+                    combinedStockData, 
+                    { validateStatus: () => true }
+                );
+
+                if (response.status === 404) {
+                    setError(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    setError(`${response.statusText}: Please try again later.`);
+                }
+
             } catch (error) {
                 setError(`${error.message}: Please try again later.`);
                 setIsLoading(false);

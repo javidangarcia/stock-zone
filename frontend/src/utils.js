@@ -14,6 +14,14 @@ export const firstWord = (string) => {
     return string.split(" ")[0];
 };
 
+export const isValidStock = (stock) => {
+    return (
+        stock.currency === "USD" &&
+        stock.instrument_type === "Common Stock" &&
+        (stock.exchange === "NYSE" || stock.exchange === "NASDAQ")
+    );
+};
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {
