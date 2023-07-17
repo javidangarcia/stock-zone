@@ -10,6 +10,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    min-width: 70px;
 }
 
 .dislike button:hover {
