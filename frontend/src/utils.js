@@ -22,10 +22,25 @@ export const isValidStock = (stock) => {
     );
 };
 
+export const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const options = {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true
+    };
+    return dateTime.toLocaleDateString("en-US", options);
+};
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {
-    const stockOverviewUrl = new URL("https://www.alphavantage.co/query/?function=OVERVIEW");
+    const stockOverviewUrl = new URL(
+        "https://www.alphavantage.co/query/?function=OVERVIEW"
+    );
     stockOverviewUrl.searchParams.append("symbol", ticker);
     stockOverviewUrl.searchParams.append("apikey", import.meta.env.VITE_ALPHA);
     return stockOverviewUrl.href;
