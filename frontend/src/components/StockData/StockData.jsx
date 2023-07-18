@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Follow from "../Follow/Follow";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
+import Comments from "../Comments/Comments";
 import {
     getStockOverviewUrl,
     getStockPriceUrl,
@@ -144,6 +145,7 @@ export default function StockData() {
                         </div>
                         <p>{stockData.description}</p>
                         <p>Sector: {stockData.sector}</p>
+                        <Comments ticker={ticker} />
                     </div>
                     <div className="stock-logo">
                         <img

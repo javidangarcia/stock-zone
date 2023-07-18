@@ -20,10 +20,6 @@ router.get("/comments/:ticker", async (req, res) => {
             include: [{ model: User }]
         });
 
-        if (comments.length === 0) {
-            return res.status(404).json({ error: "There are no comments for this stock." });
-        }
-
         res.status(200).json({ comments });
     } catch (error) {
         res.status(500).json({ error });
