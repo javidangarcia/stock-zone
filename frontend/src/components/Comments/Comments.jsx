@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../App/App";
 import { formatDateTime } from "../../utils";
+import { Link } from "react-router-dom";
 
 export default function Comments({ ticker }) {
     const { setErrorMessage } = useContext(UserContext);
@@ -82,7 +83,9 @@ export default function Comments({ ticker }) {
                                 />
                             </div>
                             <div className="comment-content">
-                                <p className="comment-name">{comment.User.fullName}</p>
+                                <Link to={`/profile/${comment.User.username}`} className="user-link">
+                                    <p className="comment-name">{comment.User.fullName}</p>
+                                </Link>
                                 <p className="comment-date">{formatDateTime(comment.createdAt)}</p>
                                 <p className="comment-content">{comment.content}</p>
                             </div>

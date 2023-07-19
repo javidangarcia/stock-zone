@@ -41,7 +41,7 @@ export default function Navbar() {
             <div className="nav-profile">
                 {user ? (
                     <div className="logout">
-                        <Link to="/profile">
+                        <Link to={`/profile/${user.username}`}>
                             <div className="user-info">
                                 <img
                                     src={user.picture}

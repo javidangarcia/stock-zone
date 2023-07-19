@@ -1,20 +1,50 @@
 import "./Profile.css";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App/App";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function Profile() {
-    const { user } = useContext(UserContext);
+    const { username } = useParams();
+    const { setErrorMessage } = useContext(UserContext);
+    const [profile, setProfile] = useState({});
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:3000/user/${username}`, 
+                    { validateStatus: () => true })
+                ;
+
+                if (response.status === 200) {
+                    setProfile(response.data.user);
+                }
+
+                if (response.status === 404) {
+                    setErrorMessage(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                }
+            } catch (error) {
+                setErrorMessage(`${error.message}: Please try again later.`);
+            }
+        };
+        fetchProfile();
+    }, [username]);
 
     return (
         <div className="profile-container">
             <div className="profile-card">
                 <div className="profile-picture">
-                    <img src={user.picture} alt={`This is a profile picture associated with ${user.username}`} />
+                    <img src={profile.picture} alt={`This is a profile picture associated with ${profile.username}`} />
                 </div>
                 <div className="profile-details">
-                    <h1>{user.fullName}</h1>
-                    <p>Username: {user.username}</p>
-                    <p>Email: {user.email}</p>
+                    <h1>{profile.fullName}</h1>
+                    <p>Username: {profile.username}</p>
+                    <p>Email: {profile.email}</p>
                 </div>
                 <div className="profile-stocks">
                     <p>Stocks You Follow</p>

@@ -39,6 +39,7 @@
     margin: 0px;
     font-weight: bold;
     font-size: 15px;
+    color: var(--secondary);
 }
 
 .comment-date {
@@ -75,4 +76,9 @@
 
 .form-comments button:hover {
     background-color: var(--secondary);
+}
+
+.user-link {
+    text-decoration: none;
+    color: inherit;
 }

@@ -48,6 +48,7 @@ export default function App() {
                             element={<SignUpForm />}
                         ></Route>
                         <Route path="/profile" element={<Profile />}></Route>
+                        <Route path="/profile/:username" element={<Profile />}></Route>
                     </Routes>
                 </BrowserRouter>
             </UserContext.Provider>

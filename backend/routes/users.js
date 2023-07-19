@@ -6,6 +6,32 @@ import { PROFILE_PICTURE } from "../utils.js";
 
 const router = express.Router();
 
+router.get("/user/:username", async (req, res) => {
+    const { username } = req.params;
+
+    try {
+        const user = await User.findOne({
+            where: { username }
+        });
+    
+        if (user === null) {
+            res.status(404).json({ error: "This user doesn't exist." });
+            return;
+        }
+    
+        res.status(200).json({
+            user: {
+                fullName: user.fullName,
+                username: user.username,
+                email: user.email,
+                picture: PROFILE_PICTURE
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
 router.post("/users/signup", async (req, res) => {
     const { fullName, username, password, email } = req.body;
 
