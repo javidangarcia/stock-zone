@@ -10,7 +10,7 @@ export default function SignUpForm() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [success, setSuccess] = useState(false);
-    const { setUser, setError } = useContext(UserContext);
+    const { setUser, setErrorMessage } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -47,10 +47,10 @@ export default function SignUpForm() {
             }
 
             if (response.status === 409 || response.status === 400) {
-                setError(response.data.error);
+                setErrorMessage(response.data.error);
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     }
 

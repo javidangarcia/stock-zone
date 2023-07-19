@@ -4,7 +4,7 @@ import { UserContext } from "../App/App";
 import { useContext } from "react";
 
 export default function Dislike({ ticker, stockData, setStockData }) {
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
     async function handleDislike() {
         const url = stockData.disliking
@@ -19,19 +19,33 @@ export default function Dislike({ ticker, stockData, setStockData }) {
 
             if (response.status === 200) {
                 stockData.liking && !stockData.disliking
-                ? setStockData({ ...stockData, disliking: !stockData.disliking, liking: false }) 
-                : setStockData({ ...stockData, disliking: !stockData.disliking });
+                    ? setStockData({
+                          ...stockData,
+                          disliking: !stockData.disliking,
+                          liking: false
+                      })
+                    : setStockData({
+                          ...stockData,
+                          disliking: !stockData.disliking
+                      });
             }
 
-            if (response.status === 400 || response.status === 401 || response.status === 404 || response.status === 409) {
-                setError(response.data.error);
+            if (
+                response.status === 400 ||
+                response.status === 401 ||
+                response.status === 404 ||
+                response.status === 409
+            ) {
+                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setError(`${response.statusText}: Please try again later.`);
+                setErrorMessage(
+                    `${response.statusText}: Please try again later.`
+                );
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     }
 

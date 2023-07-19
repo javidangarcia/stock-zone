@@ -11,7 +11,8 @@ router.get("/stocks", async (req, res) => {
         const stocks = await Stock.findAll();
 
         if (stocks.length === 0) {
-            return res.status(404).json({ error: "There are no stocks in the database." });
+            res.status(404).json({ error: "There are no stocks in the database." });
+            return;
         }
 
         res.status(200).json({ stocks });
@@ -30,9 +31,8 @@ router.post("/stocks", async (req, res) => {
         });
 
         if (stock !== null) {
-            return res
-                .status(409)
-                .json({ error: "This stock already exists in the database." });
+            res.status(409).json({ error: "This stock already exists in the database." });
+            return;
         }
 
         const newStock = await Stock.create(req.body);
@@ -52,9 +52,8 @@ router.get("/stocks/:ticker", async (req, res) => {
         });
 
         if (stock === null) {
-            return res
-                .status(404)
-                .json({ error: "This stock does not exist in database." });
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
         }
 
         const user = req.session.user;
@@ -67,24 +66,27 @@ router.get("/stocks/:ticker", async (req, res) => {
                 where: { UserId, StockId }
             });
 
-            stock.dataValues.following = following != null;
+            const currentStock = { ...stock.dataValues };
+
+            currentStock.following = following != null;
 
             const liking = await Like.findOne({
                 where: { UserId, StockId }
             });
 
-            stock.dataValues.liking = liking != null;
-            
+            currentStock.liking = liking != null;
+
             const disliking = await Dislike.findOne({
                 where: { UserId, StockId }
             });
 
-            stock.dataValues.disliking = disliking != null;
+            currentStock.disliking = disliking != null;
 
-            return res.status(200).json({ stock });
+            res.status(200).json({ stock: currentStock });
+            return;
         }
 
-        return res.status(200).json({ stock });
+        res.status(200).json({ stock });
     } catch (error) {
         res.status(500).json({ error });
     }

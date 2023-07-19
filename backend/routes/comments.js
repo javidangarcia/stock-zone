@@ -12,7 +12,8 @@ router.get("/comments/:ticker", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res.status(404).json({ error: "This stock does not exist in the database." });
+            res.status(404).json({ error: "This stock does not exist in the database." });
+            return;
         }
 
         const comments = await Comment.findAll({
@@ -34,7 +35,8 @@ router.post("/comments", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res.status(404).json({ error: "This stock does not exist in the database." });
+            res.status(404).json({ error: "This stock does not exist in the database." });
+            return;
         }
 
         const commentData = {

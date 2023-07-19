@@ -19,7 +19,7 @@ export default function StockData() {
     const [stockData, setStockData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [stockNotFound, setStockNotFound] = useState(false);
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStockData = async () => {
@@ -39,7 +39,7 @@ export default function StockData() {
                 }
 
                 if (databaseResponse.status === 500) {
-                    setError(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
@@ -64,7 +64,7 @@ export default function StockData() {
                 }
 
                 if (overviewData.Note != null) {
-                    setError(overviewData.Note);
+                    setErrorMessage(overviewData.Note);
                     return;
                 }
                 
@@ -89,15 +89,15 @@ export default function StockData() {
                 );
 
                 if (response.status === 404) {
-                    setError(response.data.error);
+                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setError(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
 
             } catch (error) {
-                setError(`${error.message}: Please try again later.`);
+                setErrorMessage(`${error.message}: Please try again later.`);
                 setIsLoading(false);
                 setStockNotFound(true);
             }

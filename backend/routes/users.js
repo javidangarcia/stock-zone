@@ -14,9 +14,8 @@ router.post("/users/signup", async (req, res) => {
     });
 
     if (userAlreadyExists) {
-        return res
-            .status(409)
-            .json({ error: "Username or email already exists." });
+        res.status(409).json({ error: "Username or email already exists." });
+        return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,17 +49,15 @@ router.post("/users/login", async (req, res) => {
         });
 
         if (user === null) {
-            return res
-                .status(401)
-                .json({ error: "Invalid username or password." });
+            res.status(401).json({ error: "Invalid username or password." });
+            return;
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
 
         if (!isValidPassword) {
-            return res
-                .status(401)
-                .json({ error: "Invalid username or password." });
+            res.status(401).json({ error: "Invalid username or password." });
+            return;
         }
 
         req.session.user = user;
@@ -79,8 +76,12 @@ router.post("/users/login", async (req, res) => {
 });
 
 router.post("/users/logout", async (req, res) => {
-    req.session.destroy();
-    res.status(200).json({ message: "Logout successful." });
+    try {
+        const session = req.session.destroy();
+        res.status(200).json({ session });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
 });
 
 export default router;

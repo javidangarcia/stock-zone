@@ -5,7 +5,7 @@ import { UserContext } from "../App/App";
 import { formatDateTime, capitalize } from "../../utils";
 
 export default function Comments({ ticker }) {
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
     const [comments, setComments] = useState([]);
     const [commentInput, setCommentInput] = useState("");
 
@@ -21,14 +21,14 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
-                setError(response.data.error);
+                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setError(`${response.statusText}: Please try again later.`);
+                setErrorMessage(`${response.statusText}: Please try again later.`);
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     };
 
@@ -57,14 +57,14 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
-                setError(response.data.error);
+                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setError(`${response.statusText}: Please try again later.`);
+                setErrorMessage(`${response.statusText}: Please try again later.`);
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     };
 

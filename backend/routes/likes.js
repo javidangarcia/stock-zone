@@ -10,16 +10,16 @@ router.post("/like", async (req, res) => {
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
-        return res.status(400).json({ error: "Invalid request body." });
+        res.status(400).json({ error: "Invalid request body." });
+        return;
     }
 
     try {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res
-                .status(404)
-                .json({ error: "This stock does not exist in database." });
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
         }
 
         const likeData = {
@@ -36,9 +36,8 @@ router.post("/like", async (req, res) => {
         const like = await Like.findOne({ where: likeData });
 
         if (like !== null) {
-            return res
-                .status(409)
-                .json({ error: "This user already likes this stock." });
+            res.status(409).json({ error: "This user already likes this stock." });
+            return;
         }
 
         const newLike = await Like.create(likeData);
@@ -54,16 +53,16 @@ router.post("/unlike", async (req, res) => {
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
-        return res.status(400).json({ error: "Invalid request body." });
+        res.status(400).json({ error: "Invalid request body." });
+        return;
     }
 
     try {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res
-                .status(404)
-                .json({ error: "This stock does not exist in database." });
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
         }
 
         const likeData = {
@@ -74,9 +73,8 @@ router.post("/unlike", async (req, res) => {
         const like = await Like.findOne({ where: likeData });
 
         if (like === null) {
-            return res
-                .status(409)
-                .json({ error: "This user does not like this stock." });
+            res.status(409).json({ error: "This user does not like this stock." });
+            return;
         }
 
         await like.destroy();

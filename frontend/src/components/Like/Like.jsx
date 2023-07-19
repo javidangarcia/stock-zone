@@ -4,7 +4,7 @@ import { UserContext } from "../App/App";
 import { useContext } from "react";
 
 export default function Like({ ticker, stockData, setStockData }) {
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
     async function handleLike() {
         const url = stockData.liking
@@ -19,19 +19,30 @@ export default function Like({ ticker, stockData, setStockData }) {
 
             if (response.status === 200) {
                 stockData.disliking && !stockData.liking
-                    ? setStockData({ ...stockData, liking: !stockData.liking, disliking: false }) 
+                    ? setStockData({
+                          ...stockData,
+                          liking: !stockData.liking,
+                          disliking: false
+                      })
                     : setStockData({ ...stockData, liking: !stockData.liking });
             }
 
-            if (response.status === 400 || response.status === 401 || response.status === 404 || response.status === 409) {
-                setError(response.data.error);
+            if (
+                response.status === 400 ||
+                response.status === 401 ||
+                response.status === 404 ||
+                response.status === 409
+            ) {
+                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setError(`${response.statusText}: Please try again later.`);
+                setErrorMessage(
+                    `${response.statusText}: Please try again later.`
+                );
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     }
 

@@ -8,7 +8,7 @@ import { UserContext } from "../App/App";
 export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser, setError } = useContext(UserContext);
+    const { setUser, setErrorMessage } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -36,10 +36,10 @@ export default function LoginForm() {
             }
 
             if (response.status === 401) {
-                setError(response.data.error);
+                setErrorMessage(response.data.error);
             }
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     }
 

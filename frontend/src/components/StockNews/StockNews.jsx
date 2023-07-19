@@ -7,7 +7,7 @@ import { UserContext } from "../App/App";
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
     const [currentStock, setCurrentStock] = useState(null);
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStockNews = async () => {
@@ -26,10 +26,10 @@ export default function StockNews({ stocks }) {
                     }
 
                     if (response.data.status === "error") {
-                        setError(`${response.data.code}: ${response.data.message}`);
+                        setErrorMessage(`${response.data.code}: ${response.data.message}`);
                     }
                 } catch (error) {
-                    setError(`System Error: ${error.message}`);
+                    setErrorMessage(`System Error: ${error.message}`);
                 }
             }
         };

@@ -1,0 +1,26 @@
+.dropdown {
+    width: 50%;
+    background-color: #fff;
+    border: 1px solid black;
+    border-top: none;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+}
+
+.dropdown-item p {
+    margin: 0px;
+}
+
+.dropdown-item:hover {
+    background-color: #f2f2f2;
+}
+
+.hidden {
+    display: none;
+}

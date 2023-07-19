@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function StocksYouFollow({ stocks, setStocks }) {
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
@@ -17,14 +17,14 @@ export default function StocksYouFollow({ stocks, setStocks }) {
                 }
 
                 if (response.status === 404) {
-                    setError(response.data.error);
+                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setError(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
             } catch (error) {
-                setError(`${error.message}: Please try again later.`);
+                setErrorMessage(`${error.message}: Please try again later.`);
             }
             
         };
