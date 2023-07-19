@@ -1,0 +1,41 @@
+.profile-container {
+    background-color: #f0f0f0;
+}
+
+.profile-card {
+    width: 50%;
+    height: 80%;
+    margin: 50px auto;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.profile-picture {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 15px;
+    margin: 15px;
+}
+
+.profile-details {
+    text-align: center;
+}
+
+.profile-details h1 {
+    margin: 0;
+}
+
+.profile-details p {
+    margin: 5px 0;
+}
+
+.profile-stocks {
+    display: flex;
+    justify-content: space-evenly;
+}

@@ -9,6 +9,7 @@ import LoginForm from "../LoginForm/LoginForm";
 import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
 import Ranking from "../Ranking/Ranking";
+import Profile from "../Profile/Profile";
 
 export const UserContext = createContext();
 
@@ -27,7 +28,7 @@ export default function App() {
         <div className="app">
             <UserContext.Provider value={{ user, setUser, setErrorMessage }}>
                 <BrowserRouter>
-                    <Error error={errorMessage} />
+                    <Error errorMessage={errorMessage} />
                     <Navbar />
                     <Routes>
                         <Route path="/" element={<Home />}></Route>
@@ -46,6 +47,7 @@ export default function App() {
                             path="/signup"
                             element={<SignUpForm />}
                         ></Route>
+                        <Route path="/profile" element={<Profile />}></Route>
                     </Routes>
                 </BrowserRouter>
             </UserContext.Provider>

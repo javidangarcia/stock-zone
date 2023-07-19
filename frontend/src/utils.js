@@ -6,8 +6,15 @@ export const formatDate = (dateString) => {
     return date.toLocaleDateString("en-US", options);
 };
 
-export const capitalize = (word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+export const capitalize = (sentence) => {
+
+    const words = sentence.split(" ");
+
+    const capitalizedWords = words.map((word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+
+    return capitalizedWords.join(" ");
 };
 
 export const firstWord = (string) => {

@@ -12,7 +12,7 @@
 .nav-pages a {
     text-decoration: none;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     padding-right: 50px;
 }
 
@@ -38,16 +38,30 @@
 
 .logout {
     display: flex;
+    align-items: center;
 }
 
-.logout p {
-    margin: 0px;
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.user-info img {
+    width: 40px; /* Adjust the image size as needed */
+    height: 40px;
+    border-radius: 50%; /* To make it a circle, assuming the image is square */
+    margin-right: 10px; /* Add some space between the image and username */
+}
+
+.user-info p {
+    margin: 0;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     user-select: none;
-    padding-right: 10px;
 }
 
 .logout a {
     color: var(--primary);
+    font-size: 30px;
 }

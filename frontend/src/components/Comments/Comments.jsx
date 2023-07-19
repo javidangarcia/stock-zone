@@ -2,7 +2,7 @@ import "./Comments.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../App/App";
-import { formatDateTime, capitalize } from "../../utils";
+import { formatDateTime } from "../../utils";
 
 export default function Comments({ ticker }) {
     const { setErrorMessage } = useContext(UserContext);
@@ -75,9 +75,17 @@ export default function Comments({ ticker }) {
                 {comments?.map((comment) => {
                     return (
                         <div className="comment-details" key={comment.content}>
-                            <p className="comment-name">{capitalize(comment.User.username)}</p>
-                            <p className="comment-date">{formatDateTime(comment.createdAt)}</p>
-                            <p className="comment-content">{comment.content}</p>
+                            <div className="comment-picture">
+                                <img
+                                    src={comment.User.picture}
+                                    alt={`This is a profile picture associated with ${comment.User.username}`}
+                                />
+                            </div>
+                            <div className="comment-content">
+                                <p className="comment-name">{comment.User.fullName}</p>
+                                <p className="comment-date">{formatDateTime(comment.createdAt)}</p>
+                                <p className="comment-content">{comment.content}</p>
+                            </div>
                         </div>
                     );
                 })}

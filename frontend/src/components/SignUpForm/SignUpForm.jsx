@@ -4,12 +4,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../App/App";
+import { capitalize } from "../../utils";
 
 export default function SignUpForm() {
+    const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [success, setSuccess] = useState(false);
     const { setUser, setErrorMessage } = useContext(UserContext);
 
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function SignUpForm() {
 
         try {
             const userData = {
+                fullName: capitalize(fullName),
                 username,
                 password,
                 email
@@ -31,6 +33,7 @@ export default function SignUpForm() {
             );
 
             if (response.status === 200) {
+                setFullName("");
                 setUsername("");
                 setPassword("");
                 setEmail("");
@@ -38,12 +41,7 @@ export default function SignUpForm() {
                 const user = response.data?.user;
                 setUser(user);
 
-                setSuccess(true);
-
-                setTimeout(() => {
-                    setSuccess(false);
-                    navigate("/");
-                }, 1000);
+                navigate("/");
             }
 
             if (response.status === 409 || response.status === 400) {
@@ -58,6 +56,16 @@ export default function SignUpForm() {
         <div className="signup-form-container">
             <form className="signup-form" onSubmit={handleSubmit}>
                 <h2>Sign Up</h2>
+                <div className="form-group">
+                    <label htmlFor="fullName">Full Name:</label>
+                    <input
+                        type="text"
+                        id="fullName"
+                        value={fullName}
+                        onChange={(event) => setFullName(event.target.value)}
+                        required
+                    />
+                </div>
                 <div className="form-group">
                     <label htmlFor="username">Username:</label>
                     <input
@@ -96,11 +104,6 @@ export default function SignUpForm() {
                     </Link>
                 </p>
             </form>
-            {success && (
-                <div className="success">
-                    <p>Account successfully created.</p>
-                </div>
-            )}
         </div>
     );
 }
