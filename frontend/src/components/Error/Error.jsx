@@ -3,21 +3,21 @@ import { useEffect, useContext } from "react";
 import { UserContext } from "../App/App";
 import { useLocation } from "react-router-dom";
 
-export default function Error({ error }) {
-    const { setError } = useContext(UserContext);
+export default function Error({ errorMessage }) {
+    const { setErrorMessage } = useContext(UserContext);
     const location = useLocation();
 
     useEffect(() => {
-        setError(null);
+        setErrorMessage(null);
     }, [location.pathname]);
 
     const handleClose = () => {
-        setError(null);
+        setErrorMessage(null);
     };
 
     return (
-        <div className={error ? "error" : "hidden"}>
-            <p>{error}</p>
+        <div className={errorMessage ? "errorMessage" : "hidden"}>
+            <p>{errorMessage}</p>
             <button onClick={handleClose}>Close</button>
         </div>
     );

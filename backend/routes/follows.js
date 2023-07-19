@@ -14,9 +14,8 @@ router.get("/follows", async (req, res) => {
         });
 
         if (follows.length === 0) {
-            return res
-                .status(404)
-                .json({ error: "This user doesn't follow any stocks." });
+            res.status(404).json({ error: "This user doesn't follow any stocks." });
+            return;
         }
 
         const stocks = follows.map((follow) => follow.Stock);
@@ -32,16 +31,16 @@ router.post("/follow", async (req, res) => {
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
-        return res.status(400).json({ error: "Invalid request body." });
+        res.status(400).json({ error: "Invalid request body." });
+        return;
     }
 
     try {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res
-                .status(404)
-                .json({ error: "This stock does not exist in database." });
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
         }
 
         const followData = {
@@ -52,9 +51,8 @@ router.post("/follow", async (req, res) => {
         const follow = await Follow.findOne({ where: followData });
 
         if (follow !== null) {
-            return res
-                .status(409)
-                .json({ error: "This user already follows this stock." });
+            res.status(409).json({ error: "This user already follows this stock." });
+            return;
         }
 
         const newFollow = await Follow.create(followData);
@@ -70,16 +68,16 @@ router.post("/unfollow", async (req, res) => {
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
-        return res.status(400).json({ error: "Invalid request body." });
+        res.status(400).json({ error: "Invalid request body." });
+        return;
     }
 
     try {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            return res
-                .status(404)
-                .json({ error: "This stock does not exist in database." });
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
         }
 
         const followData = {
@@ -90,9 +88,8 @@ router.post("/unfollow", async (req, res) => {
         const follow = await Follow.findOne({ where: followData });
 
         if (follow === null) {
-            return res
-                .status(409)
-                .json({ error: "This user does not follow this stock." });
+            res.status(409).json({ error: "This user does not follow this stock." });
+            return;
         }
 
         await follow.destroy();

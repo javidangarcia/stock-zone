@@ -13,7 +13,7 @@ import Ranking from "../Ranking/Ranking";
 export const UserContext = createContext();
 
 export default function App() {
-    const [error, setError] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
         return storedUser ? JSON.parse(storedUser) : null;
@@ -25,9 +25,9 @@ export default function App() {
 
     return (
         <div className="app">
-            <UserContext.Provider value={{ user, setUser, setError }}>
+            <UserContext.Provider value={{ user, setUser, setErrorMessage }}>
                 <BrowserRouter>
-                    <Error error={error} />
+                    <Error error={errorMessage} />
                     <Navbar />
                     <Routes>
                         <Route path="/" element={<Home />}></Route>

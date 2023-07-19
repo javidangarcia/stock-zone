@@ -3,19 +3,27 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { UserContext } from "../App/App";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-    const { user, setError } = useContext(UserContext);
+    const { user, setUser, setErrorMessage } = useContext(UserContext);
+    const navigate = useNavigate();
 
-    async function handleLogout() {
+    async function handleLogout(event) {
+        event.preventDefault();
         try {
-            await axios.post("http://localhost:3000/users/logout", {
+            const response = await axios.post("http://localhost:3000/users/logout", null, {
                 withCredentials: true
             });
-            localStorage.clear();
+
+            if (response.status === 200) {
+                localStorage.clear();
+                setUser(null);
+                navigate("/login");
+            }
 
         } catch (error) {
-            setError(`${error.message}: Please try again later.`);
+            setErrorMessage(`${error.message}: Please try again later.`);
         }
     }
 

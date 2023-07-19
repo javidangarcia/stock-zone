@@ -6,7 +6,7 @@ import { UserContext } from "../App/App"
 
 export default function Ranking() {
     const [stocksRanking, setStocksRanking] = useState([]);
-    const { setError } = useContext(UserContext);
+    const { setErrorMessage } = useContext(UserContext);
 
 
     useEffect(() => {
@@ -21,14 +21,14 @@ export default function Ranking() {
                 }
 
                 if (response.status === 422 || response.status === 401) {
-                    setError(response.data.error);
+                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setError(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
             } catch (error) {
-                setError(`${error.message}: Please try again later.`);
+                setErrorMessage(`${error.message}: Please try again later.`);
             }
             
         }
