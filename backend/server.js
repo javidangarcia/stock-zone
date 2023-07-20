@@ -11,6 +11,7 @@ import commentRoutes from "./routes/comments.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
 import cookieParser from "cookie-parser";
+import { checkSession } from "./utils.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -46,20 +47,12 @@ sessionStore.sync();
 app.use(stockRoutes);
 app.use(userRoutes);
 
-const checkSession = (req, res, next) => {
-    const user = req.session.user;
-    if (user == null) {
-        res.status(401).json({ error: "Missing Session." });
-    } else {
-        next();
-    }
-};
-
 app.use(checkSession);
-app.use(followRoutes);
-app.use(rankingRoutes);
+
 app.use(likeRoutes);
+app.use(followRoutes);
 app.use(dislikeRoutes);
+app.use(rankingRoutes);
 app.use(commentRoutes);
 
 app.listen(port, () => {

@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App/App";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ProfileHistory from "../ProfileHistory/ProfileHistory";
 
 export default function Profile() {
     const { username } = useParams();
@@ -14,8 +15,8 @@ export default function Profile() {
             try {
                 const response = await axios.get(
                     `http://localhost:3000/user/${username}`, 
-                    { validateStatus: () => true })
-                ;
+                    { validateStatus: () => true }
+                );
 
                 if (response.status === 200) {
                     setProfile(response.data.user);
@@ -46,11 +47,7 @@ export default function Profile() {
                     <p>Username: {profile.username}</p>
                     <p>Email: {profile.email}</p>
                 </div>
-                <div className="profile-stocks">
-                    <p>Stocks You Follow</p>
-                    <p>Stocks You Like</p>
-                    <p>Stocks You Dislike</p>
-                </div>
+                <ProfileHistory username={username} />
             </div>
         </div>
     )

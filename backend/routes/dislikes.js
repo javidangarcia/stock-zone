@@ -2,8 +2,38 @@ import express from "express";
 import { Dislike } from "../models/dislike.js";
 import { Stock } from "../models/stock.js";
 import { Like } from "../models/like.js";
+import { User } from "../models/user.js";
 
 const router = express.Router();
+
+router.get("/dislikes/:username", async (req, res) => {
+    const { username } = req.params;
+
+    try {
+        const user = await User.findOne({ where: { username } });
+
+        if (user === null) {
+            res.status(404).json({ error: "This user doesn't exist." });
+            return;
+        }
+
+        const dislikes = await Dislike.findAll({
+            where: { UserId: user.id },
+            include: [{ model: Stock }]
+        });
+
+        if (dislikes.length === 0) {
+            res.status(404).json({ error: "This user doesn't dislike any stocks." });
+            return;
+        }
+
+        const stocksYouDislike = dislikes.map((dislike) => dislike.Stock);
+
+        res.status(200).json({ stocksYouDislike });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
 
 router.post("/dislike", async (req, res) => {
     const user = req.session.user;

@@ -1,5 +1,14 @@
 // Functions
 
+export const checkSession = (req, res, next) => {
+    const user = req.session.user;
+    if (user == null) {
+        res.status(401).json({ error: "Missing Session." });
+    } else {
+        next();
+    }
+};
+
 export function compareStocksByPoints(firstStock, secondStock) {
     return secondStock.points - firstStock.points;
 }

@@ -4,7 +4,7 @@
 
 .profile-card {
     width: 50%;
-    height: 80%;
+    height: auto;
     margin: 50px auto;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -33,9 +33,4 @@
 
 .profile-details p {
     margin: 5px 0;
-}
-
-.profile-stocks {
-    display: flex;
-    justify-content: space-evenly;
 }
