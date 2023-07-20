@@ -26,10 +26,6 @@ export default function ProfileHistory({ username }) {
                     setDislikesHistory(dislikesResponse.data.stocksYouDislike);
                 }
     
-                if (followsResponse.status === 404) {
-                    setErrorMessage(response.data.error);
-                }
-    
                 if (followsResponse.status === 500) {
                     setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
