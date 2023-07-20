@@ -12,16 +12,19 @@ export default function Navbar() {
     async function handleLogout(event) {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3000/users/logout", null, {
-                withCredentials: true
-            });
+            const response = await axios.post(
+                "http://localhost:3000/users/logout",
+                null,
+                {
+                    withCredentials: true
+                }
+            );
 
             if (response.status === 200) {
                 localStorage.clear();
                 setUser(null);
                 navigate("/login");
             }
-
         } catch (error) {
             setErrorMessage(`${error.message}: Please try again later.`);
         }
@@ -38,7 +41,15 @@ export default function Navbar() {
             <div className="nav-profile">
                 {user ? (
                     <div className="logout">
-                        <p>{user.username}</p>
+                        <Link to={`/profile/${user.username}`}>
+                            <div className="user-info">
+                                <img
+                                    src={user.picture}
+                                    alt={`This is a profile picture associated with ${user.username}`}
+                                />
+                                <p>{user.username}</p>
+                            </div>
+                        </Link>
                         <a href="" onClick={handleLogout}>
                             (Logout)
                         </a>

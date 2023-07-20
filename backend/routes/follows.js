@@ -1,13 +1,21 @@
 import express from "express";
 import { Follow } from "../models/follow.js";
 import { Stock } from "../models/stock.js";
+import { User } from "../models/user.js";
 
 const router = express.Router();
 
-router.get("/follows", async (req, res) => {
-    const user = req.session.user;
+router.get("/follows/:username", async (req, res) => {
+    const { username } = req.params;
 
     try {
+        const user = await User.findOne({ where: { username } });
+
+        if (user === null) {
+            res.status(404).json({ error: "This user doesn't exist." });
+            return;
+        }
+
         const follows = await Follow.findAll({
             where: { UserId: user.id },
             include: [{ model: Stock }]
@@ -18,9 +26,9 @@ router.get("/follows", async (req, res) => {
             return;
         }
 
-        const stocks = follows.map((follow) => follow.Stock);
+        const stocksYouFollow = follows.map((follow) => follow.Stock);
 
-        res.status(200).json({ stocks });
+        res.status(200).json({ stocksYouFollow });
     } catch (error) {
         res.status(500).json({ error });
     }

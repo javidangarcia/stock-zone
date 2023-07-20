@@ -1,0 +1,16 @@
+.profile-history {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.follows-history {
+    text-align: center;
+}
+
+.likes-history {
+    text-align: center;
+}
+
+.dislikes-history {
+    text-align: center;
+}

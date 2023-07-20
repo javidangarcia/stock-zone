@@ -5,15 +5,18 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function StocksYouFollow({ stocks, setStocks }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { user, setErrorMessage } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/follows", { withCredentials: true, validateStatus: () => true });
+                const response = await axios.get(
+                    `http://localhost:3000/follows/${user.username}`, 
+                    { withCredentials: true, validateStatus: () => true }
+                );
 
                 if (response.status === 200) {
-                    setStocks(response.data.stocks);
+                    setStocks(response.data.stocksYouFollow);
                 }
 
                 if (response.status === 404) {
