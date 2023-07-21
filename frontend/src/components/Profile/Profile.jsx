@@ -4,7 +4,7 @@ import { UserContext } from "../App/App";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ProfileHistory from "../ProfileHistory/ProfileHistory";
-import Friend from "../Friend/Friend";
+import FriendConnection from "../FriendConnection/FriendConnection";
 
 export default function Profile() {
     const { username } = useParams();
@@ -40,7 +40,7 @@ export default function Profile() {
     return (
         <div className="profile-container">
             <div className="profile-card">
-                <Friend username={username} profile={profile} setProfile={setProfile} />
+                <FriendConnection username={username} profile={profile} setProfile={setProfile} />
                 <div className="profile-picture">
                     <img src={profile.picture} alt={`This is a profile picture associated with ${profile.username}`} />
                 </div>

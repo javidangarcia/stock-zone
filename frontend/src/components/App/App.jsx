@@ -24,31 +24,27 @@ export default function App() {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
+    const requireAuth = (element) => {
+        return user ? element : <LoginForm />;
+    };
+
     return (
         <div className="app">
             <UserContext.Provider value={{ user, setUser, setErrorMessage }}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
-                    <Navbar />
+                    {user && <Navbar />}
                     <Routes>
-                        <Route path="/" element={<Home />}></Route>
-                        <Route path="/home" element={<Home />}></Route>
-                        <Route path="/search" element={<Search />}></Route>
-                        <Route path="/ranking" element={<Ranking />}></Route>
-                        <Route
-                            path="/search/stocks/:ticker"
-                            element={<StockData />}
-                        ></Route>
-                        <Route
-                            path="/login"
-                            element={<LoginForm />}
-                        ></Route>
-                        <Route
-                            path="/signup"
-                            element={<SignUpForm />}
-                        ></Route>
-                        <Route path="/profile" element={<Profile />}></Route>
-                        <Route path="/profile/:username" element={<Profile />}></Route>
+                        <Route path="/login" element={<LoginForm />} />
+                        <Route path="/signup" element={<SignUpForm />} />
+
+                        <Route path="/" element={requireAuth(<Home />)} />
+                        <Route path="/home" element={requireAuth(<Home />)} />
+                        <Route path="/search" element={requireAuth(<Search />)} />
+                        <Route path="/ranking" element={requireAuth(<Ranking />)} />
+                        <Route path="/search/stocks/:ticker" element={requireAuth(<StockData />)} />
+                        <Route path="/profile" element={requireAuth(<Profile />)} />
+                        <Route path="/profile/:username" element={requireAuth(<Profile />)} />
                     </Routes>
                 </BrowserRouter>
             </UserContext.Provider>

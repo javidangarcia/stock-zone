@@ -10,7 +10,10 @@ export default function SearchTable() {
     useEffect(() => {
         const fetchStocks = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/stocks");
+                const response = await axios.get(
+                    "http://localhost:3000/stocks",
+                    { withCredentials: true, validateStatus: () => true }
+                );
 
                 if (response.status === 200) {
                     setStocks(response.data.stocks);
@@ -22,56 +25,59 @@ export default function SearchTable() {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(
+                        `${response.statusText}: Please try again later.`
+                    );
                 }
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
             }
-        }
+        };
         fetchStocks();
     }, []);
 
-    return (
-        stocksNotFound ? (
-            <p>There are no stocks currently in the database, search for a stock to gain access to table.</p>
-        ) : (
-            <table className="search-table">
-                <tbody>
-                    <tr>
-                        <th>Logo</th>
-                        <th>Ticker</th>
-                        <th>Name</th>
-                        <th>Sector</th>
-                        <th>Price</th>
-                    </tr>
-                </tbody>
-                {stocks?.map((stock) => {
-                    return (
-                        <tbody key={stock.name}>
-                            <tr>
-                                <td id="stock-logo">
-                                    <img
-                                        src={stock.logo}
-                                        alt={`This is a logo of ${stock.name}.`}
-                                    />
-                                </td>
-                                <td id="stock-ticker">
-                                    <Link
-                                        key={stock.name}
-                                        to={`/search/stocks/${stock.ticker}`}
-                                        className="stock-link"
-                                    >
-                                        {stock.ticker}
-                                    </Link>
-                                </td>
-                                <td>{stock.name}</td>
-                                <td>{stock.sector}</td>
-                                <td>${stock.price?.toFixed(2)}</td>
-                            </tr>
-                        </tbody>
-                    );
-                })}
-            </table>
-        )
+    return stocksNotFound ? (
+        <p>
+            There are no stocks currently in the database, search for a stock to
+            gain access to table.
+        </p>
+    ) : (
+        <table className="search-table">
+            <tbody>
+                <tr>
+                    <th>Logo</th>
+                    <th>Ticker</th>
+                    <th>Name</th>
+                    <th>Sector</th>
+                    <th>Price</th>
+                </tr>
+            </tbody>
+            {stocks?.map((stock) => {
+                return (
+                    <tbody key={stock.name}>
+                        <tr>
+                            <td id="stock-logo">
+                                <img
+                                    src={stock.logo}
+                                    alt={`This is a logo of ${stock.name}.`}
+                                />
+                            </td>
+                            <td id="stock-ticker">
+                                <Link
+                                    key={stock.name}
+                                    to={`/search/stocks/${stock.ticker}`}
+                                    className="stock-link"
+                                >
+                                    {stock.ticker}
+                                </Link>
+                            </td>
+                            <td>{stock.name}</td>
+                            <td>{stock.sector}</td>
+                            <td>${stock.price?.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                );
+            })}
+        </table>
     );
 }

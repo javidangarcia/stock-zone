@@ -45,7 +45,12 @@ router.post("/comments", async (req, res) => {
             StockId: stock.id
         };
 
-        const comment = await Comment.create(commentData);
+        const newComment = await Comment.create(commentData);
+
+        const comment = await Comment.findOne({
+            where: { id: newComment.id },
+            include: [{ model: User }]
+        });
 
         res.status(200).json({ comment });
     } catch (error) {

@@ -4,13 +4,11 @@ import { Like } from "./models/like.js";
 import { Dislike } from "./models/dislike.js";
 import { compareStocksByPoints } from "./utils.js";
 
-
 const FOLLOW_POINTS = 25;
 const LIKE_POINTS = 20;
 const DISLIKE_POINTS = -20;
 
-
-export async function RankingOptimized(user) {
+export async function RankingV2(user) {
     try {
         const [stocksInDatabase, follows, likes, dislikes] = await Promise.all([
             Stock.findAll(),
@@ -35,23 +33,20 @@ export async function RankingOptimized(user) {
             };
         }
 
-        const followsMap = {};
+        const followsMap = follows.reduce((accum, current) => { 
+            accum[current.Stock.ticker] = true; 
+            return accum; 
+        }, {});
 
-        follows.forEach((follow) => {
-            followsMap[follow.Stock.ticker] = true;
-        });
+        const likesMap = likes.reduce((accum, current) => { 
+            accum[current.Stock.ticker] = true; 
+            return accum; 
+        }, {});
 
-        const likesMap = {};
-
-        likes.forEach((like) => {
-            likesMap[like.Stock.ticker] = true;
-        });
-
-        const dislikesMap = {};
-
-        dislikes.forEach((dislike) => {
-            dislikesMap[dislike.Stock.ticker] = true;
-        });
+        const dislikesMap = dislikes.reduce((accum, current) => { 
+            accum[current.Stock.ticker] = true; 
+            return accum; 
+        }, {});
 
         const stocksRanking = stocksInDatabase.map((currentStock) => {
             let points = 0;
@@ -84,7 +79,7 @@ export async function RankingOptimized(user) {
 }
 
 
-export async function RankingVersion1(user) {
+export async function RankingV1(user) {
     try {
         const [stocksInDatabase, follows, likes, dislikes] = await Promise.all([
             Stock.findAll(),
