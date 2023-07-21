@@ -15,9 +15,7 @@ export default function Navbar() {
             const response = await axios.post(
                 "http://localhost:3000/users/logout",
                 null,
-                {
-                    withCredentials: true
-                }
+                { withCredentials: true }
             );
 
             if (response.status === 200) {

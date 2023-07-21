@@ -47,7 +47,10 @@ router.post("/comments", async (req, res) => {
 
         const newComment = await Comment.create(commentData);
 
-        const comment = await Comment.findOne({ where: { id: newComment.id }, include: [{ model: User }] });
+        const comment = await Comment.findOne({
+            where: { id: newComment.id },
+            include: [{ model: User }]
+        });
 
         res.status(200).json({ comment });
     } catch (error) {

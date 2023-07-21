@@ -1,9 +1,9 @@
-import "./Friend.css";
+import "./FriendConnection.css";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../App/App";
 
-export default function Friend({ username, profile, setProfile }) {
+export default function FriendConnection({ username, profile, setProfile }) {
     const { user, setErrorMessage } = useContext(UserContext);
 
     const handleFriend = async () => {

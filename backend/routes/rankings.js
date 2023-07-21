@@ -1,5 +1,5 @@
 import express from "express";
-import { RankingOptimized } from "../ranking.js";
+import { RankingV2 } from "../ranking.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ router.get("/ranking", async (req, res) => {
     const user = req.session.user;
 
     try {
-        const response = await RankingOptimized(user);
+        const response = await RankingV2(user);
 
         if (response.status === 200) {
             res.status(response.status).json(response.data);

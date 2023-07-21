@@ -53,9 +53,6 @@ export default function Comments({ ticker }) {
             );
 
             if (response.status === 200) {
-                console.log(comments);
-                console.log(response.data.comment);
-                
                 const newComments = [...comments, response.data.comment];
                 setComments(newComments);
                 setCommentInput("");

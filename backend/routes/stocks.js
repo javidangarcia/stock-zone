@@ -45,6 +45,7 @@ router.post("/stocks", async (req, res) => {
 // Get a specific stock from database
 router.get("/stocks/:ticker", async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
+    const user = req.session.user;
 
     try {
         const stock = await Stock.findOne({
@@ -56,37 +57,23 @@ router.get("/stocks/:ticker", async (req, res) => {
             return;
         }
 
-        const user = req.session.user;
+        const StockId = stock.id;
+        const UserId = user.id;
 
-        if (user != null) {
-            const StockId = stock.id;
-            const UserId = user.id;
+        const [following, liking, disliking] = await Promise.all([
+            Follow.findOne({ where: { UserId, StockId } }),
+            Like.findOne({ where: { UserId, StockId } }),
+            Dislike.findOne({ where: { UserId, StockId } })
+        ]);
 
-            const following = await Follow.findOne({
-                where: { UserId, StockId }
-            });
+        const currentStock = {
+            ...stock.dataValues,
+            following: following != null,
+            liking: liking != null,
+            disliking: disliking != null
+        };
 
-            const currentStock = { ...stock.dataValues };
-
-            currentStock.following = following != null;
-
-            const liking = await Like.findOne({
-                where: { UserId, StockId }
-            });
-
-            currentStock.liking = liking != null;
-
-            const disliking = await Dislike.findOne({
-                where: { UserId, StockId }
-            });
-
-            currentStock.disliking = disliking != null;
-
-            res.status(200).json({ stock: currentStock });
-            return;
-        }
-
-        res.status(200).json({ stock });
+        res.status(200).json({ stock: currentStock });
     } catch (error) {
         res.status(500).json({ error });
     }
