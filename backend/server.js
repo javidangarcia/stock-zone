@@ -45,11 +45,11 @@ app.use(
 );
 sessionStore.sync();
 
-app.use(stockRoutes);
 app.use(userRoutes);
 
 app.use(checkSession);
 
+app.use(stockRoutes);
 app.use(friendRoutes);
 app.use(likeRoutes);
 app.use(followRoutes);

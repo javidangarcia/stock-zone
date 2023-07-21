@@ -42,6 +42,10 @@ export const formatDateTime = (dateTimeString) => {
     return dateTime.toLocaleDateString("en-US", options);
 };
 
+export const compareCommentsByDate = (firstDate, secondDate) => {
+    return new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
+  };
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {

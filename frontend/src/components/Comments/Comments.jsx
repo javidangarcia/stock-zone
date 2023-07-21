@@ -2,7 +2,7 @@ import "./Comments.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../App/App";
-import { formatDateTime } from "../../utils";
+import { formatDateTime, compareCommentsByDate } from "../../utils";
 import { Link } from "react-router-dom";
 
 export default function Comments({ ticker }) {
@@ -53,7 +53,11 @@ export default function Comments({ ticker }) {
             );
 
             if (response.status === 200) {
-                fetchComments();
+                console.log(comments);
+                console.log(response.data.comment);
+                
+                const newComments = [...comments, response.data.comment];
+                setComments(newComments);
                 setCommentInput("");
             }
 
@@ -73,9 +77,9 @@ export default function Comments({ ticker }) {
         <div className="comments">
             <h2>Comments</h2>
             <div className="past-comments">
-                {comments?.map((comment) => {
+                {comments?.sort(compareCommentsByDate).map((comment) => {
                     return (
-                        <div className="comment-details" key={comment.content}>
+                        <div className="comment-details" key={`${comment.createdAt}-${comment.content}`}>
                             <div className="comment-picture">
                                 <img
                                     src={comment.User.picture}
