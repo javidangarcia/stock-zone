@@ -1,0 +1,142 @@
+[
+    {
+        "fullName": "John Doe",
+        "username": "johndoe",
+        "email": "john.doe@example.com",
+        "password": "password123",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Jane Smith",
+        "username": "janesmith",
+        "email": "jane.smith@example.com",
+        "password": "password456",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Michael Johnson",
+        "username": "michaeljohnson",
+        "email": "michael.johnson@example.com",
+        "password": "password789",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Emily Brown",
+        "username": "emilybrown",
+        "email": "emily.brown@example.com",
+        "password": "password012",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "William Lee",
+        "username": "williamlee",
+        "email": "william.lee@example.com",
+        "password": "password345",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Olivia Wilson",
+        "username": "oliviawilson",
+        "email": "olivia.wilson@example.com",
+        "password": "password678",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "James Anderson",
+        "username": "jamesanderson",
+        "email": "james.anderson@example.com",
+        "password": "password901",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Sophia Martinez",
+        "username": "sophiamartinez",
+        "email": "sophia.martinez@example.com",
+        "password": "password234",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Benjamin Taylor",
+        "username": "benjamintaylor",
+        "email": "benjamin.taylor@example.com",
+        "password": "password567",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Isabella Clark",
+        "username": "isabellaclark",
+        "email": "isabella.clark@example.com",
+        "password": "password890",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Ethan Hernandez",
+        "username": "ethanhernandez",
+        "email": "ethan.hernandez@example.com",
+        "password": "password123",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Mia Moore",
+        "username": "miamoore",
+        "email": "mia.moore@example.com",
+        "password": "password456",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Alexander Martin",
+        "username": "alexandermartin",
+        "email": "alexander.martin@example.com",
+        "password": "password789",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Ava Hall",
+        "username": "avahall",
+        "email": "ava.hall@example.com",
+        "password": "password012",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Daniel Allen",
+        "username": "danielallen",
+        "email": "daniel.allen@example.com",
+        "password": "password345",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Camila Young",
+        "username": "camilayoung",
+        "email": "camila.young@example.com",
+        "password": "password678",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Matthew Rodriguez",
+        "username": "matthewrodriguez",
+        "email": "matthew.rodriguez@example.com",
+        "password": "password901",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Luna King",
+        "username": "lunaking",
+        "email": "luna.king@example.com",
+        "password": "password234",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "David Scott",
+        "username": "davidscott",
+        "email": "david.scott@example.com",
+        "password": "password567",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    },
+    {
+        "fullName": "Ella Wright",
+        "username": "ellawright",
+        "email": "ella.wright@example.com",
+        "password": "password890",
+        "picture": "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg"
+    }
+]

@@ -8,7 +8,7 @@ export default function ProfileHistory({ username }) {
     const [followsHistory, setFollowsHistory] = useState([]);
     const [likesHistory, setLikesHistory] = useState([]);
     const [dislikesHistory, setDislikesHistory] = useState([]);
-    const { setErrorMessage } = useContext(UserContext);
+    const { user, setErrorMessage } = useContext(UserContext);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -26,10 +26,6 @@ export default function ProfileHistory({ username }) {
                     setDislikesHistory(dislikesResponse.data.stocksYouDislike);
                 }
     
-                if (followsResponse.status === 404) {
-                    setErrorMessage(response.data.error);
-                }
-    
                 if (followsResponse.status === 500) {
                     setErrorMessage(`${response.statusText}: Please try again later.`);
                 }
@@ -43,7 +39,7 @@ export default function ProfileHistory({ username }) {
     return (
         <div className="profile-history">
             <div className="follows-history">
-                <p>Stocks You Follow</p>
+                <p>{username === user.username ? "Stocks You Follow" : "Stocks They Follow"}</p>
                 {
                     followsHistory?.map((stock) => {
                         return (
@@ -60,7 +56,7 @@ export default function ProfileHistory({ username }) {
                 }
             </div>
             <div className="likes-history">
-                <p>Stocks You Like</p>
+                <p>{username === user.username ? "Stocks You Like" : "Stocks They Like"}</p>
                 {
                     likesHistory?.map((stock) => {
                         return (
@@ -77,7 +73,7 @@ export default function ProfileHistory({ username }) {
                 }
             </div>
             <div className="dislikes-history">
-                <p>Stocks You Dislike</p>
+                <p>{username === user.username ? "Stocks You Dislike" : "Stocks They Dislike"}</p>
                 {
                     dislikesHistory?.map((stock) => {
                         return (

@@ -8,6 +8,7 @@ import rankingRoutes from "./routes/rankings.js";
 import likeRoutes from "./routes/likes.js";
 import dislikeRoutes from "./routes/dislikes.js";
 import commentRoutes from "./routes/comments.js";
+import friendRoutes from "./routes/friends.js";
 import session from "express-session";
 import SequelizeStoreInit from 'connect-session-sequelize';
 import cookieParser from "cookie-parser";
@@ -49,6 +50,7 @@ app.use(userRoutes);
 
 app.use(checkSession);
 
+app.use(friendRoutes);
 app.use(likeRoutes);
 app.use(followRoutes);
 app.use(dislikeRoutes);
