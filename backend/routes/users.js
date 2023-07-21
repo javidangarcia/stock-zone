@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 import { Op } from "sequelize";
 import bcrypt from "bcrypt";
 import { PROFILE_PICTURE } from "../utils.js";
+import { Friend } from "../models/friend.js";
 
 const router = express.Router();
 
@@ -18,13 +19,31 @@ router.get("/user/:username", async (req, res) => {
             res.status(404).json({ error: "This user doesn't exist." });
             return;
         }
-    
+
+        const currentUser = req.session.user;
+
+        const friend = await Friend.findOne({ where: { UserId1: currentUser.id, UserId2: user.id } });
+
+        if (friend !== null) {
+            res.status(200).json({
+                user: {
+                    fullName: user.fullName,
+                    username: user.username,
+                    email: user.email,
+                    picture: PROFILE_PICTURE,
+                    friend: true
+                }
+            });
+            return;
+        }
+
         res.status(200).json({
             user: {
                 fullName: user.fullName,
                 username: user.username,
                 email: user.email,
-                picture: PROFILE_PICTURE
+                picture: PROFILE_PICTURE,
+                friend: false
             }
         });
     } catch (error) {

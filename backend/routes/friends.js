@@ -9,10 +9,12 @@ router.post("/friend", async (req, res) => {
     const { username } = req.body;
 
     try {
+
         const user2 = await User.findOne({ where: { username } });
 
         if (user2 === null) {
             res.status(404).json({ error: "This user doesn't exist." })
+            return;
         }
 
         const friendData = {
@@ -24,6 +26,7 @@ router.post("/friend", async (req, res) => {
 
         if (friend !== null) {
             res.status(409).json({ error: "You are already friends with this user." });
+            return;
         }
 
         const newFriend = await Friend.create(friendData);
@@ -42,7 +45,8 @@ router.post("/unfriend", async (req, res) => {
         const user2 = await User.findOne({ where: { username } });
 
         if (user2 === null) {
-            res.status(404).json({ error: "This user doesn't exist." })
+            res.status(404).json({ error: "This user doesn't exist." });
+            return;
         }
 
         const friendData = {
@@ -54,6 +58,7 @@ router.post("/unfriend", async (req, res) => {
 
         if (friend === null) {
             res.status(409).json({ error: "You are not friends with this user." });
+            return;
         }
 
         await friend.destroy();
