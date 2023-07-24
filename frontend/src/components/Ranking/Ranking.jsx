@@ -13,7 +13,7 @@ export default function Ranking() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    "http://localhost:3000/ranking",
+                    `${import.meta.env.VITE_HOST}/ranking`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 

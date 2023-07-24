@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-export const sequelize = new Sequelize('capstone', 'javierdangarcia', 'meta123', {
-  host: 'localhost',
-  dialect: 'postgres'
-});
+dotenv.config();
+
+export const sequelize = new Sequelize(process.env.DATABASE);

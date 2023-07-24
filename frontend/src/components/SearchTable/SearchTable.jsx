@@ -15,7 +15,7 @@ export default function SearchTable() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    "http://localhost:3000/stocks",
+                    `${import.meta.env.VITE_HOST}/stocks`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 

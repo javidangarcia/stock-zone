@@ -13,7 +13,7 @@ export default function Like({ ticker, stockData, setStockData }) {
     useEffect(() => {
         const fetchLikes = async () => {
             const response = await axios.get(
-                `http://localhost:3000/likes/stock/${ticker}`,
+                `${import.meta.env.VITE_HOST}/likes/stock/${ticker}`,
                 { withCredentials: true, validateStatus: () => true }
             );
 
@@ -26,8 +26,8 @@ export default function Like({ ticker, stockData, setStockData }) {
 
     async function handleLike() {
         const url = stockData.liking
-            ? "http://localhost:3000/unlike"
-            : "http://localhost:3000/like";
+            ? `${import.meta.env.VITE_HOST}/unlike`
+            : `${import.meta.env.VITE_HOST}/like`;
         try {
             const response = await axios.post(
                 url,

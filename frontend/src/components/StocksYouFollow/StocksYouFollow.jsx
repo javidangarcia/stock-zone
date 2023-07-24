@@ -12,7 +12,7 @@ export default function StocksYouFollow({ stocks, setStocks }) {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `http://localhost:3000/follows/user/${user.username}`,
+                    `${import.meta.env.VITE_HOST}/follows/user/${user.username}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 

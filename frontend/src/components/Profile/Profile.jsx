@@ -16,7 +16,7 @@ export default function Profile() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `http://localhost:3000/user/${username}`,
+                    `${import.meta.env.VITE_HOST}/user/${username}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 

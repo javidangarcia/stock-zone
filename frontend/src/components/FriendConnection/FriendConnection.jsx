@@ -8,8 +8,8 @@ export default function FriendConnection({ username, profile, setProfile }) {
 
     const handleFriend = async () => {
         const url = profile.friend
-            ? "http://localhost:3000/unfriend"
-            : "http://localhost:3000/friend";
+            ? `${import.meta.env.VITE_HOST}/unfriend`
+            : `${import.meta.env.VITE_HOST}/friend`;
         try {
             const response = await axios.post(
                 url,

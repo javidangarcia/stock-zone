@@ -13,7 +13,7 @@ export default function Follow({ ticker, stockData, setStockData }) {
     useEffect(() => {
         const fetchFollows = async () => {
             const response = await axios.get(
-                `http://localhost:3000/follows/stock/${ticker}`,
+                `${import.meta.env.VITE_HOST}/follows/stock/${ticker}`,
                 { withCredentials: true, validateStatus: () => true }
             );
 
@@ -26,8 +26,8 @@ export default function Follow({ ticker, stockData, setStockData }) {
 
     async function handleFollow() {
         const url = stockData.following
-            ? "http://localhost:3000/unfollow"
-            : "http://localhost:3000/follow";
+            ? `${import.meta.env.VITE_HOST}/unfollow`
+            : `${import.meta.env.VITE_HOST}/follow`;
         try {
             const response = await axios.post(
                 url,

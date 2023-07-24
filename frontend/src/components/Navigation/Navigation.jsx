@@ -19,7 +19,7 @@ export default function Navigation() {
         event.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:3000/users/logout",
+                `${import.meta.env.VITE_HOST}/users/logout`,
                 null,
                 { withCredentials: true }
             );

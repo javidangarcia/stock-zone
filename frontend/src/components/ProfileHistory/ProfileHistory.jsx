@@ -15,9 +15,9 @@ export default function ProfileHistory({ username }) {
             try {
                 const [followsResponse, likesResponse, dislikesResponse] =
                     await Promise.all([
-                        axios.get(`http://localhost:3000/follows/user/${username}`, { withCredentials: true, validateStatus: () => true }),
-                        axios.get(`http://localhost:3000/likes/user/${username}`, { withCredentials: true, validateStatus: () => true }),
-                        axios.get(`http://localhost:3000/dislikes/user/${username}`, { withCredentials: true, validateStatus: () => true })
+                        axios.get(`${import.meta.env.VITE_HOST}/follows/user/${username}`, { withCredentials: true, validateStatus: () => true }),
+                        axios.get(`${import.meta.env.VITE_HOST}/likes/user/${username}`, { withCredentials: true, validateStatus: () => true }),
+                        axios.get(`${import.meta.env.VITE_HOST}/dislikes/user/${username}`, { withCredentials: true, validateStatus: () => true })
                     ]);
 
                 if (followsResponse.status === 200) {
