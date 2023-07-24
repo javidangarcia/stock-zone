@@ -5,13 +5,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function StocksYouFollow({ stocks, setStocks }) {
-    const { user, setErrorMessage } = useContext(UserContext);
+    const { user, setErrorMessage, setLoading } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get(
-                    `http://localhost:3000/follows/user/${user.username}`, 
+                    `http://localhost:3000/follows/user/${user.username}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
@@ -24,12 +25,15 @@ export default function StocksYouFollow({ stocks, setStocks }) {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(
+                        `${response.statusText}: Please try again later.`
+                    );
                 }
+
+                setLoading(false);
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
             }
-            
         };
         fetchStocksYouFollow();
     }, []);
@@ -38,20 +42,25 @@ export default function StocksYouFollow({ stocks, setStocks }) {
         <div className="stocks-you-follow">
             <h1>Stocks You Follow</h1>
             <div className="stocks">
-                {
-                    stocks?.map((stock) => {
-                        return (
-                            <div key={stock.ticker} className="stock-margin">
-                                <Link key={stock.name} to={`/search/stocks/${stock.ticker}`} className="stock-link">
-                                    <div className="stock">
-                                        <img src={stock.logo} alt={`This is a logo of ${stock.name}.`} />
-                                        <p>{stock.ticker}</p>
-                                    </div>
-                                </Link>
-                            </div>
-                        )
-                    })
-                }
+                {stocks?.map((stock) => {
+                    return (
+                        <div key={stock.ticker} className="stock-margin">
+                            <Link
+                                key={stock.name}
+                                to={`/search/stocks/${stock.ticker}`}
+                                className="stock-link"
+                            >
+                                <div className="stock">
+                                    <img
+                                        src={stock.logo}
+                                        alt={`This is a logo of ${stock.name}.`}
+                                    />
+                                    <p>{stock.ticker}</p>
+                                </div>
+                            </Link>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

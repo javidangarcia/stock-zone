@@ -5,11 +5,15 @@ import { useState } from "react";
 
 export default function Home() {
     const [stocks, setStocks] = useState([]);
-    
+
     return (
         <div className="home">
-            <StockNews stocks={stocks} />
-            <StocksYouFollow stocks={stocks} setStocks={setStocks} />
+            <div className="home-container">
+                <StockNews stocks={stocks} />
+            </div>
+            <div className="home-container">
+                <StocksYouFollow stocks={stocks} setStocks={setStocks} />
+            </div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import "./App.css";
-import Navbar from "../Navbar/Navbar";
+import Navigation from "../Navigation/Navigation";
 import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
@@ -10,12 +10,13 @@ import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
 import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Loading from "../Loading/Loading";
 
 export const UserContext = createContext();
 
 export default function App() {
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
         return storedUser ? JSON.parse(storedUser) : null;
@@ -31,10 +32,11 @@ export default function App() {
 
     return (
         <div className="app">
-            <UserContext.Provider value={{ user, setUser, setErrorMessage }}>
+            <UserContext.Provider value={{ user, setUser, setErrorMessage, loading, setLoading }}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
-                    {user && <Navbar />}
+                    {user ? <Navigation /> : null}
+                    <Loading />
                     <Routes>
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/signup" element={<SignUpForm />} />
