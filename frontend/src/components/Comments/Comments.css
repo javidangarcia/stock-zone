@@ -11,7 +11,7 @@
 }
 
 .past-comments {
-    max-height: 225px;
+    max-height: 290px;
     overflow-y: auto;
     margin-bottom: 20px;
 }

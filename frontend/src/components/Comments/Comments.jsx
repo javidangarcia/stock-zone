@@ -71,7 +71,7 @@ export default function Comments({ ticker }) {
     };
 
     return (
-        <div className="comments">
+        <div className="comments me-5 ms-5">
             <h2>Comments</h2>
             <div className="past-comments">
                 {comments?.sort(compareCommentsByDate).map((comment) => {

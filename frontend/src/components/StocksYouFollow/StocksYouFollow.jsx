@@ -11,7 +11,7 @@ export default function StocksYouFollow({ stocks, setStocks }) {
         const fetchStocksYouFollow = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/follows/${user.username}`, 
+                    `http://localhost:3000/follows/user/${user.username}`, 
                     { withCredentials: true, validateStatus: () => true }
                 );
 
