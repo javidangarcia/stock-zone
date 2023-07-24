@@ -10,6 +10,7 @@ import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
 import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const UserContext = createContext();
 

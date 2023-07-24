@@ -1,10 +1,28 @@
-import "./Like.css";
 import axios from "axios";
 import { UserContext } from "../App/App";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import SplitButton from "react-bootstrap/SplitButton";
 
 export default function Like({ ticker, stockData, setStockData }) {
     const { setErrorMessage } = useContext(UserContext);
+    const [likes, setLikes] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchLikes = async () => {
+            const response = await axios.get(
+                `http://localhost:3000/likes/stock/${ticker}`,
+                { withCredentials: true, validateStatus: () => true }
+            );
+
+            if (response.status === 200) {
+                setLikes(response.data.likes);
+            }
+        };
+        fetchLikes();
+    }, [stockData]);
 
     async function handleLike() {
         const url = stockData.liking
@@ -18,13 +36,16 @@ export default function Like({ ticker, stockData, setStockData }) {
             );
 
             if (response.status === 200) {
-                stockData.disliking && !stockData.liking
-                    ? setStockData({
-                          ...stockData,
-                          liking: !stockData.liking,
-                          disliking: false
-                      })
-                    : setStockData({ ...stockData, liking: !stockData.liking });
+                const disliking =
+                    stockData.disliking && !stockData.liking
+                        ? false
+                        : stockData.disliking;
+
+                setStockData({
+                    ...stockData,
+                    liking: !stockData.liking,
+                    disliking
+                });
             }
 
             if (
@@ -47,10 +68,26 @@ export default function Like({ ticker, stockData, setStockData }) {
     }
 
     return (
-        <div className="like">
-            <button onClick={handleLike}>
-                {stockData.liking ? "Liked" : "Like"}
-            </button>
-        </div>
+        <SplitButton
+            title={stockData.liking ? "Liked" : "Like"}
+            variant="success"
+            onClick={handleLike}
+            className="me-2"
+        >
+            <Dropdown.Item>{likes.length} users like this stock.</Dropdown.Item>
+            <Dropdown.Divider />
+            {likes?.map((like) => {
+                return (
+                    <Dropdown.Item
+                        key={like.User.username}
+                        onClick={() =>
+                            navigate(`/profile/${like.User.username}`)
+                        }
+                    >
+                        {like.User.username}
+                    </Dropdown.Item>
+                );
+            })}
+        </SplitButton>
     );
 }

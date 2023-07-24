@@ -1,4 +1,3 @@
-import "./StockData.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -13,6 +12,7 @@ import {
     capitalize
 } from "../../utils.js";
 import { UserContext } from "../App/App";
+import Image from "react-bootstrap/Image";
 
 export default function StockData() {
     const { ticker } = useParams();
@@ -39,7 +39,9 @@ export default function StockData() {
                 }
 
                 if (databaseResponse.status === 500) {
-                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(
+                        `${response.statusText}: Please try again later.`
+                    );
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
@@ -67,7 +69,7 @@ export default function StockData() {
                     setErrorMessage(overviewData.Note);
                     return;
                 }
-                
+
                 const stockSector = capitalize(overviewData.Sector);
 
                 const combinedStockData = {
@@ -83,8 +85,8 @@ export default function StockData() {
 
                 // POST stock data to database for later use
                 const response = axios.post(
-                    "http://localhost:3000/stocks", 
-                    combinedStockData, 
+                    "http://localhost:3000/stocks",
+                    combinedStockData,
                     { validateStatus: () => true }
                 );
 
@@ -93,9 +95,10 @@ export default function StockData() {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(
+                        `${response.statusText}: Please try again later.`
+                    );
                 }
-
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
                 setIsLoading(false);
@@ -120,40 +123,50 @@ export default function StockData() {
             ) : null}
 
             {!isLoading && !stockNotFound ? (
-                <>
-                    <div className="stock-details">
-                        <p className="stock-name">
-                            {stockData.name} ({stockData.ticker})
-                        </p>
-                        <div className="stock-follow">
-                            <p className="stock-price">${stockData.price?.toFixed(2)}</p>
-                            <Follow
-                                ticker={ticker}
-                                stockData={stockData}
-                                setStockData={setStockData}
-                            />
-                            <Like
-                                ticker={ticker}
-                                stockData={stockData}
-                                setStockData={setStockData}
-                            />
-                            <Dislike
-                                ticker={ticker}
-                                stockData={stockData}
-                                setStockData={setStockData}
+                <div className="container-fluid vh-100 p-0">
+                    <div className="row h-100">
+                        <div className="col-md-6 h-100">
+                            <p className="h2 m-5 mb-2">
+                                {stockData.name} ({stockData.ticker})
+                            </p>
+                            <div className="d-flex align-items-center ms-5 mb-2">
+                                <p className="h2 text-primary me-2 mb-0">
+                                    ${stockData.price?.toFixed(2)}
+                                </p>
+                                <Follow
+                                    ticker={ticker}
+                                    stockData={stockData}
+                                    setStockData={setStockData}
+                                />
+                                <Like
+                                    ticker={ticker}
+                                    stockData={stockData}
+                                    setStockData={setStockData}
+                                />
+                                <Dislike
+                                    ticker={ticker}
+                                    stockData={stockData}
+                                    setStockData={setStockData}
+                                />
+                            </div>
+                            <p className="ms-5 me-5 mb-2">
+                                {stockData.description}
+                            </p>
+                            <p className="ms-5 me-5 mb-3">
+                                Sector: {stockData.sector}
+                            </p>
+                            <Comments ticker={ticker} />
+                        </div>
+
+                        <div className="col-md-6 d-flex align-items-center justify-content-end h-100">
+                            <Image
+                                src={stockData.logo}
+                                alt={`This is a logo of ${stockData.name}.`}
+                                className="img-fluid h-100"
                             />
                         </div>
-                        <p>{stockData.description}</p>
-                        <p>Sector: {stockData.sector}</p>
-                        <Comments ticker={ticker} />
                     </div>
-                    <div className="stock-logo">
-                        <img
-                            src={stockData.logo}
-                            alt={`This is a logo of ${stockData.name}.`}
-                        />
-                    </div>
-                </>
+                </div>
             ) : null}
         </div>
     );

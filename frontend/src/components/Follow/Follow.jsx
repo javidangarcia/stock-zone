@@ -1,10 +1,28 @@
-import "./Follow.css";
 import axios from "axios";
 import { UserContext } from "../App/App";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import SplitButton from "react-bootstrap/SplitButton";
 
 export default function Follow({ ticker, stockData, setStockData }) {
     const { setErrorMessage } = useContext(UserContext);
+    const [follows, setFollows] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchFollows = async () => {
+            const response = await axios.get(
+                `http://localhost:3000/follows/stock/${ticker}`,
+                { withCredentials: true, validateStatus: () => true }
+            );
+
+            if (response.status === 200) {
+                setFollows(response.data.follows);
+            }
+        };
+        fetchFollows();
+    }, [stockData]);
 
     async function handleFollow() {
         const url = stockData.following
@@ -41,10 +59,28 @@ export default function Follow({ ticker, stockData, setStockData }) {
     }
 
     return (
-        <div className="follow">
-            <button onClick={handleFollow}>
-                {stockData.following ? "Following" : "Follow"}
-            </button>
-        </div>
+        <SplitButton
+            title={stockData.following ? "Following" : "Follow"}
+            variant="primary"
+            onClick={handleFollow}
+            className="me-2"
+        >
+            <Dropdown.Item>
+                {follows.length} users follow this stock.
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            {follows?.map((follow) => {
+                return (
+                    <Dropdown.Item
+                        key={follow.User.username}
+                        onClick={() =>
+                            navigate(`/profile/${follow.User.username}`)
+                        }
+                    >
+                        {follow.User.username}
+                    </Dropdown.Item>
+                );
+            })}
+        </SplitButton>
     );
 }

@@ -6,7 +6,29 @@ import { User } from "../models/user.js";
 
 const router = express.Router();
 
-router.get("/dislikes/:username", async (req, res) => {
+router.get("/dislikes/stock/:ticker", async (req, res) => {
+    const { ticker } = req.params;
+
+    try {
+        const stock = await Stock.findOne({ where: { ticker } });
+
+        if (stock === null) {
+            res.status(404).json({ error: "This stock does not exist in database." });
+            return;
+        }
+
+        const dislikes = await Dislike.findAll({
+            where: { StockId: stock.id },
+            include: [{ model: User }]
+        });
+
+        res.status(200).json({ dislikes });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
+router.get("/dislikes/user/:username", async (req, res) => {
     const { username } = req.params;
 
     try {
