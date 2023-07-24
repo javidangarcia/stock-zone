@@ -13,7 +13,7 @@ export default function Dislike({ ticker, stockData, setStockData }) {
     useEffect(() => {
         const fetchDislikes = async () => {
             const response = await axios.get(
-                `http://localhost:3000/dislikes/stock/${ticker}`,
+                `${import.meta.env.VITE_HOST}/dislikes/stock/${ticker}`,
                 { withCredentials: true, validateStatus: () => true }
             );
 
@@ -26,8 +26,8 @@ export default function Dislike({ ticker, stockData, setStockData }) {
 
     async function handleDislike() {
         const url = stockData.disliking
-            ? "http://localhost:3000/undislike"
-            : "http://localhost:3000/dislike";
+            ? `${import.meta.env.VITE_HOST}/undislike`
+            : `${import.meta.env.VITE_HOST}/dislike`;
         try {
             const response = await axios.post(
                 url,

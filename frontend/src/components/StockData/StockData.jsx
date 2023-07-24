@@ -27,7 +27,7 @@ export default function StockData() {
                 setStockNotFound(false);
 
                 const databaseResponse = await axios.get(
-                    `http://localhost:3000/stocks/${ticker}`,
+                    `${import.meta.env.VITE_HOST}/stocks/${ticker}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
@@ -84,7 +84,7 @@ export default function StockData() {
 
                 // POST stock data to database for later use
                 const response = axios.post(
-                    "http://localhost:3000/stocks",
+                    `${import.meta.env.VITE_HOST}/stocks`,
                     combinedStockData,
                     { withCredentials: true, validateStatus: () => true }
                 );

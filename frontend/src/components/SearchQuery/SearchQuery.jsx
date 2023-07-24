@@ -19,7 +19,7 @@ export default function SearchQuery({ searchInput }) {
                     stockSearchUrl.searchParams.append("outputsize", 5);
                     stockSearchUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
                     const response = await axios.get(stockSearchUrl, { validateStatus: () => true });
-    
+                    
                     if (response.data.status === "ok") {
                         setSearchResults(response.data.data);
                         setShowDropdown(true);

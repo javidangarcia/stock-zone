@@ -13,7 +13,7 @@ export default function Comments({ ticker }) {
     const fetchComments = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:3000/comments/${ticker}`,
+                `${import.meta.env.VITE_HOST}/comments/${ticker}`,
                 { withCredentials: true, validateStatus: () => true }
             );
 
@@ -47,7 +47,7 @@ export default function Comments({ ticker }) {
             };
 
             const response = await axios.post(
-                "http://localhost:3000/comments",
+                `${import.meta.env.VITE_HOST}/comments`,
                 commentData,
                 { withCredentials: true, validateStatus: () => true }
             );

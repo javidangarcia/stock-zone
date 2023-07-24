@@ -28,7 +28,7 @@ export default function SignUpForm() {
             };
 
             const response = await axios.post(
-                "http://localhost:3000/users/signup",
+                `${import.meta.env.VITE_HOST}/users/signup`,
                 userData,
                 { withCredentials: true, validateStatus: () => true }
             );
