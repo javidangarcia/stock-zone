@@ -1,5 +1,5 @@
 import "./App.css";
-import Navbar from "../Navbar/Navbar";
+import Navigation from "../Navigation/Navigation";
 import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
@@ -10,7 +10,6 @@ import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
 import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const UserContext = createContext();
 
@@ -34,7 +33,7 @@ export default function App() {
             <UserContext.Provider value={{ user, setUser, setErrorMessage }}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
-                    {user && <Navbar />}
+                    {user && <Navigation />}
                     <Routes>
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/signup" element={<SignUpForm />} />

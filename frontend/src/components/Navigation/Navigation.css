@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #1f2937;
+}
+
+.navbar .nav-link {
+    text-decoration: none;
+}
+
+.navbar-profile {
+    width: 60px;
+    height: 60px;
+    border: 3px solid white;
+}
+
+.navbar .active {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: #101827;
+}
+
+.app-logo {
+    height: 50px;
+    width: 50px;
+}

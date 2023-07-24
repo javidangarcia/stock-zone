@@ -1,10 +1,11 @@
-import "./SignUpForm.css";
 import { useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../App/App";
 import { capitalize } from "../../utils";
+import Image from "react-bootstrap/Image";
+import appLogo from "../../assets/stock-zone.png";
 
 export default function SignUpForm() {
     const [fullName, setFullName] = useState("");
@@ -53,57 +54,84 @@ export default function SignUpForm() {
     }
 
     return (
-        <div className="signup-form-container">
-            <form className="signup-form" onSubmit={handleSubmit}>
-                <h2>Sign Up</h2>
-                <div className="form-group">
-                    <label htmlFor="fullName">Full Name:</label>
-                    <input
-                        type="text"
-                        id="fullName"
-                        value={fullName}
-                        onChange={(event) => setFullName(event.target.value)}
-                        required
+        <div
+            className="container d-flex justify-content-center align-items-center"
+            style={{ minHeight: "100vh" }}
+        >
+            <div className="col-md-6 col-sm-8 col-lg-4">
+                <div className="d-flex justify-content-center align-items-center mb-3 h2 me-2">
+                    <Image
+                        src={appLogo}
+                        alt="This is the logo of Stock Zone."
+                        className="app-logo me-2 d-flex justify-content-center"
                     />
+                    Stock Zone
                 </div>
-                <div className="form-group">
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Sign Up</button>
-                <p className="log-in-redirect">
+                <h2 className="mb-4 text-center fs-5">Create an account</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="fullName" className="form-label">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="fullName"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="username" className="form-label">
+                            Username
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary col-12">
+                        Sign Up
+                    </button>
+                </form>
+                <p className="mt-3 text-center">
                     Already have an account?{" "}
-                    <Link to="/login" className="link">
+                    <Link className="text-decoration-none" to="/login">
                         Log In
                     </Link>
                 </p>
-            </form>
+            </div>
         </div>
     );
 }
