@@ -17,14 +17,13 @@ import Image from "react-bootstrap/Image";
 export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
     const [stockNotFound, setStockNotFound] = useState(false);
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(UserContext);
 
     useEffect(() => {
         const fetchStockData = async () => {
             try {
-                setIsLoading(true);
+                setLoading(true);
                 setStockNotFound(false);
 
                 const databaseResponse = await axios.get(
@@ -34,7 +33,7 @@ export default function StockData() {
 
                 if (databaseResponse.status === 200) {
                     setStockData(databaseResponse.data.stock);
-                    setIsLoading(false);
+                    setLoading(false);
                     return;
                 }
 
@@ -58,7 +57,7 @@ export default function StockData() {
                 const overviewData = overviewResponse.data;
                 const priceData = priceResponse.data;
                 const logoData = logoResponse.data;
-                setIsLoading(false);
+                setLoading(false);
 
                 if (Object.keys(overviewData).length === 0) {
                     setStockNotFound(true);
@@ -87,7 +86,7 @@ export default function StockData() {
                 const response = axios.post(
                     "http://localhost:3000/stocks",
                     combinedStockData,
-                    { validateStatus: () => true }
+                    { withCredentials: true, validateStatus: () => true }
                 );
 
                 if (response.status === 404) {
@@ -101,7 +100,7 @@ export default function StockData() {
                 }
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
-                setIsLoading(false);
+                setLoading(false);
                 setStockNotFound(true);
             }
         };
@@ -110,19 +109,16 @@ export default function StockData() {
 
     return (
         <div className="stock-data">
-            {isLoading ? (
-                <div className="loading">
-                    <p>Loading...</p>
+            {stockNotFound ? (
+                <div
+                    class="alert alert-danger d-flex justify-content-center"
+                    role="alert"
+                >
+                    This stock does not exist.
                 </div>
             ) : null}
 
-            {!isLoading && stockNotFound ? (
-                <div className="stock-not-found">
-                    <p>Stock Not Found...</p>
-                </div>
-            ) : null}
-
-            {!isLoading && !stockNotFound ? (
+            {!stockNotFound && stockData.name ? (
                 <div className="container-fluid vh-100 p-0">
                     <div className="row h-100">
                         <div className="col-md-6 h-100">

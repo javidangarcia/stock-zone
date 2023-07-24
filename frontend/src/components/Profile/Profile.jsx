@@ -8,14 +8,15 @@ import FriendConnection from "../FriendConnection/FriendConnection";
 
 export default function Profile() {
     const { username } = useParams();
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(UserContext);
     const [profile, setProfile] = useState({});
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get(
-                    `http://localhost:3000/user/${username}`, 
+                    `http://localhost:3000/user/${username}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
@@ -28,8 +29,12 @@ export default function Profile() {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(`${response.statusText}: Please try again later.`);
+                    setErrorMessage(
+                        `${response.statusText}: Please try again later.`
+                    );
                 }
+
+                setLoading(false);
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
             }
@@ -37,12 +42,19 @@ export default function Profile() {
         fetchProfile();
     }, [username]);
 
-    return (
+    return profile.username ? (
         <div className="profile-container">
             <div className="profile-card">
-                <FriendConnection username={username} profile={profile} setProfile={setProfile} />
+                <FriendConnection
+                    username={username}
+                    profile={profile}
+                    setProfile={setProfile}
+                />
                 <div className="profile-picture">
-                    <img src={profile.picture} alt={`This is a profile picture associated with ${profile.username}`} />
+                    <img
+                        src={profile.picture}
+                        alt={`This is a profile picture associated with ${profile.username}`}
+                    />
                 </div>
                 <div className="profile-details">
                     <h1>{profile.fullName}</h1>
@@ -52,5 +64,5 @@ export default function Profile() {
                 <ProfileHistory username={username} />
             </div>
         </div>
-    )
+    ) : null;
 }
