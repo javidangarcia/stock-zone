@@ -13,6 +13,7 @@ import {
 } from "../../utils.js";
 import { UserContext } from "../App/App";
 import Image from "react-bootstrap/Image";
+import StockChart from "../StockChart/StockChart";
 
 export default function StockData() {
     const { ticker } = useParams();
@@ -151,6 +152,7 @@ export default function StockData() {
                             <p className="ms-5 me-5 mb-3">
                                 Sector: {stockData.sector}
                             </p>
+                            <StockChart ticker={ticker} />
                             <Comments ticker={ticker} />
                         </div>
 
