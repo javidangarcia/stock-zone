@@ -87,7 +87,7 @@ export default function StockNews({ stocks }) {
             {stockNews?.length > articlesToShow ? (
                 <Button
                     variant="outline-primary"
-                    onClick={() => setArticlesToShow(articlesToShow + 5)}
+                    onClick={() => setArticlesToShow((prev) => prev + 3)}
                 >
                     Load More
                 </Button>
