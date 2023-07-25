@@ -2,50 +2,52 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 25px 25px 25px 150px;
-    width: 50%;
+    margin: 25px 100px 0px 0px;
+    flex: 4;
 }
 
 .stocks-you-follow h1 {
-    margin: 0px;
+    margin: 0;
     font-size: 30px;
+    margin-bottom: 10px;
 }
 
-.stocks {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    margin-top: 20px;
-    user-select: none;
+.stocks-you-follow table {
+    overflow: hidden;
+    width: 100%;
 }
 
-.stock-margin {
-    margin-bottom: 20px;
-}
-
-.stock {
-    display: flex;
-    align-items: center;
-    background-color: var(--primary);
-    border-radius: 20px;
-    color: white;
+.stocks-you-follow table th,
+.stocks-you-follow table td {
     padding: 10px;
-    border: 3px solid black;
+    vertical-align: middle;
 }
 
-.stock img {
-    margin-right: 10px;
+.stocks-you-follow table th {
+    text-align: center;
+}
+
+.stock-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stock-follow-logo {
+    display: flex;
+    height: 60px;
+    align-items: center;
+}
+
+.stock-follow-logo img {
     border-radius: 20px;
-    height: 50px;
-    width: 50px;
+    border: 2px solid white;
 }
 
-.stock p {
-    margin: 0px;
-    font-size: 30px;
+.rounded-table {
+    border-radius: 15px;
 }
 
 .stock-link {
     text-decoration: none;
-    color: inherit;
 }
