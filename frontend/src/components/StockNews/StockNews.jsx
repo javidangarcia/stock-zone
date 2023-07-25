@@ -1,105 +1,97 @@
 import "./StockNews.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { formatDate, firstWord } from "../../utils.js";
+import { formatDate, getMarketNewsUrl, getStockNewsUrl } from "../../utils.js";
 import { UserContext } from "../App/App";
+import Card from "react-bootstrap/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Button from "react-bootstrap/Button";
 
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
     const [currentStock, setCurrentStock] = useState(null);
     const { setErrorMessage, setLoading } = useContext(UserContext);
+    const [articlesToShow, setArticlesToShow] = useState(5);
 
     useEffect(() => {
         const fetchStockNews = async () => {
-            if (currentStock != null) {
-                try {
-                    setLoading(true);
-                    const searchTerm = firstWord(currentStock.name);
-                    const newsUrl = new URL(
-                        "https://newsapi.org/v2/everything"
+            try {
+                const newsUrl =
+                    currentStock === null
+                        ? getMarketNewsUrl()
+                        : getStockNewsUrl(currentStock);
+
+                const response = await axios.get(newsUrl, {
+                    validateStatus: () => true
+                });
+
+                if (response.status === 200) {
+                    const filteredStockNews = response.data.filter(
+                        (article) => article.image !== ""
                     );
-                    newsUrl.searchParams.append("q", searchTerm);
-                    newsUrl.searchParams.append("sortBy", "relevancy");
-                    newsUrl.searchParams.append("pageSize", "5");
-                    newsUrl.searchParams.append(
-                        "apiKey",
-                        import.meta.env.VITE_NEWS
-                    );
-                    const response = await axios.get(newsUrl, {
-                        validateStatus: () => true
-                    });
-
-                    if (response.data.status === "ok") {
-                        setStockNews(response.data.articles);
-                    }
-
-                    if (response.data.status === "error") {
-                        setErrorMessage(
-                            `${response.data.code}: ${response.data.message}`
-                        );
-                    }
-
-                    setLoading(false);
-                } catch (error) {
-                    setErrorMessage(`System Error: ${error.message}`);
+                    setArticlesToShow(5);
+                    setStockNews(filteredStockNews);
+                } else {
+                    setErrorMessage(`${response.error}`);
                 }
+
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                setErrorMessage(`System Error: ${error.message}`);
             }
         };
         fetchStockNews();
     }, [currentStock]);
 
-    const handleOptions = (event) => {
-        const ticker = event.target.value;
-        const selectedStock = stocks.find((stock) => stock.ticker === ticker);
-        setCurrentStock(selectedStock);
-    };
-
     return (
         <div className="stock-news">
             <h1>Related News</h1>
-            <select
-                className="stock-options"
-                value={currentStock?.ticker || ""}
-                onChange={handleOptions}
+            <DropdownButton
+                title={currentStock === null ? "Select a Stock" : currentStock}
+                className="mt-2 mb-3"
             >
-                <option value="" disabled defaultValue>
-                    Select a Stock You Follow
-                </option>
-                {stocks?.map((stock) => (
-                    <option key={stock.ticker} value={stock.ticker}>
-                        {stock.ticker}
-                    </option>
-                ))}
-            </select>
-            <div className="news">
-                {stockNews?.map((article) => (
-                    <div className="article-margin" key={article.url}>
-                        <a
-                            href={article.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="article-link"
+                {stocks?.map((stock) => {
+                    return (
+                        <Dropdown.Item
+                            key={stock.ticker}
+                            onClick={() => setCurrentStock(stock.ticker)}
                         >
-                            <div className="article">
-                                <div className="article-logo">
-                                    <img
-                                        src={currentStock.logo}
-                                        alt={`This is a logo of ${currentStock.name}.`}
-                                    />
-                                </div>
-                                <div className="article-content">
-                                    <h2>{article.title}</h2>
-                                    <p>{article.content}</p>
-                                    <p>
-                                        {formatDate(article.publishedAt)} •{" "}
-                                        {article.author}
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                ))}
-            </div>
+                            {stock.ticker}
+                        </Dropdown.Item>
+                    );
+                })}
+            </DropdownButton>
+            {stockNews?.slice(0, articlesToShow).map((article) => {
+                return (
+                    <Card
+                        key={article.id}
+                        className="mb-5 cursor-pointer"
+                        onClick={() => window.open(article.url, "_blank")}
+                        style={{ cursor: "pointer" }}
+                    >
+                        <Card.Img variant="top" src={article.image} />
+                        <Card.Body>
+                            <Card.Text>{article.headline}</Card.Text>
+                        </Card.Body>
+                        <Card.Footer>
+                            <small className="text-muted">
+                                {article.source} •{" "}
+                                {formatDate(article.datetime)}
+                            </small>
+                        </Card.Footer>
+                    </Card>
+                );
+            })}
+            {stockNews?.length > articlesToShow ? (
+                <Button
+                    variant="outline-primary"
+                    onClick={() => setArticlesToShow(articlesToShow + 5)}
+                >
+                    Load More
+                </Button>
+            ) : null}
         </div>
     );
 }

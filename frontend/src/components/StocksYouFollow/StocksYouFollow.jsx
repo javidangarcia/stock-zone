@@ -33,6 +33,7 @@ export default function StocksYouFollow({ stocks, setStocks }) {
                 setLoading(false);
             } catch (error) {
                 setErrorMessage(`${error.message}: Please try again later.`);
+                setLoading(false);
             }
         };
         fetchStocksYouFollow();

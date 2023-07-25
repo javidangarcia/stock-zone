@@ -8,12 +8,8 @@ export default function Home() {
 
     return (
         <div className="home">
-            <div className="home-container">
-                <StockNews stocks={stocks} />
-            </div>
-            <div className="home-container">
-                <StocksYouFollow stocks={stocks} setStocks={setStocks} />
-            </div>
+            <StockNews stocks={stocks} />
+            <StocksYouFollow stocks={stocks} setStocks={setStocks} />
         </div>
     );
 }
