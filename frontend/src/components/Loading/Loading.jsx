@@ -8,7 +8,7 @@ export default function Loading() {
     return loading ? (
         <div
             className="loading-container"
-            style={{ "min-height": "calc(100vh - 90px)" }}
+            style={{ "minHeight": "calc(100vh - 90px)" }}
         >
             <div
                 className="spinner-border text-primary"

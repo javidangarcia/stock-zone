@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     margin: 25px 25px 25px 150px;
+    width: 50%;
 }
 
 .stocks-you-follow h1 {

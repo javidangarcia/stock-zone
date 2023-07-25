@@ -1,13 +1,12 @@
 // Functions
 
-export const formatDate = (dateString) => {
-    const options = { day: "numeric", month: "long", year: "numeric" };
-    const date = new Date(dateString);
+export const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
 };
 
 export const capitalize = (sentence) => {
-
     const words = sentence.split(" ");
 
     const capitalizedWords = words.map((word) => {
@@ -15,10 +14,6 @@ export const capitalize = (sentence) => {
     });
 
     return capitalizedWords.join(" ");
-};
-
-export const firstWord = (string) => {
-    return string.split(" ")[0];
 };
 
 export const isValidStock = (stock) => {
@@ -44,7 +39,12 @@ export const formatDateTime = (dateTimeString) => {
 
 export const compareCommentsByDate = (firstDate, secondDate) => {
     return new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
-  };
+};
+
+export const getCurrentDate = () => {
+    const currentDate = new Date();
+    return currentDate.toLocaleDateString("en-CA");
+};
 
 // URLs
 
@@ -69,4 +69,21 @@ export function getStockLogoUrl(ticker) {
     stockLogoUrl.searchParams.append("symbol", ticker);
     stockLogoUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
     return stockLogoUrl.href;
+}
+
+export function getMarketNewsUrl() {
+    const marketNewsUrl = new URL("https://finnhub.io/api/v1/news");
+    marketNewsUrl.searchParams.append("category", "forex");
+    marketNewsUrl.searchParams.append("minId", "10");
+    marketNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
+    return marketNewsUrl.href;
+}
+
+export function getStockNewsUrl(currentStock) {
+    const stockNewsUrl = new URL("https://finnhub.io/api/v1/company-news");
+    stockNewsUrl.searchParams.append("symbol", currentStock);
+    stockNewsUrl.searchParams.append("from", "2023-07-01");
+    stockNewsUrl.searchParams.append("to", getCurrentDate());
+    stockNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
+    return stockNewsUrl.href;
 }
