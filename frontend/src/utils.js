@@ -46,6 +46,36 @@ export const getCurrentDate = () => {
     return currentDate.toLocaleDateString("en-CA");
 };
 
+export const formatDateToMonth = (inputDate) => {
+    const [year, month, day] = inputDate.split("-");
+    const dateObject = new Date(year, month - 1, day, 0, 0, 0);
+
+    const formattedDate = new Intl.DateTimeFormat("en", {
+        month: "short"
+    }).format(dateObject);
+
+    return formattedDate;
+};
+
+export const formatDateToMonthDay = (inputDate) => {
+    const [year, month, day] = inputDate.split("-");
+    const dateObject = new Date(year, month - 1, day, 0, 0, 0);
+
+    const formattedMonth = new Intl.DateTimeFormat("en", {
+        month: "short"
+    }).format(dateObject);
+
+    const formattedDay = new Intl.DateTimeFormat("en", {
+        day: "numeric"
+    }).format(dateObject);
+
+    return `${formattedMonth} ${formattedDay}`;
+};
+
+export const getCurrentTime = () => {
+    return new Date().getTime();
+};
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {
