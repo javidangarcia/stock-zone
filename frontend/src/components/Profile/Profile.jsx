@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ProfileHistory from "../ProfileHistory/ProfileHistory";
 import FriendConnection from "../FriendConnection/FriendConnection";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Profile() {
     const { username } = useParams();
@@ -43,26 +45,31 @@ export default function Profile() {
     }, [username]);
 
     return profile.username ? (
-        <div className="profile-container">
-            <div className="profile-card">
-                <FriendConnection
-                    username={username}
-                    profile={profile}
-                    setProfile={setProfile}
-                />
-                <div className="profile-picture">
-                    <img
-                        src={profile.picture}
-                        alt={`This is a profile picture associated with ${profile.username}`}
-                    />
-                </div>
-                <div className="profile-details">
-                    <h1>{profile.fullName}</h1>
-                    <p>Username: {profile.username}</p>
-                    <p>Email: {profile.email}</p>
-                </div>
-                <ProfileHistory username={username} />
+        <div className="d-flex justify-content-center align-items-center flex-column">
+            <div className="profile-card mt-5">
+                <Card>
+                    <div className="profile-header">
+                        <Card.Img variant="top" src={profile.picture} />
+                        <FriendConnection
+                            username={username}
+                            profile={profile}
+                            setProfile={setProfile}
+                        />
+                    </div>
+                    <Card.Body className="text-center">
+                        <Card.Title className="m-0">
+                            {profile.fullName}
+                        </Card.Title>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush text-center">
+                        <ListGroup.Item>
+                            Username: {profile.username}
+                        </ListGroup.Item>
+                        <ListGroup.Item>Email: {profile.email}</ListGroup.Item>
+                    </ListGroup>
+                </Card>
             </div>
+            <ProfileHistory username={username} />
         </div>
     ) : null;
 }

@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 
+const STOCKS_TO_DISPLAY = 3;
+
 export default function StocksYouFollow({ stocks, setStocks }) {
     const { user, setErrorMessage, setLoading } = useContext(UserContext);
-    const [displayedStocks, setDisplayedStocks] = useState(3);
+    const [displayedStocks, setDisplayedStocks] = useState(STOCKS_TO_DISPLAY);
     const [loadedLogos, setLoadedLogos] = useState({});
 
     useEffect(() => {
@@ -112,7 +114,7 @@ export default function StocksYouFollow({ stocks, setStocks }) {
             {stocks.length > displayedStocks ? (
                 <Button
                     variant="outline-primary"
-                    onClick={() => setDisplayedStocks((prev) => prev + 3)}
+                    onClick={() => setDisplayedStocks((prev) => prev + STOCKS_TO_DISPLAY)}
                 >
                     Load More
                 </Button>

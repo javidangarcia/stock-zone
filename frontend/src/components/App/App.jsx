@@ -27,7 +27,7 @@ export default function App() {
     }, [user]);
 
     const requireAuth = (element) => {
-        return user ? element : <LoginForm />;
+        return user != null ? element : <LoginForm />;
     };
 
     return (
@@ -35,7 +35,7 @@ export default function App() {
             <UserContext.Provider value={{ user, setUser, setErrorMessage, loading, setLoading }}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
-                    {user ? <Navigation /> : null}
+                    {user != null ? <Navigation /> : null}
                     <Loading />
                     <Routes>
                         <Route path="/login" element={<LoginForm />} />

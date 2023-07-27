@@ -71,12 +71,12 @@ export default function Comments({ ticker }) {
     };
 
     return (
-        <div className="comments me-5 ms-5">
+        <div className="comments me-5 ms-5 mb-5">
             <h2>Comments</h2>
             <div className="past-comments">
                 {comments?.sort(compareCommentsByDate).map((comment) => {
                     return (
-                        <div className="comment-details" key={`${comment.createdAt}-${comment.content}`}>
+                        <div className="comment-details" key={comment.id}>
                             <div className="comment-picture">
                                 <img
                                     src={comment.User.picture}

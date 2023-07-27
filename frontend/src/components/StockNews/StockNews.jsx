@@ -8,14 +8,17 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "react-bootstrap/Button";
 
+const ARTICLES_TO_SHOW = 5;
+
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
     const [currentStock, setCurrentStock] = useState(null);
     const { setErrorMessage, setLoading } = useContext(UserContext);
-    const [articlesToShow, setArticlesToShow] = useState(5);
+    const [articlesToShow, setArticlesToShow] = useState(ARTICLES_TO_SHOW);
 
     useEffect(() => {
         const fetchStockNews = async () => {
+            setLoading(true);
             try {
                 const newsUrl =
                     currentStock === null
@@ -71,9 +74,10 @@ export default function StockNews({ stocks }) {
                         onClick={() => window.open(article.url, "_blank")}
                         style={{ cursor: "pointer" }}
                     >
-                        <Card.Img variant="top" src={article.image} />
+                        <Card.Img variant="top" src={article.image}/>
                         <Card.Body>
-                            <Card.Text>{article.headline}</Card.Text>
+                            <Card.Title>{article.headline}</Card.Title>
+                            <Card.Text>{article.summary}</Card.Text>
                         </Card.Body>
                         <Card.Footer>
                             <small className="text-muted">
@@ -86,8 +90,9 @@ export default function StockNews({ stocks }) {
             })}
             {stockNews?.length > articlesToShow ? (
                 <Button
+                    className="mb-5"
                     variant="outline-primary"
-                    onClick={() => setArticlesToShow((prev) => prev + 3)}
+                    onClick={() => setArticlesToShow((prev) => prev + ARTICLES_TO_SHOW)}
                 >
                     Load More
                 </Button>
