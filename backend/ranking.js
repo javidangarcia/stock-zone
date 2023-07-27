@@ -3,10 +3,184 @@ import { Follow } from "./models/follow.js";
 import { Like } from "./models/like.js";
 import { Dislike } from "./models/dislike.js";
 import { compareStocksByPoints } from "./utils.js";
+import { User } from "./models/user.js";
+import { Friend } from "./models/friend.js";
 
 const FOLLOW_POINTS = 25;
 const LIKE_POINTS = 20;
 const DISLIKE_POINTS = -20;
+const FOLLOW_FRIEND_POINTS = 10;
+const LIKE_FRIEND_POINTS = 10;
+const DISLIKE_FRIEND_POINTS = -10;
+
+export async function RankingV3(user) {
+    try {
+        const [stocksInDatabase, follows, likes, dislikes, connections] = await Promise.all([
+            Stock.findAll(),
+            Follow.findAll({
+                where: { UserId: user.id },
+                include: [{ model: Stock }]
+            }),
+            Like.findAll({
+                where: { UserId: user.id },
+                include: [{ model: Stock }]
+            }),
+            Dislike.findAll({
+                where: { UserId: user.id },
+                include: [{ model: Stock }]
+            }),
+            Friend.findAll({
+                where: { UserId1: user.id },
+                include: [
+                    { model: User, as: "user1" },
+                    { model: User, as: "user2" }
+                ]
+            })
+        ]);
+
+        if (stocksInDatabase.length < 10) {
+            return {
+                status: 422,
+                error: "You need at least 10 stocks in the database to access ranking."
+            };
+        }
+
+        const followsMap = follows.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
+        }, {});
+
+        const likesMap = likes.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
+        }, {});
+
+        const dislikesMap = dislikes.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
+        }, {});
+
+        const friendIDs = connections.map((connection) => connection.user2.id);
+
+        const stocksThatFriendsFollow = await Promise.all(
+            friendIDs.map(async (friendID) => {
+                const friendFollows = await Follow.findAll({
+                    where: { UserId: friendID },
+                    include: [{ model: Stock }]
+                });
+                const stocksTheyFollow = friendFollows.map((friendFollow) => {
+                    return friendFollow.Stock.dataValues;
+                });
+                return stocksTheyFollow;
+            })
+        );
+
+        const stocksThatFriendsLike = await Promise.all(
+            friendIDs.map(async (friendID) => {
+                const friendLikes = await Like.findAll({
+                    where: { UserId: friendID },
+                    include: [{ model: Stock }]
+                });
+                const stocksTheyLike = friendLikes.map((friendLike) => {
+                    return friendLike.Stock.dataValues;
+                });
+                return stocksTheyLike;
+            })
+        );
+
+        const stocksThatFriendsDislike = await Promise.all(
+            friendIDs.map(async (friendID) => {
+                const friendDislikes = await Dislike.findAll({
+                    where: { UserId: friendID },
+                    include: [{ model: Stock }]
+                });
+                const stocksTheyDislike = friendDislikes.map((friendDislike) => {
+                    return friendDislike.Stock.dataValues;
+                });
+                return stocksTheyDislike;
+            })
+        );
+
+        const friendsFollowsMap = {};
+
+        stocksThatFriendsFollow.forEach((friendStocks) => {
+            friendStocks.forEach((stock) => {
+                if (friendsFollowsMap[stock.ticker]) {
+                    friendsFollowsMap[stock.ticker] += 1;
+                } else {
+                    friendsFollowsMap[stock.ticker] = 1;
+                }
+            });
+        });
+
+        const friendsLikesMap = {};
+
+        stocksThatFriendsLike.forEach((friendStocks) => {
+            friendStocks.forEach((stock) => {
+                if (friendsLikesMap[stock.ticker]) {
+                    friendsLikesMap[stock.ticker] += 1;
+                } else {
+                    friendsLikesMap[stock.ticker] = 1;
+                }
+            });
+        });
+
+        const friendsDislikesMap = {};
+
+        stocksThatFriendsDislike.forEach((friendStocks) => {
+            friendStocks.forEach((stock) => {
+                if (friendsDislikesMap[stock.ticker]) {
+                    friendsDislikesMap[stock.ticker] += 1;
+                } else {
+                    friendsDislikesMap[stock.ticker] = 1;
+                }
+            });
+        });
+
+        const stocksRanking = stocksInDatabase.map((currentStock) => {
+            let points = 0;
+
+            if (followsMap[currentStock.ticker]) {
+                points += FOLLOW_POINTS;
+            }
+
+            if (likesMap[currentStock.ticker]) {
+                points += LIKE_POINTS;
+            }
+
+            if (dislikesMap[currentStock.ticker]) {
+                points += DISLIKE_POINTS;
+            }
+
+            if (friendsFollowsMap[currentStock.ticker]) {
+                points += friendsFollowsMap[currentStock.ticker] * FOLLOW_FRIEND_POINTS;
+            }
+
+            if (friendsLikesMap[currentStock.ticker]) {
+                points += friendsLikesMap[currentStock.ticker] * LIKE_FRIEND_POINTS;
+            }
+
+            if (friendsDislikesMap[currentStock.ticker]) {
+                points +=
+                    friendsDislikesMap[currentStock.ticker] *
+                    DISLIKE_FRIEND_POINTS *
+                    (friendsDislikesMap[currentStock.ticker] % 2 === 0 ? -1 : 1);
+            }
+
+            const { ticker, name, logo } = currentStock.dataValues;
+            const stockWithPoints = { ticker, name, logo, points };
+
+            return stockWithPoints;
+        });
+
+        stocksRanking.sort(compareStocksByPoints);
+        const topTenStocks = stocksRanking.slice(0, 10);
+
+        return { status: 200, data: { stocksRanking: topTenStocks } };
+    } catch (error) {
+        return { status: 500, error };
+    }
+}
 
 export async function RankingV2(user) {
     try {
@@ -33,19 +207,19 @@ export async function RankingV2(user) {
             };
         }
 
-        const followsMap = follows.reduce((accum, current) => { 
-            accum[current.Stock.ticker] = true; 
-            return accum; 
+        const followsMap = follows.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
         }, {});
 
-        const likesMap = likes.reduce((accum, current) => { 
-            accum[current.Stock.ticker] = true; 
-            return accum; 
+        const likesMap = likes.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
         }, {});
 
-        const dislikesMap = dislikes.reduce((accum, current) => { 
-            accum[current.Stock.ticker] = true; 
-            return accum; 
+        const dislikesMap = dislikes.reduce((accum, current) => {
+            accum[current.Stock.ticker] = true;
+            return accum;
         }, {});
 
         const stocksRanking = stocksInDatabase.map((currentStock) => {
@@ -77,7 +251,6 @@ export async function RankingV2(user) {
         return { status: 500, error };
     }
 }
-
 
 export async function RankingV1(user) {
     try {
