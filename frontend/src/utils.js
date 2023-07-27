@@ -76,6 +76,15 @@ export const getCurrentTime = () => {
     return new Date().getTime();
 };
 
+function getTwoWeeksAgoDate() {
+    const today = new Date();
+    const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const year = twoWeeksAgo.getFullYear();
+    const month = String(twoWeeksAgo.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksAgo.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {
@@ -112,7 +121,7 @@ export function getMarketNewsUrl() {
 export function getStockNewsUrl(currentStock) {
     const stockNewsUrl = new URL("https://finnhub.io/api/v1/company-news");
     stockNewsUrl.searchParams.append("symbol", currentStock);
-    stockNewsUrl.searchParams.append("from", "2023-07-01");
+    stockNewsUrl.searchParams.append("from", getTwoWeeksAgoDate());
     stockNewsUrl.searchParams.append("to", getCurrentDate());
     stockNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
     return stockNewsUrl.href;

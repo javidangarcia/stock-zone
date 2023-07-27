@@ -111,12 +111,12 @@ export default function StockData() {
     return (
         <div className="stock-data">
             {stockNotFound ? (
-                <div
-                    class="alert alert-danger d-flex justify-content-center"
+                <p
+                    className="alert alert-danger d-flex justify-content-center"
                     role="alert"
                 >
                     This stock does not exist.
-                </div>
+                </p>
             ) : null}
 
             {!stockNotFound && stockData.name ? (

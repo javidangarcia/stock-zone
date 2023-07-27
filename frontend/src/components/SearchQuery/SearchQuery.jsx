@@ -41,7 +41,7 @@ export default function SearchQuery({ searchInput }) {
 
     return (
         showDropdown ? (
-            <div className="dropdown">
+            <div className="search-dropdown">
                 {
                     searchResults?.map((stock) => {
                         if (isValidStock(stock)) {
@@ -50,7 +50,7 @@ export default function SearchQuery({ searchInput }) {
                                     to={`/search/stocks/${stock.symbol}`} 
                                     className="stock-link"
                                 >
-                                    <div className="dropdown-item">
+                                    <div className="search-dropdown-item">
                                         <p>{stock.instrument_name} ({stock.symbol})</p>
                                     </div>
                                 </Link>
