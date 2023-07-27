@@ -64,6 +64,7 @@ export default function ProfileHistory({ username }) {
             }
         };
         fetchHistory();
+        setMode([]);
     }, [username]);
 
     return (

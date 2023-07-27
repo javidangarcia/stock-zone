@@ -85,6 +85,17 @@ function getTwoWeeksAgoDate() {
     return `${year}-${month}-${day}`;
 }
 
+export function isValidArticle(currentStock, article) {
+    return (
+        article.image !== "" &&
+        article.summary.length < 1000 &&
+        (article.headline.includes(currentStock.ticker) ||
+            article.summary.includes(currentStock.ticker) ||
+            article.headline.includes(currentStock.name) ||
+            article.summary.includes(currentStock.name))
+    );
+}
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {
@@ -120,7 +131,7 @@ export function getMarketNewsUrl() {
 
 export function getStockNewsUrl(currentStock) {
     const stockNewsUrl = new URL("https://finnhub.io/api/v1/company-news");
-    stockNewsUrl.searchParams.append("symbol", currentStock);
+    stockNewsUrl.searchParams.append("symbol", currentStock.ticker);
     stockNewsUrl.searchParams.append("from", getTwoWeeksAgoDate());
     stockNewsUrl.searchParams.append("to", getCurrentDate());
     stockNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);

@@ -167,16 +167,15 @@ export async function RankingV3(user) {
                     (friendsDislikesMap[currentStock.ticker] % 2 === 0 ? -1 : 1);
             }
 
-            const { ticker, name, logo } = currentStock.dataValues;
-            const stockWithPoints = { ticker, name, logo, points };
+            const { ticker, name, logo, sector, price } = currentStock.dataValues;
+            const stockWithPoints = { ticker, name, logo, points, sector, price };
 
             return stockWithPoints;
         });
 
         stocksRanking.sort(compareStocksByPoints);
-        const topTenStocks = stocksRanking.slice(0, 10);
 
-        return { status: 200, data: { stocksRanking: topTenStocks } };
+        return { status: 200, data: { stocksRanking } };
     } catch (error) {
         return { status: 500, error };
     }

@@ -1,7 +1,12 @@
 import "./StockNews.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { formatDate, getMarketNewsUrl, getStockNewsUrl } from "../../utils.js";
+import {
+    formatDate,
+    getMarketNewsUrl,
+    getStockNewsUrl,
+    isValidArticle
+} from "../../utils.js";
 import { UserContext } from "../App/App";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -9,6 +14,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "react-bootstrap/Button";
 
 const ARTICLES_TO_SHOW = 5;
+const ARTICLES_SUMMARY_LIMIT = 1000;
 
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
@@ -25,15 +31,20 @@ export default function StockNews({ stocks }) {
                         ? getMarketNewsUrl()
                         : getStockNewsUrl(currentStock);
 
+                console.log(newsUrl);
+
                 const response = await axios.get(newsUrl, {
                     validateStatus: () => true
                 });
 
                 if (response.status === 200) {
                     const filteredStockNews = response.data.filter(
-                        (article) => article.image !== ""
+                        (article) =>
+                            (article.category === "forex" &&
+                                article.summary.length <
+                                    ARTICLES_SUMMARY_LIMIT) ||
+                            isValidArticle(currentStock, article)
                     );
-                    setArticlesToShow(5);
                     setStockNews(filteredStockNews);
                 } else {
                     setErrorMessage(`${response.error}`);
@@ -52,14 +63,14 @@ export default function StockNews({ stocks }) {
         <div className="stock-news">
             <h1>Related News</h1>
             <DropdownButton
-                title={currentStock === null ? "Select a Stock" : currentStock}
+                title={currentStock?.ticker == null ? "Select a Stock" : currentStock.ticker}
                 className="mt-2 mb-3"
             >
                 {stocks?.map((stock) => {
                     return (
                         <Dropdown.Item
                             key={stock.ticker}
-                            onClick={() => setCurrentStock(stock.ticker)}
+                            onClick={() => setCurrentStock(stock)}
                         >
                             {stock.ticker}
                         </Dropdown.Item>
@@ -74,7 +85,7 @@ export default function StockNews({ stocks }) {
                         onClick={() => window.open(article.url, "_blank")}
                         style={{ cursor: "pointer" }}
                     >
-                        <Card.Img variant="top" src={article.image}/>
+                        <Card.Img variant="top" src={article.image} />
                         <Card.Body>
                             <Card.Title>{article.headline}</Card.Title>
                             <Card.Text>{article.summary}</Card.Text>
@@ -92,7 +103,9 @@ export default function StockNews({ stocks }) {
                 <Button
                     className="mb-5"
                     variant="outline-primary"
-                    onClick={() => setArticlesToShow((prev) => prev + ARTICLES_TO_SHOW)}
+                    onClick={() =>
+                        setArticlesToShow((prev) => prev + ARTICLES_TO_SHOW)
+                    }
                 >
                     Load More
                 </Button>
