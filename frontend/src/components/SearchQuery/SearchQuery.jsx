@@ -1,14 +1,14 @@
 import "./SearchQuery.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { isValidStock } from "../../utils";
-import { UserContext } from "../App/App";
 import { Link } from "react-router-dom";
+import { isValidStock } from "../../utils";
+import { Context } from "../../context";
 
 export default function SearchQuery({ searchInput }) {
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -56,6 +56,7 @@ export default function SearchQuery({ searchInput }) {
                                 </Link>
                             )
                         }
+                        return null;
                     })
                 }
             </div>

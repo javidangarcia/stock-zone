@@ -1,16 +1,16 @@
 import "./Profile.css";
 import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../App/App";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ProfileHistory from "../ProfileHistory/ProfileHistory";
-import FriendConnection from "../FriendConnection/FriendConnection";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import ProfileHistory from "../ProfileHistory/ProfileHistory";
+import FriendConnection from "../FriendConnection/FriendConnection";
+import { Context } from "../../context";
 
 export default function Profile() {
     const { username } = useParams();
-    const { setErrorMessage, setLoading } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(Context);
     const [profile, setProfile] = useState({});
 
     useEffect(() => {

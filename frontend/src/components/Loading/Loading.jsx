@@ -1,9 +1,9 @@
 import "./Loading.css";
 import { useContext } from "react";
-import { UserContext } from "../App/App";
+import { Context } from "../../context";
 
 export default function Loading() {
-    const { loading } = useContext(UserContext);
+    const { loading } = useContext(Context);
 
     return loading ? (
         <div
@@ -14,7 +14,7 @@ export default function Loading() {
                 className="spinner-border text-primary"
                 style={{ height: "200px", width: "200px" }}
                 role="status"
-            ></div>
+             />
         </div>
     ) : null;
 }

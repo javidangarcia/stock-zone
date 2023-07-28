@@ -26,5 +26,5 @@ module.exports = {
         sourceType: "module"
     },
     plugins: ["react"],
-    rules: { "react/prop-types": "off", 'import/prefer-default-export': [0] }
+    rules: { "react/prop-types": "off", "import/prefer-default-export": [0] }
 };

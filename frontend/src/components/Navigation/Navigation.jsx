@@ -1,21 +1,20 @@
 import "./Navigation.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { UserContext } from "../App/App";
+import { Link , useNavigate, NavLink } from "react-router-dom";
 import { useContext } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Context } from "../../context";
 import appLogo from "../../assets/stock-zone.png";
 
 export default function Navigation() {
-    const { user, setUser, setErrorMessage } = useContext(UserContext);
+    const { user, setUser, setErrorMessage } = useContext(Context);
     const navigate = useNavigate();
 
-    async function handleLogout(event) {
+    const handleLogout = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post(

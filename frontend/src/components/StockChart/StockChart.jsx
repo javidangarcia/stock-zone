@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import ApexCharts from "react-apexcharts";
-import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
 import axios from "axios";
-import { UserContext } from "../App/App";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import { Context } from "../../context";
+import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
 
 export default function StockChart({ ticker }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const [chartData, setChartData] = useState({});
     const [oneYearData, setOneYearData] = useState([]);
     const [oneMonthData, setOneMonthData] = useState([]);
@@ -33,8 +33,8 @@ export default function StockChart({ ticker }) {
                 },
                 tooltip: {
                     y: {
-                        formatter: function (val) {
-                            return "$" + val;
+                        formatter (val) {
+                            return `$${  val}`;
                         }
                     }
                 }
@@ -71,8 +71,8 @@ export default function StockChart({ ticker }) {
                 },
                 tooltip: {
                     y: {
-                        formatter: function (val) {
-                            return "$" + val;
+                        formatter (val) {
+                            return `$${  val}`;
                         }
                     }
                 }

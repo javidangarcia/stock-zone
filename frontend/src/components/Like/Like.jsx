@@ -1,12 +1,12 @@
 import axios from "axios";
-import { UserContext } from "../App/App";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import { Context } from "../../context";
 
 export default function Like({ ticker, stockData, setStockData }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const [likes, setLikes] = useState([]);
     const navigate = useNavigate();
 
@@ -71,13 +71,12 @@ export default function Like({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.liking ? "Liked" : "Like"}
             variant="success"
-            onClick={handleLike}
+            onClick={() => handleLike}
             className="me-2"
         >
             <Dropdown.Item>{likes.length} users like this stock.</Dropdown.Item>
             <Dropdown.Divider />
-            {likes?.map((like) => {
-                return (
+            {likes?.map((like) => (
                     <Dropdown.Item
                         key={like.User.username}
                         onClick={() =>
@@ -86,8 +85,7 @@ export default function Like({ ticker, stockData, setStockData }) {
                     >
                         {like.User.username}
                     </Dropdown.Item>
-                );
-            })}
+                ))}
         </SplitButton>
     );
 }

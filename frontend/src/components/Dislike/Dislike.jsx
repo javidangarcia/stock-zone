@@ -1,12 +1,12 @@
 import axios from "axios";
-import { UserContext } from "../App/App";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import { Context } from "../../context";
 
 export default function Dislike({ ticker, stockData, setStockData }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const [dislikes, setDislikes] = useState([]);
     const navigate = useNavigate();
 
@@ -71,15 +71,14 @@ export default function Dislike({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.disliking ? "Disliked" : "Dislike"}
             variant="danger"
-            onClick={handleDislike}
+            onClick={() => handleDislike}
             className="me-2"
         >
             <Dropdown.Item>
                 {dislikes.length} users dislike this stock.
             </Dropdown.Item>
             <Dropdown.Divider />
-            {dislikes?.map((dislike) => {
-                return (
+            {dislikes?.map((dislike) => (
                     <Dropdown.Item
                         key={dislike.User.username}
                         onClick={() =>
@@ -88,8 +87,7 @@ export default function Dislike({ ticker, stockData, setStockData }) {
                     >
                         {dislike.User.username}
                     </Dropdown.Item>
-                );
-            })}
+                ))}
         </SplitButton>
     );
 }

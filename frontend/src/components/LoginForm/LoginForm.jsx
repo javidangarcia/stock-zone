@@ -1,15 +1,14 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../App/App";
 import Image from "react-bootstrap/Image";
+import { Context } from "../../context";
 import appLogo from "../../assets/stock-zone.png";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser, setErrorMessage } = useContext(UserContext);
+    const { setUser, setErrorMessage } = useContext(Context);
 
     const navigate = useNavigate();
 
@@ -62,38 +61,53 @@ export default function LoginForm() {
                     Log in to your account
                 </h2>
                 <form onSubmit={handleLogin}>
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label">
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
+                    <div className="row mb-3">
+                        <div className="col">
+                            <label htmlFor="username" className="form-label w-100">
+                                Username
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="username"
+                                    value={username}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
+                                    required
+                                />
+                            </label>
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                    <div className="row mb-3">
+                        <div className="col">
+                            <label htmlFor="password" className="form-label w-100">
+                                Password
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    required
+                                />
+                            </label>
+                        </div>
                     </div>
-                    <button type="submit" className="btn btn-primary col-12">
-                        Login
-                    </button>
+                    <div className="row">
+                        <div className="col">
+                            <button
+                                type="submit"
+                                className="btn btn-primary col-12"
+                            >
+                                Login
+                            </button>
+                        </div>
+                    </div>
                 </form>
                 <p className="mt-3 text-center">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link className="text-decoration-none" to="/signup">
                         Sign Up
                     </Link>

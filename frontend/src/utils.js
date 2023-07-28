@@ -9,20 +9,16 @@ export const formatDate = (timestamp) => {
 export const capitalize = (sentence) => {
     const words = sentence.split(" ");
 
-    const capitalizedWords = words.map((word) => {
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    });
+    const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 
     return capitalizedWords.join(" ");
 };
 
-export const isValidStock = (stock) => {
-    return (
+export const isValidStock = (stock) => (
         stock.currency === "USD" &&
         stock.instrument_type === "Common Stock" &&
         (stock.exchange === "NYSE" || stock.exchange === "NASDAQ")
     );
-};
 
 export const formatDateTime = (dateTimeString) => {
     const dateTime = new Date(dateTimeString);
@@ -37,9 +33,7 @@ export const formatDateTime = (dateTimeString) => {
     return dateTime.toLocaleDateString("en-US", options);
 };
 
-export const compareCommentsByDate = (firstDate, secondDate) => {
-    return new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
-};
+export const compareCommentsByDate = (firstDate, secondDate) => new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
 
 export const getCurrentDate = () => {
     const currentDate = new Date();
@@ -72,9 +66,7 @@ export const formatDateToMonthDay = (inputDate) => {
     return `${formattedMonth} ${formattedDay}`;
 };
 
-export const getCurrentTime = () => {
-    return new Date().getTime();
-};
+export const getCurrentTime = () => new Date().getTime();
 
 function getTwoWeeksAgoDate() {
     const today = new Date();

@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Image from "react-bootstrap/Image";
 import Follow from "../Follow/Follow";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
@@ -10,16 +11,15 @@ import {
     getStockPriceUrl,
     getStockLogoUrl,
     capitalize
-} from "../../utils.js";
-import { UserContext } from "../App/App";
-import Image from "react-bootstrap/Image";
+} from "../../utils";
+import { Context } from "../../context";
 import StockChart from "../StockChart/StockChart";
 
 export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const [stockNotFound, setStockNotFound] = useState(false);
-    const { setErrorMessage, setLoading } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(Context);
 
     useEffect(() => {
         const fetchStockData = async () => {
@@ -40,7 +40,7 @@ export default function StockData() {
 
                 if (databaseResponse.status === 500) {
                     setErrorMessage(
-                        `${response.statusText}: Please try again later.`
+                        `${databaseResponse.statusText}: Please try again later.`
                     );
                 }
 

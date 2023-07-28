@@ -1,12 +1,12 @@
 import "./Comments.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { UserContext } from "../App/App";
-import { formatDateTime, compareCommentsByDate } from "../../utils";
 import { Link } from "react-router-dom";
+import { Context } from "../../context";
+import { formatDateTime, compareCommentsByDate } from "../../utils";
 
 export default function Comments({ ticker }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const [comments, setComments] = useState([]);
     const [commentInput, setCommentInput] = useState("");
 
@@ -74,13 +74,12 @@ export default function Comments({ ticker }) {
         <div className="comments me-5 ms-5 mb-5">
             <h2>Comments</h2>
             <div className="past-comments">
-                {comments?.sort(compareCommentsByDate).map((comment) => {
-                    return (
+                {comments?.sort(compareCommentsByDate).map((comment) => (
                         <div className="comment-details" key={comment.id}>
                             <div className="comment-picture">
                                 <img
                                     src={comment.User.picture}
-                                    alt={`This is a profile picture associated with ${comment.User.username}`}
+                                    alt={`This is the profile associated with ${comment.User.username}`}
                                 />
                             </div>
                             <div className="comment-content">
@@ -91,8 +90,7 @@ export default function Comments({ ticker }) {
                                 <p className="comment-content">{comment.content}</p>
                             </div>
                         </div>
-                    );
-                })}
+                    ))}
             </div>
             <form className="form-comments" onSubmit={handleSubmit}>
                 <input

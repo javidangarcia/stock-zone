@@ -1,18 +1,17 @@
 import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Navigation from "../Navigation/Navigation";
 import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUpForm from "../SignUpForm/SignUpForm";
 import LoginForm from "../LoginForm/LoginForm";
-import { useState, useEffect, createContext } from "react";
 import Error from "../Error/Error";
 import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
 import Loading from "../Loading/Loading";
-
-export const UserContext = createContext();
+import { Context } from "../../context";
 
 export default function App() {
     const [errorMessage, setErrorMessage] = useState("");
@@ -26,13 +25,11 @@ export default function App() {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
-    const requireAuth = (element) => {
-        return user != null ? element : <LoginForm />;
-    };
+    const requireAuth = (element) => user != null ? element : <LoginForm />;
 
     return (
         <div className="app">
-            <UserContext.Provider value={{ user, setUser, setErrorMessage, loading, setLoading }}>
+            <Context.Provider value={{ user, setUser, setErrorMessage, loading, setLoading }}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
                     {user != null ? <Navigation /> : null}
@@ -50,7 +47,7 @@ export default function App() {
                         <Route path="/profile/:username" element={requireAuth(<Profile />)} />
                     </Routes>
                 </BrowserRouter>
-            </UserContext.Provider>
+            </Context.Provider>
         </div>
     );
 }
