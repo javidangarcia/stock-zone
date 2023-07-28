@@ -1,10 +1,10 @@
 import "./Error.css";
 import { useEffect, useContext } from "react";
-import { UserContext } from "../App/App";
 import { useLocation } from "react-router-dom";
+import { Context } from "../../context";
 
 export default function Error({ errorMessage }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const location = useLocation();
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export default function Error({ errorMessage }) {
     return (
         <div className={errorMessage ? "error" : "hidden"}>
             <p>{errorMessage}</p>
-            <button onClick={handleClose}>Close</button>
+            <button type="button" onClick={handleClose}>Close</button>
         </div>
     );
 }

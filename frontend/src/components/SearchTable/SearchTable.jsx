@@ -1,14 +1,13 @@
 import "./SearchTable.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect , useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { UserContext } from "../App/App";
+import { Context } from "../../context";
 
 export default function SearchTable() {
     const [stocks, setStocks] = useState([]);
     const [stocksNotFound, setStocksNotFound] = useState(false);
-    const { setErrorMessage, setLoading } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(Context);
 
     useEffect(() => {
         const fetchStocks = async () => {
@@ -45,7 +44,7 @@ export default function SearchTable() {
         <>
             {stocksNotFound ? (
                 <div
-                    class="alert alert-danger d-flex justify-content-center"
+                    className="alert alert-danger d-flex justify-content-center"
                     role="alert"
                 >
                     There are no stocks currently in the database, search for a
@@ -64,8 +63,7 @@ export default function SearchTable() {
                             <th>Price</th>
                         </tr>
                     </tbody>
-                    {stocks.map((stock) => {
-                        return (
+                    {stocks.map((stock) => (
                             <tbody key={stock.name}>
                                 <tr>
                                     <td id="stock-logo">
@@ -88,8 +86,7 @@ export default function SearchTable() {
                                     <td>${stock.price?.toFixed(2)}</td>
                                 </tr>
                             </tbody>
-                        );
-                    })}
+                        ))}
                 </table>
             ) : null}
         </>

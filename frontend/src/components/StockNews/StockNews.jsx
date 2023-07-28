@@ -1,17 +1,17 @@
 import "./StockNews.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Card from "react-bootstrap/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Button from "react-bootstrap/Button";
+import { Context } from "../../context";
 import {
     formatDate,
     getMarketNewsUrl,
     getStockNewsUrl,
     isValidArticle
-} from "../../utils.js";
-import { UserContext } from "../App/App";
-import Card from "react-bootstrap/Card";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Button from "react-bootstrap/Button";
+} from "../../utils";
 
 const ARTICLES_TO_SHOW = 5;
 const ARTICLES_SUMMARY_LIMIT = 1000;
@@ -19,7 +19,7 @@ const ARTICLES_SUMMARY_LIMIT = 1000;
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
     const [currentStock, setCurrentStock] = useState(null);
-    const { setErrorMessage, setLoading } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(Context);
     const [articlesToShow, setArticlesToShow] = useState(ARTICLES_TO_SHOW);
 
     useEffect(() => {
@@ -30,8 +30,6 @@ export default function StockNews({ stocks }) {
                     currentStock === null
                         ? getMarketNewsUrl()
                         : getStockNewsUrl(currentStock);
-
-                console.log(newsUrl);
 
                 const response = await axios.get(newsUrl, {
                     validateStatus: () => true
@@ -66,19 +64,16 @@ export default function StockNews({ stocks }) {
                 title={currentStock?.ticker == null ? "Select a Stock" : currentStock.ticker}
                 className="mt-2 mb-3"
             >
-                {stocks?.map((stock) => {
-                    return (
+                {stocks?.map((stock) => (
                         <Dropdown.Item
                             key={stock.ticker}
                             onClick={() => setCurrentStock(stock)}
                         >
                             {stock.ticker}
                         </Dropdown.Item>
-                    );
-                })}
+                    ))}
             </DropdownButton>
-            {stockNews?.slice(0, articlesToShow).map((article) => {
-                return (
+            {stockNews?.slice(0, articlesToShow).map((article) => (
                     <Card
                         key={article.id}
                         className="mb-5 cursor-pointer"
@@ -97,8 +92,7 @@ export default function StockNews({ stocks }) {
                             </small>
                         </Card.Footer>
                     </Card>
-                );
-            })}
+                ))}
             {stockNews?.length > articlesToShow ? (
                 <Button
                     className="mb-5"

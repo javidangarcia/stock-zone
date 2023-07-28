@@ -2,15 +2,15 @@ import "./Ranking.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App/App";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { Context } from "../../context";
 
 const STOCKS_TO_SHOW = 10;
 
 export default function Ranking() {
     const [stocksRanking, setStocksRanking] = useState([]);
-    const { setErrorMessage, setLoading } = useContext(UserContext);
+    const { setErrorMessage, setLoading } = useContext(Context);
     const [stocksToShow, setStocksToShow] = useState(STOCKS_TO_SHOW);
 
     useEffect(() => {

@@ -1,10 +1,9 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../App/App";
-import { capitalize } from "../../utils";
+import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
+import { Context } from "../../context";
+import { capitalize } from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 
 export default function SignUpForm() {
@@ -12,7 +11,7 @@ export default function SignUpForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const { setUser, setErrorMessage } = useContext(UserContext);
+    const { setUser, setErrorMessage } = useContext(Context);
 
     const navigate = useNavigate();
 
@@ -70,56 +69,56 @@ export default function SignUpForm() {
                 <h2 className="mb-4 text-center fs-5">Create an account</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="fullName" className="form-label">
+                        <label htmlFor="fullName" className="form-label w-100">
                             Full Name
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="fullName"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                required
+                            />
                         </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="fullName"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            required
-                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="form-label">
+                        <label htmlFor="email" className="form-label w-100">
                             Email
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
                         </label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="username" className="form-label">
+                        <label htmlFor="username" className="form-label w-100">
                             Username
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
                         </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="password" className="form-label">
+                        <label htmlFor="password" className="form-label w-100">
                             Password
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
                         </label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
                     </div>
                     <button type="submit" className="btn btn-primary col-12">
                         Sign Up

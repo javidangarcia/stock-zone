@@ -1,11 +1,11 @@
 import "./FriendConnection.css";
 import axios from "axios";
 import { useContext } from "react";
-import { UserContext } from "../App/App";
 import Button from "react-bootstrap/Button";
+import { Context } from "../../context";
 
 export default function FriendConnection({ username, profile, setProfile }) {
-    const { user, setErrorMessage } = useContext(UserContext);
+    const { user, setErrorMessage } = useContext(Context);
 
     const handleFriend = async () => {
         const url = profile.friend

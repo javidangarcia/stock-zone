@@ -1,12 +1,12 @@
 import axios from "axios";
-import { UserContext } from "../App/App";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import { Context } from "../../context";
 
 export default function Follow({ ticker, stockData, setStockData }) {
-    const { setErrorMessage } = useContext(UserContext);
+    const { setErrorMessage } = useContext(Context);
     const [follows, setFollows] = useState([]);
     const navigate = useNavigate();
 
@@ -62,15 +62,14 @@ export default function Follow({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.following ? "Following" : "Follow"}
             variant="primary"
-            onClick={handleFollow}
+            onClick={() => handleFollow}
             className="me-2"
         >
             <Dropdown.Item>
                 {follows.length} users follow this stock.
             </Dropdown.Item>
             <Dropdown.Divider />
-            {follows?.map((follow) => {
-                return (
+            {follows?.map((follow) => (
                     <Dropdown.Item
                         key={follow.User.username}
                         onClick={() =>
@@ -79,8 +78,7 @@ export default function Follow({ ticker, stockData, setStockData }) {
                     >
                         {follow.User.username}
                     </Dropdown.Item>
-                );
-            })}
+                ))}
         </SplitButton>
     );
 }
