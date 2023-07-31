@@ -62,7 +62,7 @@ export default function Follow({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.following ? "Following" : "Follow"}
             variant="primary"
-            onClick={() => handleFollow}
+            onClick={() => handleFollow()}
             className="me-2"
         >
             <Dropdown.Item>
