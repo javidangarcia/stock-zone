@@ -12,6 +12,7 @@ import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
 import Loading from "../Loading/Loading";
 import { Context } from "../../context";
+import ChatRoom from "../ChatRoom/ChatRoom";
 
 export default function App() {
     const [errorMessage, setErrorMessage] = useState("");
@@ -45,6 +46,7 @@ export default function App() {
                         <Route path="/search/stocks/:ticker" element={requireAuth(<StockData />)} />
                         <Route path="/profile" element={requireAuth(<Profile />)} />
                         <Route path="/profile/:username" element={requireAuth(<Profile />)} />
+                        <Route path="/chat" element={requireAuth(<ChatRoom />)} />
                     </Routes>
                 </BrowserRouter>
             </Context.Provider>
