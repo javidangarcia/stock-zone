@@ -43,7 +43,7 @@ export default function Home() {
         fetchStocksYouFollow();
     }, []);
 
-    return stocks ? (
+    return stocks.length > 0 ? (
         <div className="home">
             <StockNews stocks={stocks} />
             <StocksYouFollow stocks={stocks} />
