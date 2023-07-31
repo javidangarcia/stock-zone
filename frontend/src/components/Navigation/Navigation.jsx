@@ -86,6 +86,12 @@ export default function Navigation() {
                         >
                             Your Profile
                         </Dropdown.Item>
+                        <Dropdown.Item
+                            as={Link}
+                            to={`/chat`}
+                        >
+                            Messages
+                        </Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>
                             Sign Out
                         </Dropdown.Item>

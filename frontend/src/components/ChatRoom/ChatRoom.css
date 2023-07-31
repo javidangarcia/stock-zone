@@ -1,0 +1,25 @@
+.friends {
+    cursor: pointer;
+}
+
+.chat {
+    display: flex;
+    height: 90vh;
+    width: 100%;
+}
+
+.friends-list {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    margin-left: 20px;
+}
+
+.friends-card {
+    width: 100%;
+}
+
+.friends-list h3 {
+    text-align: center;
+    margin-top: 10px;
+}

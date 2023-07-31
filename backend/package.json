@@ -24,7 +24,8 @@
     "nodemon": "^2.0.22",
     "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "socket.io": "^4.7.1"
   },
   "devDependencies": {
     "eslint": "^8.46.0",
@@ -32,5 +33,10 @@
     "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-react": "^7.33.0",
     "prettier": "^3.0.0"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "useTabs": false,
+    "trailingComma": "none"
   }
 }
