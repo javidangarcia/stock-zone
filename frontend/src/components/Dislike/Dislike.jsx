@@ -71,7 +71,7 @@ export default function Dislike({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.disliking ? "Disliked" : "Dislike"}
             variant="danger"
-            onClick={() => handleDislike}
+            onClick={() => handleDislike()}
             className="me-2"
         >
             <Dropdown.Item>

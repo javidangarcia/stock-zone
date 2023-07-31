@@ -71,7 +71,7 @@ export default function Like({ ticker, stockData, setStockData }) {
         <SplitButton
             title={stockData.liking ? "Liked" : "Like"}
             variant="success"
-            onClick={() => handleLike}
+            onClick={() => handleLike()}
             className="me-2"
         >
             <Dropdown.Item>{likes.length} users like this stock.</Dropdown.Item>

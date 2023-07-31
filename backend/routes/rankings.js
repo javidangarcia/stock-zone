@@ -1,13 +1,14 @@
 import express from "express";
-import { RankingV3 } from "../ranking.js";
+import { RankingV5 } from "../ranking.js";
 
 const router = express.Router();
 
-router.get("/ranking", async (req, res) => {
+router.get("/ranking/:page", async (req, res) => {
     const user = req.session.user;
+    const { page } = req.params;
 
     try {
-        const response = await RankingV3(user);
+        const response = await RankingV5(user, page);
 
         if (response.status === 200) {
             res.status(response.status).json(response.data);

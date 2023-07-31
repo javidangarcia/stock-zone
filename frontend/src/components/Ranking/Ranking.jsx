@@ -6,24 +6,37 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { Context } from "../../context";
 
-const STOCKS_TO_SHOW = 10;
+const DEFAULT_RANKING_PAGE = 1;
+const MAX_PAGE_SIZE = 10;
 
 export default function Ranking() {
     const [stocksRanking, setStocksRanking] = useState([]);
-    const { setErrorMessage, setLoading } = useContext(Context);
-    const [stocksToShow, setStocksToShow] = useState(STOCKS_TO_SHOW);
+    const { setErrorMessage, loading, setLoading } = useContext(Context);
+    const [page, setPage] = useState(DEFAULT_RANKING_PAGE);
+    const [showLoadMore, setShowLoadMore] = useState(true);
 
     useEffect(() => {
         const fetchRanking = async () => {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/ranking`,
+                    `${import.meta.env.VITE_HOST}/ranking/${page}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
                 if (response.status === 200) {
-                    setStocksRanking(response.data.stocksRanking);
+                    if (response.data.stocksRanking.length < MAX_PAGE_SIZE) {
+                        setShowLoadMore(false);
+                    }
+
+                    if (page === DEFAULT_RANKING_PAGE) {
+                        setStocksRanking(response.data.stocksRanking);
+                    } else {
+                        setStocksRanking((prevRanking) => [
+                            ...prevRanking,
+                            ...response.data.stocksRanking
+                        ]);
+                    }
                 }
 
                 if (response.status === 422 || response.status === 401) {
@@ -42,7 +55,7 @@ export default function Ranking() {
             }
         };
         fetchRanking();
-    }, []);
+    }, [page]);
 
     return (
         <div className="d-flex flex-column align-items-center justify-content-center">
@@ -50,7 +63,7 @@ export default function Ranking() {
             <p className="mb-4">
                 Recommended based on your profile and history.
             </p>
-            {stocksRanking?.slice(0, stocksToShow).map((stock, index) => (
+            {stocksRanking?.map((stock, index) => (
                 <div className="mb-4">
                     <Link
                         to={`/search/stocks/${stock.ticker}`}
@@ -76,12 +89,12 @@ export default function Ranking() {
                     </Link>
                 </div>
             ))}
-            {stocksRanking?.length > stocksToShow ? (
+            {!loading && showLoadMore ? (
                 <Button
                     className="mb-5 mt-4"
                     variant="outline-primary"
                     onClick={() =>
-                        setStocksToShow((prev) => prev + STOCKS_TO_SHOW)
+                        setPage((prev) => prev + DEFAULT_RANKING_PAGE)
                     }
                 >
                     Load More
