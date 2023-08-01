@@ -1,10 +1,11 @@
-import "./SearchTable.css";
+import "./StockCarousel.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Context } from "../../context";
+import Carousel from "react-bootstrap/Carousel";
 
-export default function SearchTable() {
+export default function StockCarousel() {
     const [stocks, setStocks] = useState([]);
     const [stocksNotFound, setStocksNotFound] = useState(false);
     const { setErrorMessage, setLoading } = useContext(Context);
@@ -48,46 +49,36 @@ export default function SearchTable() {
                     role="alert"
                 >
                     There are no stocks currently in the database, search for a
-                    stock to gain access to table.
+                    stock to gain access to the table.
                 </div>
             ) : null}
 
             {stocks.length > 0 ? (
-                <table className="search-table">
-                    <tbody>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Ticker</th>
-                            <th>Name</th>
-                            <th>Sector</th>
-                            <th>Price</th>
-                        </tr>
-                    </tbody>
+                <Carousel className="carousel mb-5" data-bs-theme="light" interval={700}>
                     {stocks.map((stock) => (
-                        <tbody key={stock.name}>
-                            <tr>
-                                <td id="stock-logo">
-                                    <img
-                                        src={stock.logo}
-                                        alt={`This is a logo of ${stock.name}.`}
-                                    />
-                                </td>
-                                <td id="stock-ticker">
-                                    <Link
-                                        key={stock.name}
-                                        to={`/search/stocks/${stock.ticker}`}
-                                        className="stock-link"
-                                    >
-                                        {stock.ticker}
-                                    </Link>
-                                </td>
-                                <td>{stock.name}</td>
-                                <td>{stock.sector}</td>
-                                <td>${stock.price?.toFixed(2)}</td>
-                            </tr>
-                        </tbody>
+                        <Carousel.Item
+                            key={stock.ticker}
+                            className="carousel-item"
+                        >
+                            <Link
+                                to={`/search/stocks/${stock.ticker}`}
+                                className="stock-link"
+                            >
+                                <img
+                                    className="d-block w-100"
+                                    src={stock.logo}
+                                    alt={stock.name}
+                                />
+                            </Link>
+                            <Carousel.Caption>
+                                <div className="text-white carousel-info">
+                                    <h5>{stock.ticker}</h5>
+                                    <p>{stock.name}</p>
+                                </div>
+                            </Carousel.Caption>
+                        </Carousel.Item>
                     ))}
-                </table>
+                </Carousel>
             ) : null}
         </>
     );

@@ -1,7 +1,7 @@
 import "./Search.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchTable from "../SearchTable/SearchTable";
+import StockCarousel from "../StockCarousel/StockCarousel";
 import SearchQuery from "../SearchQuery/SearchQuery";
 
 export default function Search() {
@@ -15,7 +15,7 @@ export default function Search() {
     };
 
     return (
-        <div className="search">
+        <div>
             <div className="search-container">
                 <form className="search-bar" onSubmit={handleSearchSubmit}>
                     <input
@@ -25,12 +25,12 @@ export default function Search() {
                         onChange={(event) => setSearchInput(event.target.value)}
                     />
                     <button type="submit">
-                        <i className="material-icons">search</i>
+                        <i className="fa fa-search"></i>
                     </button>
                 </form>
                 <SearchQuery searchInput={searchInput} />
             </div>
-            <SearchTable />
+            <StockCarousel />
         </div>
     );
 }
