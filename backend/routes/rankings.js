@@ -1,5 +1,5 @@
 import express from "express";
-import { RankingV5 } from "../ranking.js";
+import { GetRanking } from "../ranking.js";
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.get("/ranking/:page", async (req, res) => {
     const { page } = req.params;
 
     try {
-        const response = await RankingV5(user, parseInt(page, 10));
+        const response = await GetRanking(user, parseInt(page, 10));
 
         if (response.status === 200) {
             res.status(response.status).json(response.data);
