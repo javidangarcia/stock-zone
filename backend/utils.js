@@ -1,7 +1,7 @@
 // Functions
 
 export const checkSession = (req, res, next) => {
-    const user = req.session.user;
+    const { user } = req.session;
     if (user == null) {
         res.status(401).json({ error: "Missing Session." });
     } else {
@@ -15,4 +15,5 @@ export function compareStocksByPoints(firstStock, secondStock) {
 
 // Constants
 
-export const PROFILE_PICTURE = "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg";
+export const PROFILE_PICTURE =
+    "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg";

@@ -13,7 +13,9 @@ router.get("/dislikes/stock/:ticker", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in database." });
+            res.status(404).json({
+                error: "This stock does not exist in database."
+            });
             return;
         }
 
@@ -45,7 +47,9 @@ router.get("/dislikes/user/:username", async (req, res) => {
         });
 
         if (dislikes.length === 0) {
-            res.status(404).json({ error: "This user doesn't dislike any stocks." });
+            res.status(404).json({
+                error: "This user doesn't dislike any stocks."
+            });
             return;
         }
 
@@ -58,7 +62,7 @@ router.get("/dislikes/user/:username", async (req, res) => {
 });
 
 router.post("/dislike", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
@@ -70,7 +74,9 @@ router.post("/dislike", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in database." });
+            res.status(404).json({
+                error: "This stock does not exist in database."
+            });
             return;
         }
 
@@ -88,7 +94,9 @@ router.post("/dislike", async (req, res) => {
         const dislike = await Dislike.findOne({ where: dislikeData });
 
         if (dislike !== null) {
-            res.status(409).json({ error: "This user already dislikes this stock." });
+            res.status(409).json({
+                error: "This user already dislikes this stock."
+            });
             return;
         }
 
@@ -101,7 +109,7 @@ router.post("/dislike", async (req, res) => {
 });
 
 router.post("/undislike", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const ticker = req.body.ticker?.toUpperCase();
 
     if (ticker == null) {
@@ -113,7 +121,9 @@ router.post("/undislike", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in database." });
+            res.status(404).json({
+                error: "This stock does not exist in database."
+            });
             return;
         }
 
@@ -125,7 +135,9 @@ router.post("/undislike", async (req, res) => {
         const dislike = await Dislike.findOne({ where: dislikeData });
 
         if (dislike === null) {
-            res.status(409).json({ error: "This user does not dislike this stock." });
+            res.status(409).json({
+                error: "This user does not dislike this stock."
+            });
             return;
         }
 

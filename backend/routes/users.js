@@ -1,7 +1,7 @@
 import express from "express";
-import { User } from "../models/user.js";
 import { Op } from "sequelize";
 import bcrypt from "bcrypt";
+import { User } from "../models/user.js";
 import { PROFILE_PICTURE } from "../utils.js";
 import { Friend } from "../models/friend.js";
 
@@ -14,7 +14,7 @@ router.get("/user/:username", async (req, res) => {
         const user = await User.findOne({
             where: { username }
         });
-    
+
         if (user === null) {
             res.status(404).json({ error: "This user doesn't exist." });
             return;
@@ -22,7 +22,9 @@ router.get("/user/:username", async (req, res) => {
 
         const currentUser = req.session.user;
 
-        const friend = await Friend.findOne({ where: { UserId1: currentUser.id, UserId2: user.id } });
+        const friend = await Friend.findOne({
+            where: { UserId1: currentUser.id, UserId2: user.id }
+        });
 
         if (friend !== null) {
             res.status(200).json({

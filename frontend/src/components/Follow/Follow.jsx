@@ -70,15 +70,13 @@ export default function Follow({ ticker, stockData, setStockData }) {
             </Dropdown.Item>
             <Dropdown.Divider />
             {follows?.map((follow) => (
-                    <Dropdown.Item
-                        key={follow.User.username}
-                        onClick={() =>
-                            navigate(`/profile/${follow.User.username}`)
-                        }
-                    >
-                        {follow.User.username}
-                    </Dropdown.Item>
-                ))}
+                <Dropdown.Item
+                    key={follow.User.username}
+                    onClick={() => navigate(`/profile/${follow.User.username}`)}
+                >
+                    {follow.User.username}
+                </Dropdown.Item>
+            ))}
         </SplitButton>
     );
 }

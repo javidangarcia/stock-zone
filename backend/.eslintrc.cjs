@@ -5,10 +5,9 @@ module.exports = {
     },
     extends: [
         "eslint:recommended",
-        "plugin:react/recommended",
         "airbnb",
         "prettier",
-        "plugin:react/jsx-runtime"
+        "eslint-config-prettier"
     ],
     overrides: [
         {
@@ -25,6 +24,11 @@ module.exports = {
         ecmaVersion: "latest",
         sourceType: "module"
     },
-    plugins: ["react"],
-    rules: { "react/prop-types": "off", "import/prefer-default-export": [0] }
+    plugins: [],
+    rules: {
+        "react/prop-types": "off",
+        "import/prefer-default-export": "off",
+        "import/extensions": "off",
+        "no-console": "off"
+    }
 };

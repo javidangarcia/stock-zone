@@ -77,15 +77,13 @@ export default function Like({ ticker, stockData, setStockData }) {
             <Dropdown.Item>{likes.length} users like this stock.</Dropdown.Item>
             <Dropdown.Divider />
             {likes?.map((like) => (
-                    <Dropdown.Item
-                        key={like.User.username}
-                        onClick={() =>
-                            navigate(`/profile/${like.User.username}`)
-                        }
-                    >
-                        {like.User.username}
-                    </Dropdown.Item>
-                ))}
+                <Dropdown.Item
+                    key={like.User.username}
+                    onClick={() => navigate(`/profile/${like.User.username}`)}
+                >
+                    {like.User.username}
+                </Dropdown.Item>
+            ))}
         </SplitButton>
     );
 }

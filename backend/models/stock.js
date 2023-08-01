@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database.js";
 
-export const Stock = sequelize.define('Stock', {
+export const Stock = sequelize.define("Stock", {
     ticker: {
         type: DataTypes.STRING,
         allowNull: false,

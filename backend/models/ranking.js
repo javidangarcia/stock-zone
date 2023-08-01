@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../database.js";
 import { User } from "./user.js";
 
-export const Ranking = sequelize.define('Ranking', {
+export const Ranking = sequelize.define("Ranking", {
     ranking: {
         type: DataTypes.ARRAY(DataTypes.JSON),
         allowNull: false,
@@ -10,5 +10,5 @@ export const Ranking = sequelize.define('Ranking', {
     }
 });
 
-Ranking.belongsTo(User, { foreignKey: 'UserId' });
-User.hasOne(Ranking, { foreignKey: 'UserId' });
+Ranking.belongsTo(User, { foreignKey: "UserId" });
+User.hasOne(Ranking, { foreignKey: "UserId" });

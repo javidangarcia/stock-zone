@@ -17,7 +17,7 @@ const MAX_PAGE_SIZE = 10;
 
 export async function RankingV5(user, page) {
     try {
-        if (page != 1) {
+        if (page !== 1) {
             const currentRanking = await Ranking.findOne({
                 where: { UserId: user.id }
             });
@@ -63,20 +63,29 @@ export async function RankingV5(user, page) {
             };
         }
 
-        const followsMap = follows.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const followsMap = follows.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const likesMap = likes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const likesMap = likes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const dislikesMap = dislikes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const dislikesMap = dislikes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
         const friendIDs = connections.map((connection) => connection.user2.id);
 
@@ -86,9 +95,9 @@ export async function RankingV5(user, page) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyFollow = friendFollows.map((friendFollow) => {
-                    return friendFollow.Stock.dataValues;
-                });
+                const stocksTheyFollow = friendFollows.map(
+                    (friendFollow) => friendFollow.Stock.dataValues
+                );
                 return stocksTheyFollow;
             })
         );
@@ -99,9 +108,9 @@ export async function RankingV5(user, page) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyLike = friendLikes.map((friendLike) => {
-                    return friendLike.Stock.dataValues;
-                });
+                const stocksTheyLike = friendLikes.map(
+                    (friendLike) => friendLike.Stock.dataValues
+                );
                 return stocksTheyLike;
             })
         );
@@ -113,9 +122,7 @@ export async function RankingV5(user, page) {
                     include: [{ model: Stock }]
                 });
                 const stocksTheyDislike = friendDislikes.map(
-                    (friendDislike) => {
-                        return friendDislike.Stock.dataValues;
-                    }
+                    (friendDislike) => friendDislike.Stock.dataValues
                 );
                 return stocksTheyDislike;
             })
@@ -209,7 +216,9 @@ export async function RankingV5(user, page) {
 
         stocksRanking.sort(compareStocksByPoints);
 
-        const rankingInDatabase = await Ranking.findOne({ where: { UserId: user.id } });
+        const rankingInDatabase = await Ranking.findOne({
+            where: { UserId: user.id }
+        });
 
         if (rankingInDatabase !== null) {
             rankingInDatabase.ranking = stocksRanking;
@@ -266,20 +275,29 @@ export async function RankingV4(user, page) {
             };
         }
 
-        const followsMap = follows.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const followsMap = follows.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const likesMap = likes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const likesMap = likes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const dislikesMap = dislikes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const dislikesMap = dislikes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
         const friendIDs = connections.map((connection) => connection.user2.id);
 
@@ -289,9 +307,9 @@ export async function RankingV4(user, page) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyFollow = friendFollows.map((friendFollow) => {
-                    return friendFollow.Stock.dataValues;
-                });
+                const stocksTheyFollow = friendFollows.map(
+                    (friendFollow) => friendFollow.Stock.dataValues
+                );
                 return stocksTheyFollow;
             })
         );
@@ -302,9 +320,9 @@ export async function RankingV4(user, page) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyLike = friendLikes.map((friendLike) => {
-                    return friendLike.Stock.dataValues;
-                });
+                const stocksTheyLike = friendLikes.map(
+                    (friendLike) => friendLike.Stock.dataValues
+                );
                 return stocksTheyLike;
             })
         );
@@ -316,9 +334,7 @@ export async function RankingV4(user, page) {
                     include: [{ model: Stock }]
                 });
                 const stocksTheyDislike = friendDislikes.map(
-                    (friendDislike) => {
-                        return friendDislike.Stock.dataValues;
-                    }
+                    (friendDislike) => friendDislike.Stock.dataValues
                 );
                 return stocksTheyDislike;
             })
@@ -455,20 +471,29 @@ export async function RankingV3(user) {
             };
         }
 
-        const followsMap = follows.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const followsMap = follows.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const likesMap = likes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const likesMap = likes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const dislikesMap = dislikes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const dislikesMap = dislikes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
         const friendIDs = connections.map((connection) => connection.user2.id);
 
@@ -478,9 +503,9 @@ export async function RankingV3(user) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyFollow = friendFollows.map((friendFollow) => {
-                    return friendFollow.Stock.dataValues;
-                });
+                const stocksTheyFollow = friendFollows.map(
+                    (friendFollow) => friendFollow.Stock.dataValues
+                );
                 return stocksTheyFollow;
             })
         );
@@ -491,9 +516,9 @@ export async function RankingV3(user) {
                     where: { UserId: friendID },
                     include: [{ model: Stock }]
                 });
-                const stocksTheyLike = friendLikes.map((friendLike) => {
-                    return friendLike.Stock.dataValues;
-                });
+                const stocksTheyLike = friendLikes.map(
+                    (friendLike) => friendLike.Stock.dataValues
+                );
                 return stocksTheyLike;
             })
         );
@@ -505,9 +530,7 @@ export async function RankingV3(user) {
                     include: [{ model: Stock }]
                 });
                 const stocksTheyDislike = friendDislikes.map(
-                    (friendDislike) => {
-                        return friendDislike.Stock.dataValues;
-                    }
+                    (friendDislike) => friendDislike.Stock.dataValues
                 );
                 return stocksTheyDislike;
             })
@@ -631,20 +654,29 @@ export async function RankingV2(user) {
             };
         }
 
-        const followsMap = follows.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const followsMap = follows.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const likesMap = likes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const likesMap = likes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
-        const dislikesMap = dislikes.reduce((accum, current) => {
-            accum[current.Stock.ticker] = true;
-            return accum;
-        }, {});
+        const dislikesMap = dislikes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
 
         const stocksRanking = stocksInDatabase.map((currentStock) => {
             let points = 0;

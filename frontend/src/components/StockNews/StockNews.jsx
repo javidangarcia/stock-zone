@@ -61,38 +61,41 @@ export default function StockNews({ stocks }) {
         <div className="stock-news">
             <h1>Related News</h1>
             <DropdownButton
-                title={currentStock?.ticker == null ? "Select a Stock" : currentStock.ticker}
+                title={
+                    currentStock?.ticker == null
+                        ? "Select a Stock"
+                        : currentStock.ticker
+                }
                 className="mt-2 mb-3"
             >
                 {stocks?.map((stock) => (
-                        <Dropdown.Item
-                            key={stock.ticker}
-                            onClick={() => setCurrentStock(stock)}
-                        >
-                            {stock.ticker}
-                        </Dropdown.Item>
-                    ))}
+                    <Dropdown.Item
+                        key={stock.ticker}
+                        onClick={() => setCurrentStock(stock)}
+                    >
+                        {stock.ticker}
+                    </Dropdown.Item>
+                ))}
             </DropdownButton>
             {stockNews?.slice(0, articlesToShow).map((article) => (
-                    <Card
-                        key={article.id}
-                        className="mb-5 cursor-pointer"
-                        onClick={() => window.open(article.url, "_blank")}
-                        style={{ cursor: "pointer" }}
-                    >
-                        <Card.Img variant="top" src={article.image} />
-                        <Card.Body>
-                            <Card.Title>{article.headline}</Card.Title>
-                            <Card.Text>{article.summary}</Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <small className="text-muted">
-                                {article.source} •{" "}
-                                {formatDate(article.datetime)}
-                            </small>
-                        </Card.Footer>
-                    </Card>
-                ))}
+                <Card
+                    key={article.id}
+                    className="mb-5 cursor-pointer"
+                    onClick={() => window.open(article.url, "_blank")}
+                    style={{ cursor: "pointer" }}
+                >
+                    <Card.Img variant="top" src={article.image} />
+                    <Card.Body>
+                        <Card.Title>{article.headline}</Card.Title>
+                        <Card.Text>{article.summary}</Card.Text>
+                    </Card.Body>
+                    <Card.Footer>
+                        <small className="text-muted">
+                            {article.source} • {formatDate(article.datetime)}
+                        </small>
+                    </Card.Footer>
+                </Card>
+            ))}
             {stockNews?.length > articlesToShow ? (
                 <Button
                     className="mb-5"
