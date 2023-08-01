@@ -18,7 +18,9 @@ export default function Error({ errorMessage }) {
     return (
         <div className={errorMessage ? "error" : "hidden"}>
             <p>{errorMessage}</p>
-            <button type="button" onClick={handleClose}>Close</button>
+            <button type="button" onClick={handleClose}>
+                Close
+            </button>
         </div>
     );
 }

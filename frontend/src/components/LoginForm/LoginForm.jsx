@@ -63,7 +63,10 @@ export default function LoginForm() {
                 <form onSubmit={handleLogin}>
                     <div className="row mb-3">
                         <div className="col">
-                            <label htmlFor="username" className="form-label w-100">
+                            <label
+                                htmlFor="username"
+                                className="form-label w-100"
+                            >
                                 Username
                                 <input
                                     type="text"
@@ -80,7 +83,10 @@ export default function LoginForm() {
                     </div>
                     <div className="row mb-3">
                         <div className="col">
-                            <label htmlFor="password" className="form-label w-100">
+                            <label
+                                htmlFor="password"
+                                className="form-label w-100"
+                            >
                                 Password
                                 <input
                                     type="password"

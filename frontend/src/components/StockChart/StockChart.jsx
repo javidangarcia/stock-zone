@@ -33,8 +33,8 @@ export default function StockChart({ ticker }) {
                 },
                 tooltip: {
                     y: {
-                        formatter (val) {
-                            return `$${  val}`;
+                        formatter(val) {
+                            return `$${val}`;
                         }
                     }
                 }
@@ -71,8 +71,8 @@ export default function StockChart({ ticker }) {
                 },
                 tooltip: {
                     y: {
-                        formatter (val) {
-                            return `$${  val}`;
+                        formatter(val) {
+                            return `$${val}`;
                         }
                     }
                 }

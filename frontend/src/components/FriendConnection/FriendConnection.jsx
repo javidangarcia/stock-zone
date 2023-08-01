@@ -38,7 +38,11 @@ export default function FriendConnection({ username, profile, setProfile }) {
 
     return (
         <div className={username === user.username ? "hidden" : ""}>
-            <Button className="friend-button" variant="primary" onClick={handleFriend}>
+            <Button
+                className="friend-button"
+                variant="primary"
+                onClick={handleFriend}
+            >
                 {profile.friend ? "Remove Friend" : "Add Friend"}
             </Button>
         </div>

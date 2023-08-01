@@ -1,15 +1,15 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import bcrypt from "bcrypt";
 import { User } from "./models/user.js";
 import { sequelize } from "./database.js";
-import bcrypt from "bcrypt";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 const userData = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "./seeders/users.json"), "utf8")
+    fs.readFileSync(path.resolve(dirname, "./seeders/users.json"), "utf8")
 );
 
 const seedDatabase = async () => {

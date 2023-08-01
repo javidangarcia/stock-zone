@@ -5,7 +5,7 @@ import { User } from "../models/user.js";
 const router = express.Router();
 
 router.get("/friends", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
 
     try {
         const friends = await Friend.findAll({
@@ -23,7 +23,7 @@ router.get("/friends", async (req, res) => {
 });
 
 router.post("/friend", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { username } = req.body;
 
     try {
@@ -42,7 +42,9 @@ router.post("/friend", async (req, res) => {
         const friend = await Friend.findOne({ where: friendData });
 
         if (friend !== null) {
-            res.status(409).json({ error: "You are already friends with this user." });
+            res.status(409).json({
+                error: "You are already friends with this user."
+            });
             return;
         }
 
@@ -55,7 +57,7 @@ router.post("/friend", async (req, res) => {
 });
 
 router.post("/unfriend", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { username } = req.body;
 
     try {
@@ -74,7 +76,9 @@ router.post("/unfriend", async (req, res) => {
         const friend = await Friend.findOne({ where: friendData });
 
         if (friend === null) {
-            res.status(409).json({ error: "You are not friends with this user." });
+            res.status(409).json({
+                error: "You are not friends with this user."
+            });
             return;
         }
 

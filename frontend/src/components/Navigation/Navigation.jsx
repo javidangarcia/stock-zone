@@ -1,6 +1,6 @@
 import "./Navigation.css";
 import axios from "axios";
-import { Link , useNavigate, NavLink } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -31,12 +31,16 @@ export default function Navigation() {
         } catch (error) {
             setErrorMessage(`${error.message}: Please try again later.`);
         }
-    }
+    };
 
     return (
         <Navbar className="py-2 navbar">
             <Container>
-                <Navbar.Brand className="d-flex align-items-center fs-3 text-white me-3 h1 mb-0" as={Link} to="/home">
+                <Navbar.Brand
+                    className="d-flex align-items-center fs-3 text-white me-3 h1 mb-0"
+                    as={Link}
+                    to="/home"
+                >
                     <Image
                         src={appLogo}
                         alt="This is the logo of Stock Zone."
@@ -86,10 +90,7 @@ export default function Navigation() {
                         >
                             Your Profile
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            as={Link}
-                            to={`/chat`}
-                        >
+                        <Dropdown.Item as={Link} to="/chat">
                             Messages
                         </Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>

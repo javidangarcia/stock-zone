@@ -11,7 +11,9 @@ router.get("/stocks", async (req, res) => {
         const stocks = await Stock.findAll();
 
         if (stocks.length === 0) {
-            res.status(404).json({ error: "There are no stocks in the database." });
+            res.status(404).json({
+                error: "There are no stocks in the database."
+            });
             return;
         }
 
@@ -31,7 +33,9 @@ router.post("/stocks", async (req, res) => {
         });
 
         if (stock !== null) {
-            res.status(409).json({ error: "This stock already exists in the database." });
+            res.status(409).json({
+                error: "This stock already exists in the database."
+            });
             return;
         }
 
@@ -45,7 +49,7 @@ router.post("/stocks", async (req, res) => {
 // Get a specific stock from database
 router.get("/stocks/:ticker", async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
-    const user = req.session.user;
+    const { user } = req.session;
 
     try {
         const stock = await Stock.findOne({
@@ -53,7 +57,9 @@ router.get("/stocks/:ticker", async (req, res) => {
         });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in database." });
+            res.status(404).json({
+                error: "This stock does not exist in database."
+            });
             return;
         }
 

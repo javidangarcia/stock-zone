@@ -1,12 +1,11 @@
 import "./ChatRoom.css";
 import { useState, useContext, useEffect } from "react";
 import io from "socket.io-client";
-import Chat from "../Chat/Chat";
-import { Context } from "../../context";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import { Context } from "../../context";
+import Chat from "../Chat/Chat";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -42,13 +41,13 @@ export default function ChatRoom() {
         fetchFriends();
     }, []);
 
-    const joinRoom = (friend) => {
-        const roomID = [friend.user2.username, friend.user1.username]
+    const joinRoom = (friendModel) => {
+        const roomID = [friendModel.user2.username, friendModel.user1.username]
             .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
             .join("");
 
         socket.emit("join_room", roomID);
-        setFriend(friend);
+        setFriend(friendModel);
         setRoom(roomID);
         setShowChat(true);
     };
@@ -59,13 +58,13 @@ export default function ChatRoom() {
                 <h3>Friends</h3>
                 <Card className="friends-card">
                     <ListGroup variant="flush">
-                        {friends.map((friend) => (
+                        {friends.map((friendModel) => (
                             <ListGroup.Item
-                                key={friend.user2.id}
+                                key={friendModel.user2.id}
                                 className="friends"
-                                onClick={() => joinRoom(friend)}
+                                onClick={() => joinRoom(friendModel)}
                             >
-                                {friend.user2.username}
+                                {friendModel.user2.username}
                             </ListGroup.Item>
                         ))}
                     </ListGroup>

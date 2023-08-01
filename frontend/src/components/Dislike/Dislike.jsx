@@ -79,15 +79,15 @@ export default function Dislike({ ticker, stockData, setStockData }) {
             </Dropdown.Item>
             <Dropdown.Divider />
             {dislikes?.map((dislike) => (
-                    <Dropdown.Item
-                        key={dislike.User.username}
-                        onClick={() =>
-                            navigate(`/profile/${dislike.User.username}`)
-                        }
-                    >
-                        {dislike.User.username}
-                    </Dropdown.Item>
-                ))}
+                <Dropdown.Item
+                    key={dislike.User.username}
+                    onClick={() =>
+                        navigate(`/profile/${dislike.User.username}`)
+                    }
+                >
+                    {dislike.User.username}
+                </Dropdown.Item>
+            ))}
         </SplitButton>
     );
 }

@@ -10,8 +10,18 @@ export const Friend = sequelize.define("Friend", {
     }
 });
 
-User.belongsToMany(User, { through: Friend, as: "user1", foreignKey: "UserId1", otherKey: "UserId2" });
-User.belongsToMany(User, { through: Friend, as: "user2", foreignKey: "UserId2", otherKey: "UserId1" });
+User.belongsToMany(User, {
+    through: Friend,
+    as: "user1",
+    foreignKey: "UserId1",
+    otherKey: "UserId2"
+});
+User.belongsToMany(User, {
+    through: Friend,
+    as: "user2",
+    foreignKey: "UserId2",
+    otherKey: "UserId1"
+});
 User.hasMany(Friend, { foreignKey: "UserId1" });
 User.hasMany(Friend, { foreignKey: "UserId2" });
 Friend.belongsTo(User, { foreignKey: "UserId1", as: "user1" });

@@ -1,11 +1,11 @@
 import express from "express";
-import { Message } from "../models/message.js";
 import { Op } from "sequelize";
+import { Message } from "../models/message.js";
 
 const router = express.Router();
 
 router.get("/messages/:friendID", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { friendID } = req.params;
 
     try {
@@ -28,7 +28,7 @@ router.get("/messages/:friendID", async (req, res) => {
 });
 
 router.post("/message", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { room, author, friendID, content } = req.body;
 
     try {

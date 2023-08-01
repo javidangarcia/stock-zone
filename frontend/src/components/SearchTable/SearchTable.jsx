@@ -1,5 +1,5 @@
 import "./SearchTable.css";
-import { useState, useEffect , useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Context } from "../../context";
@@ -64,29 +64,29 @@ export default function SearchTable() {
                         </tr>
                     </tbody>
                     {stocks.map((stock) => (
-                            <tbody key={stock.name}>
-                                <tr>
-                                    <td id="stock-logo">
-                                        <img
-                                            src={stock.logo}
-                                            alt={`This is a logo of ${stock.name}.`}
-                                        />
-                                    </td>
-                                    <td id="stock-ticker">
-                                        <Link
-                                            key={stock.name}
-                                            to={`/search/stocks/${stock.ticker}`}
-                                            className="stock-link"
-                                        >
-                                            {stock.ticker}
-                                        </Link>
-                                    </td>
-                                    <td>{stock.name}</td>
-                                    <td>{stock.sector}</td>
-                                    <td>${stock.price?.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        ))}
+                        <tbody key={stock.name}>
+                            <tr>
+                                <td id="stock-logo">
+                                    <img
+                                        src={stock.logo}
+                                        alt={`This is a logo of ${stock.name}.`}
+                                    />
+                                </td>
+                                <td id="stock-ticker">
+                                    <Link
+                                        key={stock.name}
+                                        to={`/search/stocks/${stock.ticker}`}
+                                        className="stock-link"
+                                    >
+                                        {stock.ticker}
+                                    </Link>
+                                </td>
+                                <td>{stock.name}</td>
+                                <td>{stock.sector}</td>
+                                <td>${stock.price?.toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    ))}
                 </table>
             ) : null}
         </>

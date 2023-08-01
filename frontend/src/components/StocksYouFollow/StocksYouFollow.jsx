@@ -32,50 +32,48 @@ export default function StocksYouFollow({ stocks }) {
                     {stocks
                         .slice(0, Math.min(displayedStocks, stocks.length))
                         .map((stock) => (
-                                <tr key={stock.ticker}>
-                                    <td className="stock-image">
-                                        <div className="stock-follow-logo">
-                                            <img
-                                                src={stock.logo}
-                                                alt={`This is a logo of ${stock.name}.`}
-                                                onLoad={() =>
-                                                    setLoadedLogos((prev) => ({
-                                                        ...prev,
-                                                        [stock.ticker]: true
-                                                    }))
-                                                }
-                                                style={{
-                                                    visibility: loadedLogos[
-                                                        stock.ticker
-                                                    ]
-                                                        ? "visible"
-                                                        : "hidden"
-                                                }}
-                                            />
-                                        </div>
-                                    </td>
-                                    <td className="text-center">
-                                        <Link
-                                            className="stock-link"
-                                            to={`/search/stocks/${stock.ticker}`}
-                                        >
-                                            {stock.ticker}
-                                        </Link>
-                                    </td>
-                                    <td className="text-center">
-                                        ${stock.price}
-                                    </td>
-                                    <td className="text-center">
-                                        {stock.sector}
-                                    </td>
-                                </tr>
-                            ))}
+                            <tr key={stock.ticker}>
+                                <td className="stock-image">
+                                    <div className="stock-follow-logo">
+                                        <img
+                                            src={stock.logo}
+                                            alt={`This is a logo of ${stock.name}.`}
+                                            onLoad={() =>
+                                                setLoadedLogos((prev) => ({
+                                                    ...prev,
+                                                    [stock.ticker]: true
+                                                }))
+                                            }
+                                            style={{
+                                                visibility: loadedLogos[
+                                                    stock.ticker
+                                                ]
+                                                    ? "visible"
+                                                    : "hidden"
+                                            }}
+                                        />
+                                    </div>
+                                </td>
+                                <td className="text-center">
+                                    <Link
+                                        className="stock-link"
+                                        to={`/search/stocks/${stock.ticker}`}
+                                    >
+                                        {stock.ticker}
+                                    </Link>
+                                </td>
+                                <td className="text-center">${stock.price}</td>
+                                <td className="text-center">{stock.sector}</td>
+                            </tr>
+                        ))}
                 </tbody>
             </Table>
             {stocks.length > displayedStocks ? (
                 <Button
                     variant="outline-primary"
-                    onClick={() => setDisplayedStocks((prev) => prev + STOCKS_TO_DISPLAY)}
+                    onClick={() =>
+                        setDisplayedStocks((prev) => prev + STOCKS_TO_DISPLAY)
+                    }
                 >
                     Load More
                 </Button>

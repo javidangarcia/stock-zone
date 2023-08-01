@@ -110,7 +110,10 @@ export default function ProfileHistory({ username }) {
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {mode?.map((stock) => (
                         <div key={stock.ticker} className="col">
-                            <Link to={`/search/stocks/${stock.ticker}`} className="stock-link">
+                            <Link
+                                to={`/search/stocks/${stock.ticker}`}
+                                className="stock-link"
+                            >
                                 <Card>
                                     <Card.Img variant="top" src={stock.logo} />
                                     <Card.Body>

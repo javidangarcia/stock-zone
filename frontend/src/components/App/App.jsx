@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Navigation from "../Navigation/Navigation";
 import Home from "../Home/Home";
 import Search from "../Search/Search";
@@ -26,11 +26,16 @@ export default function App() {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
-    const requireAuth = (element) => user != null ? element : <LoginForm />;
+    const contextData = useMemo(
+        () => ({ user, setUser, setErrorMessage, loading, setLoading }),
+        [user, loading]
+    );
+
+    const requireAuth = (element) => (user != null ? element : <LoginForm />);
 
     return (
         <div className="app">
-            <Context.Provider value={{ user, setUser, setErrorMessage, loading, setLoading }}>
+            <Context.Provider value={contextData}>
                 <BrowserRouter>
                     <Error errorMessage={errorMessage} />
                     {user != null ? <Navigation /> : null}
@@ -41,12 +46,30 @@ export default function App() {
 
                         <Route path="/" element={requireAuth(<Home />)} />
                         <Route path="/home" element={requireAuth(<Home />)} />
-                        <Route path="/search" element={requireAuth(<Search />)} />
-                        <Route path="/ranking" element={requireAuth(<Ranking />)} />
-                        <Route path="/search/stocks/:ticker" element={requireAuth(<StockData />)} />
-                        <Route path="/profile" element={requireAuth(<Profile />)} />
-                        <Route path="/profile/:username" element={requireAuth(<Profile />)} />
-                        <Route path="/chat" element={requireAuth(<ChatRoom />)} />
+                        <Route
+                            path="/search"
+                            element={requireAuth(<Search />)}
+                        />
+                        <Route
+                            path="/ranking"
+                            element={requireAuth(<Ranking />)}
+                        />
+                        <Route
+                            path="/search/stocks/:ticker"
+                            element={requireAuth(<StockData />)}
+                        />
+                        <Route
+                            path="/profile"
+                            element={requireAuth(<Profile />)}
+                        />
+                        <Route
+                            path="/profile/:username"
+                            element={requireAuth(<Profile />)}
+                        />
+                        <Route
+                            path="/chat"
+                            element={requireAuth(<ChatRoom />)}
+                        />
                     </Routes>
                 </BrowserRouter>
             </Context.Provider>

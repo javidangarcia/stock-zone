@@ -17,7 +17,7 @@ export default function Chat({ socket, user, room, friend }) {
                     `${import.meta.env.VITE_HOST}/messages/${friend.user2.id}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
-    
+
                 if (response.status === 200) {
                     setMessageList(response.data.messages);
                 }
@@ -44,7 +44,7 @@ export default function Chat({ socket, user, room, friend }) {
         event.preventDefault();
 
         const messageData = {
-            room: room,
+            room,
             author: user.username,
             friendID: friend.user2.id,
             content: currentMessage
@@ -82,31 +82,31 @@ export default function Chat({ socket, user, room, friend }) {
     return (
         <div className="chat-section">
             <ScrollToBottom className="chat-window">
-                {messageList.map((messageContent) => {
-                    return (
-                        <div
-                            key={messageContent.id}
-                            className="message"
-                            id={
-                                user.username === messageContent.author
-                                    ? "you"
-                                    : "other"
-                            }
-                        >
-                            <div >
-                                <div className="message-content">
-                                    <p>{messageContent.content}</p>
-                                </div>
-                                <div className="message-footer">
-                                    <p className="message-author">
-                                        {messageContent.author}
-                                    </p>
-                                    <p className="message-time">{formatDateTime(messageContent.createdAt)}</p>
-                                </div>
+                {messageList.map((messageContent) => (
+                    <div
+                        key={messageContent.id}
+                        className="message"
+                        id={
+                            user.username === messageContent.author
+                                ? "you"
+                                : "other"
+                        }
+                    >
+                        <div>
+                            <div className="message-content">
+                                <p>{messageContent.content}</p>
+                            </div>
+                            <div className="message-footer">
+                                <p className="message-author">
+                                    {messageContent.author}
+                                </p>
+                                <p className="message-time">
+                                    {formatDateTime(messageContent.createdAt)}
+                                </p>
                             </div>
                         </div>
-                    );
-                })}
+                    </div>
+                ))}
             </ScrollToBottom>
             <form onSubmit={sendMessage}>
                 <input

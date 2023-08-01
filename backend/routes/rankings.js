@@ -4,11 +4,11 @@ import { RankingV5 } from "../ranking.js";
 const router = express.Router();
 
 router.get("/ranking/:page", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { page } = req.params;
 
     try {
-        const response = await RankingV5(user, page);
+        const response = await RankingV5(user, parseInt(page, 10));
 
         if (response.status === 200) {
             res.status(response.status).json(response.data);
@@ -17,12 +17,10 @@ router.get("/ranking/:page", async (req, res) => {
 
         if (response.status === 422 || response.status === 500) {
             res.status(response.status).json({ error: response.error });
-            return;
         }
     } catch (error) {
         res.status(500).json({ error });
     }
-
 });
 
 export default router;

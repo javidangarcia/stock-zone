@@ -26,7 +26,9 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 500) {
-                setErrorMessage(`${response.statusText}: Please try again later.`);
+                setErrorMessage(
+                    `${response.statusText}: Please try again later.`
+                );
             }
         } catch (error) {
             setErrorMessage(`${error.message}: Please try again later.`);
@@ -63,7 +65,9 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 500) {
-                setErrorMessage(`${response.statusText}: Please try again later.`);
+                setErrorMessage(
+                    `${response.statusText}: Please try again later.`
+                );
             }
         } catch (error) {
             setErrorMessage(`${error.message}: Please try again later.`);
@@ -75,22 +79,29 @@ export default function Comments({ ticker }) {
             <h2>Comments</h2>
             <div className="past-comments">
                 {comments?.sort(compareCommentsByDate).map((comment) => (
-                        <div className="comment-details" key={comment.id}>
-                            <div className="comment-picture">
-                                <img
-                                    src={comment.User.picture}
-                                    alt={`This is the profile associated with ${comment.User.username}`}
-                                />
-                            </div>
-                            <div className="comment-content">
-                                <Link to={`/profile/${comment.User.username}`} className="user-link">
-                                    <p className="comment-name">{comment.User.fullName}</p>
-                                </Link>
-                                <p className="comment-date">{formatDateTime(comment.createdAt)}</p>
-                                <p className="comment-content">{comment.content}</p>
-                            </div>
+                    <div className="comment-details" key={comment.id}>
+                        <div className="comment-picture">
+                            <img
+                                src={comment.User.picture}
+                                alt={`This is the profile associated with ${comment.User.username}`}
+                            />
                         </div>
-                    ))}
+                        <div className="comment-content">
+                            <Link
+                                to={`/profile/${comment.User.username}`}
+                                className="user-link"
+                            >
+                                <p className="comment-name">
+                                    {comment.User.fullName}
+                                </p>
+                            </Link>
+                            <p className="comment-date">
+                                {formatDateTime(comment.createdAt)}
+                            </p>
+                            <p className="comment-content">{comment.content}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
             <form className="form-comments" onSubmit={handleSubmit}>
                 <input

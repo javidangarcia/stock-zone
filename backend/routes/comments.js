@@ -12,7 +12,9 @@ router.get("/comments/:ticker", async (req, res) => {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in the database." });
+            res.status(404).json({
+                error: "This stock does not exist in the database."
+            });
             return;
         }
 
@@ -28,14 +30,16 @@ router.get("/comments/:ticker", async (req, res) => {
 });
 
 router.post("/comments", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { ticker, content } = req.body;
 
     try {
         const stock = await Stock.findOne({ where: { ticker } });
 
         if (stock === null) {
-            res.status(404).json({ error: "This stock does not exist in the database." });
+            res.status(404).json({
+                error: "This stock does not exist in the database."
+            });
             return;
         }
 
