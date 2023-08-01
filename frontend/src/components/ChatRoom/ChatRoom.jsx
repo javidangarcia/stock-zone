@@ -41,13 +41,13 @@ export default function ChatRoom() {
         fetchFriends();
     }, []);
 
-    const joinRoom = (friendModel) => {
-        const roomID = [friendModel.user2.username, friendModel.user1.username]
+    const joinRoom = (connection) => {
+        const roomID = [connection.user2.username, connection.user1.username]
             .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
             .join("");
 
         socket.emit("join_room", roomID);
-        setFriend(friendModel);
+        setFriend(connection);
         setRoom(roomID);
         setShowChat(true);
     };
@@ -58,13 +58,13 @@ export default function ChatRoom() {
                 <h3>Friends</h3>
                 <Card className="friends-card">
                     <ListGroup variant="flush">
-                        {friends.map((friendModel) => (
+                        {friends.map((connection) => (
                             <ListGroup.Item
-                                key={friendModel.user2.id}
+                                key={connection.user2.id}
                                 className="friends"
-                                onClick={() => joinRoom(friendModel)}
+                                onClick={() => joinRoom(connection)}
                             >
-                                {friendModel.user2.username}
+                                {connection.user2.username}
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
