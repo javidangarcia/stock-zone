@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 import { setLoading } from "../../redux/loading";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 export default function Home() {
     const [stocks, setStocks] = useState([]);
@@ -27,14 +28,17 @@ export default function Home() {
                 }
 
                 if (response.status === 404) {
+                    ResponseError(response.data.error);
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
 
                 dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
+                NetworkError(error);
             }
         };
         fetchStocksYouFollow();

@@ -4,8 +4,10 @@ import io from "socket.io-client";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Chat from "../Chat/Chat";
+import { setLoading } from "../../redux/loading";
+import { NetworkError, ServerError } from "../../utils";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -15,10 +17,12 @@ export default function ChatRoom() {
     const [showChat, setShowChat] = useState(false);
     const [friends, setFriends] = useState([]);
     const [friend, setFriend] = useState({});
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchFriends = async () => {
             try {
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/friends`,
                     {
@@ -32,8 +36,14 @@ export default function ChatRoom() {
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
-            } catch (error) {}
+
+                dispatch(setLoading(false));
+            } catch (error) {
+                dispatch(setLoading(false));
+                NetworkError(error);
+            }
         };
         fetchFriends();
     }, []);

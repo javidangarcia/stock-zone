@@ -41,7 +41,7 @@
     margin: 0px;
     font-weight: bold;
     font-size: 15px;
-    color: var(--secondary);
+    color: #1e88e5;
 }
 
 .comment-date {
@@ -71,13 +71,13 @@
     padding: 8px 15px;
     border: none;
     border-radius: 5px;
-    background-color: var(--primary);
+    background-color: #42a5f5;
     color: #fff;
     cursor: pointer;
 }
 
 .form-comments button:hover {
-    background-color: var(--secondary);
+    background-color: #1e88e5;
 }
 
 .user-link {

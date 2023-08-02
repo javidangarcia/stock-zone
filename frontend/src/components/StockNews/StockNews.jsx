@@ -10,7 +10,9 @@ import {
     formatDate,
     getMarketNewsUrl,
     getStockNewsUrl,
-    isValidArticle
+    isValidArticle,
+    NetworkError,
+    ResponseError
 } from "../../utils";
 import { setLoading } from "../../redux/loading";
 
@@ -46,11 +48,13 @@ export default function StockNews({ stocks }) {
                     );
                     setStockNews(filteredStockNews);
                 } else {
+                    ResponseError(response.message);
                 }
 
                 dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
+                NetworkError();
             }
         };
         fetchStockNews();

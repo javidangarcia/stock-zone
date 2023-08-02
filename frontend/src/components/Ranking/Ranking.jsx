@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading } from "../../redux/loading";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 const DEFAULT_RANKING_PAGE = 1;
 const MAX_PAGE_SIZE = 10;
@@ -42,14 +43,17 @@ export default function Ranking() {
                 }
 
                 if (response.status === 422 || response.status === 401) {
+                    ResponseError(response.data.error);
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
 
                 dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
+                NetworkError(error);
             }
         };
         fetchRanking();

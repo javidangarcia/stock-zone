@@ -3,7 +3,12 @@ import ApexCharts from "react-apexcharts";
 import axios from "axios";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
+import {
+    formatDateToMonth,
+    formatDateToMonthDay,
+    NetworkError,
+    ResponseError
+} from "../../utils";
 
 export default function StockChart({ ticker }) {
     const [chartData, setChartData] = useState({});
@@ -110,8 +115,11 @@ export default function StockChart({ ticker }) {
                 }
 
                 if (response.data.status === "error") {
+                    ResponseError(response.data.message);
                 }
-            } catch (error) {}
+            } catch (error) {
+                NetworkError(error);
+            }
         };
         fetchOneYearData();
     }, []);
@@ -140,8 +148,11 @@ export default function StockChart({ ticker }) {
             }
 
             if (response.data.status === "error") {
+                ResponseError(response.data.message);
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     async function oneMonth() {
@@ -165,8 +176,11 @@ export default function StockChart({ ticker }) {
             }
 
             if (response.data.status === "error") {
+                ResponseError(response.data.message);
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     function sixMonths() {

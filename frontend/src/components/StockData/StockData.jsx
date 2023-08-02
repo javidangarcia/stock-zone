@@ -11,7 +11,10 @@ import {
     getStockOverviewUrl,
     getStockPriceUrl,
     getStockLogoUrl,
-    capitalize
+    capitalize,
+    NetworkError,
+    ServerError,
+    ResponseError
 } from "../../utils";
 import StockChart from "../StockChart/StockChart";
 import { setLoading } from "../../redux/loading";
@@ -40,6 +43,7 @@ export default function StockData() {
                 }
 
                 if (databaseResponse.status === 500) {
+                    ServerError();
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
@@ -88,13 +92,15 @@ export default function StockData() {
                 );
 
                 if (response.status === 404) {
+                    ResponseError(response.data.error);
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
             } catch (error) {
                 dispatch(setLoading(false));
-                setStockNotFound(true);
+                NetworkError(error);
             }
         };
         fetchStockData();

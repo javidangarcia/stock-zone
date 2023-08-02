@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import Card from "react-bootstrap/Card";
+import { NetworkError, ServerError } from "../../utils";
 
 export default function ProfileHistory({ username }) {
     const [followsHistory, setFollowsHistory] = useState([]);
@@ -53,8 +54,11 @@ export default function ProfileHistory({ username }) {
                 }
 
                 if (followsResponse.status === 500) {
+                    ServerError();
                 }
-            } catch (error) {}
+            } catch (error) {
+                NetworkError(error);
+            }
         };
         fetchHistory();
         setMode([]);

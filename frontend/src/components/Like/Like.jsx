@@ -3,30 +3,49 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 export default function Like({ ticker, stockData, setStockData }) {
     const [likes, setLikes] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchLikes = async () => {
-            const response = await axios.get(
-                `${import.meta.env.VITE_HOST}/likes/stock/${ticker}`,
-                { withCredentials: true, validateStatus: () => true }
-            );
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_HOST}/likes/stock/${ticker}`,
+                    { withCredentials: true, validateStatus: () => true }
+                );
 
-            if (response.status === 200) {
-                setLikes(response.data.likes);
+                if (response.status === 200) {
+                    setLikes(response.data.likes);
+                }
+
+                if (response.status === 404) {
+                    ResponseError(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    ServerError();
+                }
+            } catch (error) {
+                NetworkError(error);
             }
         };
         fetchLikes();
     }, [stockData]);
 
     async function handleLike() {
-        const url = stockData.liking
-            ? `${import.meta.env.VITE_HOST}/unlike`
-            : `${import.meta.env.VITE_HOST}/like`;
         try {
+            dispatch(setLoading(true));
+            const url = stockData.liking
+                ? `${import.meta.env.VITE_HOST}/unlike`
+                : `${import.meta.env.VITE_HOST}/like`;
+
             const response = await axios.post(
                 url,
                 { ticker },
@@ -34,6 +53,16 @@ export default function Like({ ticker, stockData, setStockData }) {
             );
 
             if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: `You ${
+                        stockData.liking
+                            ? `have unliked ${stockData.ticker}!`
+                            : `are now liking ${stockData.ticker}!`
+                    }`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 const disliking =
                     stockData.disliking && !stockData.liking
                         ? false
@@ -52,11 +81,18 @@ export default function Like({ ticker, stockData, setStockData }) {
                 response.status === 404 ||
                 response.status === 409
             ) {
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+
+            dispatch(setLoading(false));
+        } catch (error) {
+            dispatch(setLoading(false));
+            NetworkError(error);
+        }
     }
 
     return (

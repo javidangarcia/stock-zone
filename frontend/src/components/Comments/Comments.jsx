@@ -2,7 +2,13 @@ import "./Comments.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { formatDateTime, compareCommentsByDate } from "../../utils";
+import {
+    formatDateTime,
+    compareCommentsByDate,
+    NetworkError,
+    ServerError,
+    ResponseError
+} from "../../utils";
 
 export default function Comments({ ticker }) {
     const [comments, setComments] = useState([]);
@@ -20,11 +26,15 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     };
 
     useEffect(() => {
@@ -53,11 +63,15 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
+                ResponseError(response);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     };
 
     return (

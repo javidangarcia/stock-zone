@@ -3,9 +3,15 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
-import { capitalize } from "../../utils";
+import {
+    capitalize,
+    NetworkError,
+    ServerError,
+    ResponseError
+} from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
+import { setLoading } from "../../redux/loading";
 
 export default function SignUpForm() {
     const [fullName, setFullName] = useState("");
@@ -20,6 +26,7 @@ export default function SignUpForm() {
         event.preventDefault();
 
         try {
+            dispatch(setLoading(true));
             const userData = {
                 fullName: capitalize(fullName),
                 username,
@@ -46,8 +53,18 @@ export default function SignUpForm() {
             }
 
             if (response.status === 409 || response.status === 400) {
+                ResponseError(response.data.error);
             }
-        } catch (error) {}
+
+            if (response.status === 500) {
+                ServerError();
+            }
+
+            dispatch(setLoading(false));
+        } catch (error) {
+            dispatch(setLoading(false));
+            NetworkError(error);
+        }
     }
 
     return (
