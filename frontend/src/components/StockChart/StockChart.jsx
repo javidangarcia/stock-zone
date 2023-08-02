@@ -1,13 +1,11 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
 import axios from "axios";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import { Context } from "../../context";
 import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
 
 export default function StockChart({ ticker }) {
-    const { setErrorMessage } = useContext(Context);
     const [chartData, setChartData] = useState({});
     const [oneYearData, setOneYearData] = useState([]);
     const [oneMonthData, setOneMonthData] = useState([]);
@@ -112,11 +110,8 @@ export default function StockChart({ ticker }) {
                 }
 
                 if (response.data.status === "error") {
-                    setErrorMessage(response.data.message);
                 }
-            } catch (error) {
-                setErrorMessage(`System Error: ${error.message}`);
-            }
+            } catch (error) {}
         };
         fetchOneYearData();
     }, []);
@@ -145,11 +140,8 @@ export default function StockChart({ ticker }) {
             }
 
             if (response.data.status === "error") {
-                setErrorMessage(response.data.message);
             }
-        } catch (error) {
-            setErrorMessage(`System Error: ${error.message}`);
-        }
+        } catch (error) {}
     }
 
     async function oneMonth() {
@@ -173,11 +165,8 @@ export default function StockChart({ ticker }) {
             }
 
             if (response.data.status === "error") {
-                setErrorMessage(response.data.message);
             }
-        } catch (error) {
-            setErrorMessage(`System Error: ${error.message}`);
-        }
+        } catch (error) {}
     }
 
     function sixMonths() {

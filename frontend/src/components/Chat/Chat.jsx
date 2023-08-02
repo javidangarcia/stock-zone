@@ -1,14 +1,12 @@
 import "./Chat.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
-import { Context } from "../../context";
 import { formatDateTime } from "../../utils";
 
 export default function Chat({ socket, user, room, friend }) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
-    const { setErrorMessage } = useContext(Context);
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -23,11 +21,8 @@ export default function Chat({ socket, user, room, friend }) {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(response.data.error);
                 }
-            } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
-            }
+            } catch (error) {}
             const response = await axios.get(
                 `${import.meta.env.VITE_HOST}/messages/${friend.user2.id}`,
                 { withCredentials: true, validateStatus: () => true }
@@ -64,11 +59,8 @@ export default function Chat({ socket, user, room, friend }) {
             }
 
             if (response.status === 500) {
-                setErrorMessage(response.data.error);
             }
-        } catch (error) {
-            setErrorMessage(error);
-        }
+        } catch (error) {}
     };
 
     useEffect(() => {

@@ -1,17 +1,18 @@
 import "./StockNews.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "react-bootstrap/Button";
-import { Context } from "../../context";
+import { useDispatch } from "react-redux";
 import {
     formatDate,
     getMarketNewsUrl,
     getStockNewsUrl,
     isValidArticle
 } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 const ARTICLES_TO_SHOW = 5;
 const ARTICLES_SUMMARY_LIMIT = 1000;
@@ -19,12 +20,12 @@ const ARTICLES_SUMMARY_LIMIT = 1000;
 export default function StockNews({ stocks }) {
     const [stockNews, setStockNews] = useState([]);
     const [currentStock, setCurrentStock] = useState(null);
-    const { setErrorMessage, setLoading } = useContext(Context);
     const [articlesToShow, setArticlesToShow] = useState(ARTICLES_TO_SHOW);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchStockNews = async () => {
-            setLoading(true);
+            dispatch(setLoading(true));
             try {
                 const newsUrl =
                     currentStock === null
@@ -45,13 +46,11 @@ export default function StockNews({ stocks }) {
                     );
                     setStockNews(filteredStockNews);
                 } else {
-                    setErrorMessage(`${response.error}`);
                 }
 
-                setLoading(false);
+                dispatch(setLoading(false));
             } catch (error) {
-                setLoading(false);
-                setErrorMessage(`System Error: ${error.message}`);
+                dispatch(setLoading(false));
             }
         };
         fetchStockNews();

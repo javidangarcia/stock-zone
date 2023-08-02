@@ -1,11 +1,10 @@
 import "./FriendConnection.css";
 import axios from "axios";
-import { useContext } from "react";
 import Button from "react-bootstrap/Button";
-import { Context } from "../../context";
+import { useSelector } from "react-redux";
 
 export default function FriendConnection({ username, profile, setProfile }) {
-    const { user, setErrorMessage } = useContext(Context);
+    const user = useSelector((state) => state.user);
 
     const handleFriend = async () => {
         const url = profile.friend
@@ -23,17 +22,11 @@ export default function FriendConnection({ username, profile, setProfile }) {
             }
 
             if (response.status === 404 || response.status === 409) {
-                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setErrorMessage(
-                    `${response.statusText}: Please try again later.`
-                );
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     };
 
     return (

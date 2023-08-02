@@ -1,24 +1,26 @@
 import "./Ranking.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { Context } from "../../context";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoading } from "../../redux/loading";
 
 const DEFAULT_RANKING_PAGE = 1;
 const MAX_PAGE_SIZE = 10;
 
 export default function Ranking() {
     const [stocksRanking, setStocksRanking] = useState([]);
-    const { setErrorMessage, loading, setLoading } = useContext(Context);
     const [page, setPage] = useState(DEFAULT_RANKING_PAGE);
     const [showLoadMore, setShowLoadMore] = useState(true);
+    const dispatch = useDispatch();
+    const loading = useSelector((state) => state.loading);
 
     useEffect(() => {
         const fetchRanking = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/ranking/${page}`,
                     { withCredentials: true, validateStatus: () => true }
@@ -40,18 +42,14 @@ export default function Ranking() {
                 }
 
                 if (response.status === 422 || response.status === 401) {
-                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(
-                        `${response.statusText}: Please try again later.`
-                    );
                 }
 
-                setLoading(false);
+                dispatch(setLoading(false));
             } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
+                dispatch(setLoading(false));
             }
         };
         fetchRanking();

@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
-import { Context } from "../../context";
 
 export default function Like({ ticker, stockData, setStockData }) {
-    const { setErrorMessage } = useContext(Context);
     const [likes, setLikes] = useState([]);
     const navigate = useNavigate();
 
@@ -54,17 +52,11 @@ export default function Like({ ticker, stockData, setStockData }) {
                 response.status === 404 ||
                 response.status === 409
             ) {
-                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setErrorMessage(
-                    `${response.statusText}: Please try again later.`
-                );
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     }
 
     return (

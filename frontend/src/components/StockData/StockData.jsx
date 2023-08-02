@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
+import { useDispatch } from "react-redux";
 import Follow from "../Follow/Follow";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
@@ -12,19 +13,19 @@ import {
     getStockLogoUrl,
     capitalize
 } from "../../utils";
-import { Context } from "../../context";
 import StockChart from "../StockChart/StockChart";
+import { setLoading } from "../../redux/loading";
 
 export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const [stockNotFound, setStockNotFound] = useState(false);
-    const { setErrorMessage, setLoading } = useContext(Context);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchStockData = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 setStockNotFound(false);
 
                 const databaseResponse = await axios.get(
@@ -34,14 +35,11 @@ export default function StockData() {
 
                 if (databaseResponse.status === 200) {
                     setStockData(databaseResponse.data.stock);
-                    setLoading(false);
+                    dispatch(setLoading(false));
                     return;
                 }
 
                 if (databaseResponse.status === 500) {
-                    setErrorMessage(
-                        `${databaseResponse.statusText}: Please try again later.`
-                    );
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
@@ -58,7 +56,7 @@ export default function StockData() {
                 const overviewData = overviewResponse.data;
                 const priceData = priceResponse.data;
                 const logoData = logoResponse.data;
-                setLoading(false);
+                dispatch(setLoading(false));
 
                 if (Object.keys(overviewData).length === 0) {
                     setStockNotFound(true);
@@ -66,7 +64,6 @@ export default function StockData() {
                 }
 
                 if (overviewData.Note != null) {
-                    setErrorMessage(overviewData.Note);
                     return;
                 }
 
@@ -91,17 +88,12 @@ export default function StockData() {
                 );
 
                 if (response.status === 404) {
-                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(
-                        `${response.statusText}: Please try again later.`
-                    );
                 }
             } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
-                setLoading(false);
+                dispatch(setLoading(false));
                 setStockNotFound(true);
             }
         };

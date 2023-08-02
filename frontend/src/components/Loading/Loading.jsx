@@ -1,9 +1,8 @@
 import "./Loading.css";
-import { useContext } from "react";
-import { Context } from "../../context";
+import { useSelector } from "react-redux";
 
 export default function Loading() {
-    const { loading } = useContext(Context);
+    const loading = useSelector((state) => state.loading);
 
     return loading ? (
         <div

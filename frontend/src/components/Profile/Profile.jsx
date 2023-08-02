@@ -1,22 +1,23 @@
 import "./Profile.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import { useDispatch } from "react-redux";
 import ProfileHistory from "../ProfileHistory/ProfileHistory";
 import FriendConnection from "../FriendConnection/FriendConnection";
-import { Context } from "../../context";
+import { setLoading } from "../../redux/loading";
 
 export default function Profile() {
     const { username } = useParams();
-    const { setErrorMessage, setLoading } = useContext(Context);
     const [profile, setProfile] = useState({});
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/user/${username}`,
                     { withCredentials: true, validateStatus: () => true }
@@ -27,18 +28,14 @@ export default function Profile() {
                 }
 
                 if (response.status === 404) {
-                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(
-                        `${response.statusText}: Please try again later.`
-                    );
                 }
 
-                setLoading(false);
+                dispatch(setLoading(false));
             } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
+                dispatch(setLoading(false));
             }
         };
         fetchProfile();

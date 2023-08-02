@@ -1,18 +1,19 @@
 import "./Navigation.css";
 import axios from "axios";
 import { Link, useNavigate, NavLink } from "react-router-dom";
-import { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Context } from "../../context";
+import { useSelector, useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
+import { clearUser } from "../../redux/user";
 
 export default function Navigation() {
-    const { user, setUser, setErrorMessage } = useContext(Context);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
     const handleLogout = async (event) => {
         event.preventDefault();
@@ -25,12 +26,10 @@ export default function Navigation() {
 
             if (response.status === 200) {
                 localStorage.clear();
-                setUser(null);
+                dispatch(clearUser());
                 navigate("/login");
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     };
 
     return (
