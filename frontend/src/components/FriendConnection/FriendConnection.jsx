@@ -3,15 +3,21 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useSelector } from "react-redux";
 import { NetworkError, ServerError, ResponseError } from "../../utils";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../redux/loading";
 
 export default function FriendConnection({ username, profile, setProfile }) {
     const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     const handleFriend = async () => {
-        const url = profile.friend
+        try {
+            dispatch(setLoading(true));
+            const url = profile.friend
             ? `${import.meta.env.VITE_HOST}/unfriend`
             : `${import.meta.env.VITE_HOST}/friend`;
-        try {
+
             const response = await axios.post(
                 url,
                 { username },
@@ -19,6 +25,16 @@ export default function FriendConnection({ username, profile, setProfile }) {
             );
 
             if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: `You ${
+                        profile.friend
+                            ? `have unfriended ${username}!`
+                            : `are now friends with ${username}!`
+                    }`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 setProfile({ ...profile, friend: !profile.friend });
             }
 
@@ -29,7 +45,10 @@ export default function FriendConnection({ username, profile, setProfile }) {
             if (response.status === 500) {
                 ServerError();
             }
+
+            dispatch(setLoading(false));
         } catch (error) {
+            dispatch(setLoading(false));
             NetworkError(error);
         }
     };

@@ -1,6 +1,6 @@
-// Functions
-
 import Swal from "sweetalert2";
+
+// Functions
 
 export const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);

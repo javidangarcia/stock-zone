@@ -11,6 +11,7 @@ import {
 } from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
+import { setLoading } from "../../redux/loading";
 
 export default function SignUpForm() {
     const [fullName, setFullName] = useState("");
@@ -25,6 +26,7 @@ export default function SignUpForm() {
         event.preventDefault();
 
         try {
+            dispatch(setLoading(true));
             const userData = {
                 fullName: capitalize(fullName),
                 username,
@@ -57,7 +59,10 @@ export default function SignUpForm() {
             if (response.status === 500) {
                 ServerError();
             }
+
+            dispatch(setLoading(false));
         } catch (error) {
+            dispatch(setLoading(false));
             NetworkError(error);
         }
     }

@@ -3,11 +3,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
 import { NetworkError, ServerError, ResponseError } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 export default function Follow({ ticker, stockData, setStockData }) {
     const [follows, setFollows] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchFollows = async () => {
@@ -36,10 +40,12 @@ export default function Follow({ ticker, stockData, setStockData }) {
     }, [stockData]);
 
     async function handleFollow() {
-        const url = stockData.following
-            ? `${import.meta.env.VITE_HOST}/unfollow`
-            : `${import.meta.env.VITE_HOST}/follow`;
         try {
+            dispatch(setLoading(true));
+            const url = stockData.following
+                ? `${import.meta.env.VITE_HOST}/unfollow`
+                : `${import.meta.env.VITE_HOST}/follow`;
+
             const response = await axios.post(
                 url,
                 { ticker },
@@ -47,6 +53,16 @@ export default function Follow({ ticker, stockData, setStockData }) {
             );
 
             if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: `You ${
+                        stockData.following
+                            ? `have unfollowed ${stockData.ticker}!`
+                            : `are now following ${stockData.ticker}!`
+                    }`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 setStockData({ ...stockData, following: !stockData.following });
             }
 
@@ -62,7 +78,10 @@ export default function Follow({ ticker, stockData, setStockData }) {
             if (response.status === 500) {
                 ServerError();
             }
+
+            dispatch(setLoading(false));
         } catch (error) {
+            dispatch(setLoading(false));
             NetworkError(error);
         }
     }
