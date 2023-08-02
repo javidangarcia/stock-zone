@@ -1,16 +1,16 @@
 import "./ChatRoom.css";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import { Context } from "../../context";
+import { useSelector } from "react-redux";
 import Chat from "../Chat/Chat";
 
 const socket = io.connect("http://localhost:3001");
 
 export default function ChatRoom() {
-    const { user, setErrorMessage } = useContext(Context);
+    const user = useSelector((state) => state.user);
     const [room, setRoom] = useState("");
     const [showChat, setShowChat] = useState(false);
     const [friends, setFriends] = useState([]);
@@ -32,11 +32,8 @@ export default function ChatRoom() {
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(response.data.error);
                 }
-            } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
-            }
+            } catch (error) {}
         };
         fetchFriends();
     }, []);

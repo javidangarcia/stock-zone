@@ -1,15 +1,15 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Image from "react-bootstrap/Image";
-import { Context } from "../../context";
+import { useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
+import { setUser } from "../../redux/user";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser, setErrorMessage } = useContext(Context);
-
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     async function handleLogin(event) {
@@ -30,17 +30,14 @@ export default function LoginForm() {
             if (response.status === 200) {
                 const user = response.data?.user;
 
-                setUser(user);
+                dispatch(setUser(user));
 
                 navigate("/");
             }
 
             if (response.status === 401) {
-                setErrorMessage(response.data.error);
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     }
 
     return (

@@ -1,17 +1,18 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
-import { Context } from "../../context";
+import { useDispatch } from "react-redux";
 import { capitalize } from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
+import { setUser } from "../../redux/user";
 
 export default function SignUpForm() {
     const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const { setUser, setErrorMessage } = useContext(Context);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -39,17 +40,14 @@ export default function SignUpForm() {
                 setEmail("");
 
                 const user = response.data?.user;
-                setUser(user);
+                dispatch(setUser(user));
 
                 navigate("/");
             }
 
             if (response.status === 409 || response.status === 400) {
-                setErrorMessage(response.data.error);
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     }
 
     return (

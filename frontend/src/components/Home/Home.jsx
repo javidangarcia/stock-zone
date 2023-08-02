@@ -1,18 +1,20 @@
 import "./Home.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
-import { Context } from "../../context";
+import { setLoading } from "../../redux/loading";
 
 export default function Home() {
     const [stocks, setStocks] = useState([]);
-    const { user, setErrorMessage, setLoading } = useContext(Context);
+    const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/follows/user/${
                         user.username
@@ -25,19 +27,14 @@ export default function Home() {
                 }
 
                 if (response.status === 404) {
-                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(
-                        `${response.statusText}: Please try again later.`
-                    );
                 }
 
-                setLoading(false);
+                dispatch(setLoading(false));
             } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
-                setLoading(false);
+                dispatch(setLoading(false));
             }
         };
         fetchStocksYouFollow();

@@ -25,7 +25,7 @@ export default function Search() {
                         onChange={(event) => setSearchInput(event.target.value)}
                     />
                     <button type="submit">
-                        <i className="fa fa-search"></i>
+                        <i className="fa fa-search" />
                     </button>
                 </form>
                 <SearchQuery searchInput={searchInput} />

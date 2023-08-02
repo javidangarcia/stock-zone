@@ -20,7 +20,10 @@ export default function StocksYouFollow({ stocks }) {
                             to={`/search/stocks/${stock.ticker}`}
                             className="stock-link"
                         >
-                            <Card key={stock.id} className="stock-you-follow bg-dark text-white border-3">
+                            <Card
+                                key={stock.id}
+                                className="stock-you-follow bg-dark text-white border-3"
+                            >
                                 <Card.Img variant="top" src={stock.logo} />
                                 <Card.Body>
                                     <Card.Text className="text-center">

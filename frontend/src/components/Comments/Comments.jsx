@@ -1,12 +1,10 @@
 import "./Comments.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Context } from "../../context";
 import { formatDateTime, compareCommentsByDate } from "../../utils";
 
 export default function Comments({ ticker }) {
-    const { setErrorMessage } = useContext(Context);
     const [comments, setComments] = useState([]);
     const [commentInput, setCommentInput] = useState("");
 
@@ -22,17 +20,11 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
-                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setErrorMessage(
-                    `${response.statusText}: Please try again later.`
-                );
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -61,17 +53,11 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
-                setErrorMessage(response.data.error);
             }
 
             if (response.status === 500) {
-                setErrorMessage(
-                    `${response.statusText}: Please try again later.`
-                );
             }
-        } catch (error) {
-            setErrorMessage(`${error.message}: Please try again later.`);
-        }
+        } catch (error) {}
     };
 
     return (

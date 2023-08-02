@@ -1,17 +1,15 @@
 import "./ProfileHistory.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import Card from "react-bootstrap/Card";
-import { Context } from "../../context";
 
 export default function ProfileHistory({ username }) {
     const [followsHistory, setFollowsHistory] = useState([]);
     const [likesHistory, setLikesHistory] = useState([]);
     const [dislikesHistory, setDislikesHistory] = useState([]);
-    const { setErrorMessage } = useContext(Context);
     const [mode, setMode] = useState([]);
 
     useEffect(() => {
@@ -55,13 +53,8 @@ export default function ProfileHistory({ username }) {
                 }
 
                 if (followsResponse.status === 500) {
-                    setErrorMessage(
-                        `${followsResponse.statusText}: Please try again later.`
-                    );
                 }
-            } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
-            }
+            } catch (error) {}
         };
         fetchHistory();
         setMode([]);

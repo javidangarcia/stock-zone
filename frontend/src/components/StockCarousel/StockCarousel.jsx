@@ -1,19 +1,20 @@
 import "./StockCarousel.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Context } from "../../context";
 import Carousel from "react-bootstrap/Carousel";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../redux/loading";
 
 export default function StockCarousel() {
     const [stocks, setStocks] = useState([]);
     const [stocksNotFound, setStocksNotFound] = useState(false);
-    const { setErrorMessage, setLoading } = useContext(Context);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchStocks = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/stocks`,
                     { withCredentials: true, validateStatus: () => true }
@@ -25,17 +26,13 @@ export default function StockCarousel() {
 
                 if (response.status === 404) {
                     setStocksNotFound(true);
-                    setErrorMessage(response.data.error);
                 }
 
                 if (response.status === 500) {
-                    setErrorMessage(
-                        `${response.statusText}: Please try again later.`
-                    );
                 }
-                setLoading(false);
+                dispatch(setLoading(false));
             } catch (error) {
-                setErrorMessage(`${error.message}: Please try again later.`);
+                dispatch(setLoading(false));
             }
         };
         fetchStocks();
@@ -54,7 +51,11 @@ export default function StockCarousel() {
             ) : null}
 
             {stocks.length > 0 ? (
-                <Carousel className="carousel mb-5" data-bs-theme="light" interval={700}>
+                <Carousel
+                    className="carousel mb-5"
+                    data-bs-theme="light"
+                    interval={700}
+                >
                     {stocks.map((stock) => (
                         <Carousel.Item
                             key={stock.ticker}
