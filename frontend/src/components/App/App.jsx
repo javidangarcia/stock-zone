@@ -12,6 +12,7 @@ import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
 import Loading from "../Loading/Loading";
 import ChatRoom from "../ChatRoom/ChatRoom";
+import Discussions from "../Discussions/Discussions";
 
 export default function App() {
     const user = useSelector((state) => state.user);
@@ -35,6 +36,10 @@ export default function App() {
                     <Route path="/home" element={requireAuth(<Home />)} />
                     <Route path="/search" element={requireAuth(<Search />)} />
                     <Route path="/ranking" element={requireAuth(<Ranking />)} />
+                    <Route
+                        path="/discussions"
+                        element={requireAuth(<Discussions />)}
+                    />
                     <Route
                         path="/search/stocks/:ticker"
                         element={requireAuth(<StockData />)}

@@ -45,7 +45,13 @@ router.post("/post", async (req, res) => {
             UserId: user.id
         };
         const newPost = await Post.create(postData);
-        res.status(200).json({ post: newPost });
+
+        const post = await Post.findOne({
+            where: { id: newPost.id },
+            include: [{ model: User }]
+        });
+
+        res.status(200).json({ post });
     } catch (error) {
         res.status(500).json({ error });
     }
