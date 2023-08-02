@@ -9,6 +9,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useSelector, useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
 import { clearUser } from "../../redux/user";
+import { NetworkError } from "../../utils";
 
 export default function Navigation() {
     const navigate = useNavigate();
@@ -29,7 +30,9 @@ export default function Navigation() {
                 dispatch(clearUser());
                 navigate("/login");
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     };
 
     return (

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 export default function Follow({ ticker, stockData, setStockData }) {
     const [follows, setFollows] = useState([]);
@@ -10,13 +11,25 @@ export default function Follow({ ticker, stockData, setStockData }) {
 
     useEffect(() => {
         const fetchFollows = async () => {
-            const response = await axios.get(
-                `${import.meta.env.VITE_HOST}/follows/stock/${ticker}`,
-                { withCredentials: true, validateStatus: () => true }
-            );
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_HOST}/follows/stock/${ticker}`,
+                    { withCredentials: true, validateStatus: () => true }
+                );
 
-            if (response.status === 200) {
-                setFollows(response.data.follows);
+                if (response.status === 200) {
+                    setFollows(response.data.follows);
+                }
+
+                if (response.status === 404) {
+                    ResponseError(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    ServerError();
+                }
+            } catch (error) {
+                NetworkError(error);
             }
         };
         fetchFollows();
@@ -43,11 +56,15 @@ export default function Follow({ ticker, stockData, setStockData }) {
                 response.status === 404 ||
                 response.status === 409
             ) {
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     return (

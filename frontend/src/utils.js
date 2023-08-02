@@ -1,5 +1,7 @@
 // Functions
 
+import Swal from "sweetalert2";
+
 export const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -130,4 +132,30 @@ export function getStockNewsUrl(currentStock) {
     stockNewsUrl.searchParams.append("to", getCurrentDate());
     stockNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
     return stockNewsUrl.href;
+}
+
+// Error Alerts
+
+export function ResponseError(message) {
+    Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${message}`
+    });
+}
+
+export function ServerError() {
+    Swal.fire({
+        icon: "error",
+        title: "Internal Server Error",
+        text: "Please try again later."
+    });
+}
+
+export function NetworkError(error) {
+    Swal.fire({
+        icon: "error",
+        title: `${error.message}`,
+        text: "Please try again later."
+    });
 }

@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import ProfileHistory from "../ProfileHistory/ProfileHistory";
 import FriendConnection from "../FriendConnection/FriendConnection";
 import { setLoading } from "../../redux/loading";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 export default function Profile() {
     const { username } = useParams();
@@ -28,14 +29,17 @@ export default function Profile() {
                 }
 
                 if (response.status === 404) {
+                    ResponseError(response.data.error);
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
 
                 dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
+                NetworkError(error);
             }
         };
         fetchProfile();

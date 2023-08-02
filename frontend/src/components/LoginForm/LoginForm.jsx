@@ -5,6 +5,7 @@ import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
+import { NetworkError, ResponseError, ServerError } from "../../utils";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
@@ -36,8 +37,15 @@ export default function LoginForm() {
             }
 
             if (response.status === 401) {
+                ResponseError(response.data.error);
             }
-        } catch (error) {}
+
+            if (response.status === 500) {
+                ServerError();
+            }
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     return (

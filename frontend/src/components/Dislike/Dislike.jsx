@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import SplitButton from "react-bootstrap/SplitButton";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 export default function Dislike({ ticker, stockData, setStockData }) {
     const [dislikes, setDislikes] = useState([]);
@@ -10,13 +11,25 @@ export default function Dislike({ ticker, stockData, setStockData }) {
 
     useEffect(() => {
         const fetchDislikes = async () => {
-            const response = await axios.get(
-                `${import.meta.env.VITE_HOST}/dislikes/stock/${ticker}`,
-                { withCredentials: true, validateStatus: () => true }
-            );
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_HOST}/dislikes/stock/${ticker}`,
+                    { withCredentials: true, validateStatus: () => true }
+                );
 
-            if (response.status === 200) {
-                setDislikes(response.data.dislikes);
+                if (response.status === 200) {
+                    setDislikes(response.data.dislikes);
+                }
+
+                if (response.status === 404) {
+                    ResponseError(response.data.error);
+                }
+
+                if (response.status === 500) {
+                    ServerError();
+                }
+            } catch (error) {
+                NetworkError(error);
             }
         };
         fetchDislikes();
@@ -52,11 +65,15 @@ export default function Dislike({ ticker, stockData, setStockData }) {
                 response.status === 404 ||
                 response.status === 409
             ) {
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     return (

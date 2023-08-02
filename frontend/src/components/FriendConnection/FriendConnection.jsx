@@ -2,6 +2,7 @@ import "./FriendConnection.css";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useSelector } from "react-redux";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 
 export default function FriendConnection({ username, profile, setProfile }) {
     const user = useSelector((state) => state.user);
@@ -22,11 +23,15 @@ export default function FriendConnection({ username, profile, setProfile }) {
             }
 
             if (response.status === 404 || response.status === 409) {
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+        } catch (error) {
+            NetworkError(error);
+        }
     };
 
     return (

@@ -3,7 +3,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
-import { capitalize } from "../../utils";
+import {
+    capitalize,
+    NetworkError,
+    ServerError,
+    ResponseError
+} from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
 
@@ -46,8 +51,15 @@ export default function SignUpForm() {
             }
 
             if (response.status === 409 || response.status === 400) {
+                ResponseError(response.data.error);
             }
-        } catch (error) {}
+
+            if (response.status === 500) {
+                ServerError();
+            }
+        } catch (error) {
+            NetworkError(error);
+        }
     }
 
     return (

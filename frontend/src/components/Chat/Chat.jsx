@@ -2,15 +2,19 @@ import "./Chat.css";
 import { useState, useEffect } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
-import { formatDateTime } from "../../utils";
+import { useDispatch } from "react-redux";
+import { formatDateTime, NetworkError, ServerError } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 export default function Chat({ socket, user, room, friend }) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
+                dispatch(setLoading(true));
                 const response = await axios.get(
                     `${import.meta.env.VITE_HOST}/messages/${friend.user2.id}`,
                     { withCredentials: true, validateStatus: () => true }
@@ -21,15 +25,13 @@ export default function Chat({ socket, user, room, friend }) {
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
-            } catch (error) {}
-            const response = await axios.get(
-                `${import.meta.env.VITE_HOST}/messages/${friend.user2.id}`,
-                { withCredentials: true, validateStatus: () => true }
-            );
 
-            if (response.status === 200) {
-                setMessageList(response.data.messages);
+                dispatch(setLoading(false));
+            } catch (error) {
+                dispatch(setLoading(false));
+                NetworkError(error);
             }
         };
         fetchMessages();
@@ -38,14 +40,15 @@ export default function Chat({ socket, user, room, friend }) {
     const sendMessage = async (event) => {
         event.preventDefault();
 
-        const messageData = {
-            room,
-            author: user.username,
-            friendID: friend.user2.id,
-            content: currentMessage
-        };
-
         try {
+            dispatch(setLoading(true));
+            const messageData = {
+                room,
+                author: user.username,
+                friendID: friend.user2.id,
+                content: currentMessage
+            };
+
             const response = await axios.post(
                 `${import.meta.env.VITE_HOST}/message`,
                 messageData,
@@ -59,8 +62,13 @@ export default function Chat({ socket, user, room, friend }) {
             }
 
             if (response.status === 500) {
+                ServerError();
             }
-        } catch (error) {}
+            dispatch(setLoading(false));
+        } catch (error) {
+            dispatch(setLoading(false));
+            NetworkError(error);
+        }
     };
 
     useEffect(() => {

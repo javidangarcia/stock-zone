@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/loading";
+import { NetworkError, ServerError } from "../../utils";
 
 export default function StockCarousel() {
     const [stocks, setStocks] = useState([]);
@@ -29,10 +30,12 @@ export default function StockCarousel() {
                 }
 
                 if (response.status === 500) {
+                    ServerError();
                 }
                 dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
+                NetworkError(error);
             }
         };
         fetchStocks();

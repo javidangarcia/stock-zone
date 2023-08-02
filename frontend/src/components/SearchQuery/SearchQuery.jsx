@@ -2,7 +2,7 @@ import "./SearchQuery.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { isValidStock } from "../../utils";
+import { isValidStock, NetworkError, ResponseError } from "../../utils";
 
 export default function SearchQuery({ searchInput }) {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -31,8 +31,11 @@ export default function SearchQuery({ searchInput }) {
                     }
 
                     if (response.data.status === "error") {
+                        ResponseError(response.message);
                     }
-                } catch (error) {}
+                } catch (error) {
+                    NetworkError(error);
+                }
             } else {
                 setSearchResults([]);
                 setShowDropdown(false);
