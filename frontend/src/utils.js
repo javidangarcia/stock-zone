@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import { format } from "date-fns";
 
 // Functions
 
@@ -25,15 +26,8 @@ export const isValidStock = (stock) =>
 
 export const formatDateTime = (dateTimeString) => {
     const dateTime = new Date(dateTimeString);
-    const options = {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true
-    };
-    return dateTime.toLocaleDateString("en-US", options);
+
+    return format(dateTime, "MMMM do, yyyy 'at' h:mm aa");
 };
 
 export const compareCommentsByDate = (firstDate, secondDate) =>
@@ -94,7 +88,7 @@ export function isValidArticle(currentStock, article) {
 
 export const comparePostsByDate = (firstDate, secondDate) =>
     new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
-    
+
 // URLs
 
 export function getStockOverviewUrl(ticker) {

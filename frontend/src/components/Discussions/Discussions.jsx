@@ -1,6 +1,6 @@
 import "./Discussions.css";
 import { useEffect, useState } from "react";
-import { NetworkError, ServerError, comparePostsByDate } from "../../utils";
+import { NetworkError, ServerError, comparePostsByDate, formatDateTime } from "../../utils";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading } from "../../redux/loading";
 import axios from "axios";
@@ -52,20 +52,31 @@ export default function Discussions() {
             {posts.sort(comparePostsByDate).map((post) => (
                 <Row key={post.id} className="mb-3">
                     <Col>
-                        <Card className="post-card">
-                            <Card.Body>
-                                <Card.Title>{post.title}</Card.Title>
-                                <Card.Text>{post.content}</Card.Text>
-                            </Card.Body>
-                            <Card.Footer>
-                                <small className="text-muted">
-                                    Posted by{" "}
-                                    <Link className="user-link text-primary" to={`/profile/${post.User.username}`}>
-                                        {post.User.username}
-                                    </Link>
-                                </small>
-                            </Card.Footer>
-                        </Card>
+                        <Link
+                            className="user-link"
+                            to={`/discussions/${post.id}`}
+                        >
+                            <Card className="post-card">
+                                <Card.Body>
+                                    <Card.Title>{post.title}</Card.Title>
+                                    <Card.Text>{post.content}</Card.Text>
+                                </Card.Body>
+                                <Card.Footer className="d-flex justify-content-between align-items-center">
+                                    <small className="text-muted">
+                                        Posted by{" "}
+                                        <Link
+                                            className="user-link text-primary"
+                                            to={`/profile/${post.User.username}`}
+                                        >
+                                            {post.User.username}
+                                        </Link>{" "}
+                                    </small>
+                                    <small className="text-muted">
+                                        {formatDateTime(post.createdAt)}
+                                    </small>
+                                </Card.Footer>
+                            </Card>
+                        </Link>
                     </Col>
                 </Row>
             ))}

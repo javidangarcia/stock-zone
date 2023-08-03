@@ -13,6 +13,7 @@ import Profile from "../Profile/Profile";
 import Loading from "../Loading/Loading";
 import ChatRoom from "../ChatRoom/ChatRoom";
 import Discussions from "../Discussions/Discussions";
+import PostView from "../PostView/PostView";
 
 export default function App() {
     const user = useSelector((state) => state.user);
@@ -39,6 +40,10 @@ export default function App() {
                     <Route
                         path="/discussions"
                         element={requireAuth(<Discussions />)}
+                    />
+                    <Route
+                        path="/discussions/:postID"
+                        element={requireAuth(<PostView />)}
                     />
                     <Route
                         path="/search/stocks/:ticker"
