@@ -16,6 +16,7 @@ import commentRoutes from "./routes/comments.js";
 import friendRoutes from "./routes/friends.js";
 import messageRoutes from "./routes/messages.js";
 import { checkSession } from "./utils.js";
+import postRoutes from "./routes/posts.js";
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use(dislikeRoutes);
 app.use(rankingRoutes);
 app.use(commentRoutes);
 app.use(messageRoutes);
+app.use(postRoutes);
 
 // Chat App
 const server = http.createServer(app);

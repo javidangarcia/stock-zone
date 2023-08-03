@@ -75,6 +75,14 @@ export default function Navigation() {
                     >
                         Ranking
                     </NavLink>
+                    <NavLink
+                        className="fs-5 text-white nav-link mx-2"
+                        activeclassname="active"
+                        as={Link}
+                        to="/discussions"
+                    >
+                        Discussions
+                    </NavLink>
                 </Nav>
                 <Dropdown>
                     <Dropdown.Toggle variant="link" bsPrefix="none">
