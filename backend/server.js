@@ -36,6 +36,8 @@ const sessionStore = new SequelizeStore({
     db: sequelize
 });
 
+app.set("trust proxy", 1);
+
 // Session middleware
 app.use(
     session({
@@ -44,8 +46,8 @@ app.use(
         saveUninitialized: false,
         store: sessionStore,
         cookie: {
-            sameSite: false,
-            secure: false,
+            sameSite: 'none',
+            secure: process.env.DEVELOPMENT === "prod",
             expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year in milliseconds
         }
     })
@@ -92,7 +94,7 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3001, () => {
+server.listen(3001, "0.0.0.0", () => {
     console.log("Chat server is running.");
 });
 
