@@ -32,7 +32,7 @@ export async function GetRanking(user, page) {
             };
         }
 
-        const response = await RankingAlgorithmV3(user);
+        const response = await RankingAlgorithmV4(user);
 
         if (response.status === 500) {
             return { status: 500, error: response.error };
@@ -58,6 +58,167 @@ export async function GetRanking(user, page) {
         const topTenStocks = stocksRanking.slice(0, MAX_PAGE_SIZE);
 
         return { status: 200, data: { stocksRanking: topTenStocks } };
+    } catch (error) {
+        return { status: 500, error };
+    }
+}
+
+export async function RankingAlgorithmV4(user) {
+    try {
+        const [stocksInDatabase, follows, likes, dislikes, connections] =
+            await Promise.all([
+                Stock.findAll(),
+                Follow.findAll({
+                    where: { UserId: user.id },
+                    include: [{ model: Stock }]
+                }),
+                Like.findAll({
+                    where: { UserId: user.id },
+                    include: [{ model: Stock }]
+                }),
+                Dislike.findAll({
+                    where: { UserId: user.id },
+                    include: [{ model: Stock }]
+                }),
+                Friend.findAll({
+                    where: { UserId1: user.id },
+                    include: [
+                        { model: User, as: "user1" },
+                        {
+                            model: User,
+                            as: "user2",
+                            include: [
+                                {
+                                    model: Follow,
+                                    include: [{ model: Stock }]
+                                },
+                                {
+                                    model: Like,
+                                    include: [{ model: Stock }]
+                                },
+                                {
+                                    model: Dislike,
+                                    include: [{ model: Stock }]
+                                }
+                            ]
+                        }
+                    ]
+                })
+            ]);
+
+        if (stocksInDatabase.length < 10) {
+            return {
+                status: 422,
+                error: "You need at least 10 stocks in the database to access ranking."
+            };
+        }
+
+        const followsMap = follows.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
+
+        const likesMap = likes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
+
+        const dislikesMap = dislikes.reduce(
+            (accum, current) => ({
+                ...accum,
+                [current.Stock.ticker]: true
+            }),
+            {}
+        );
+
+        const friendsFollowsCount = connections
+            .flatMap((connection) => connection.user2.Follows)
+            .reduce((accum, current) => {
+                const { ticker } = current.Stock;
+                return {
+                    ...accum,
+                    [ticker]: (accum[ticker] || 0) + 1
+                };
+            }, {});
+
+        const friendsLikesCount = connections
+            .flatMap((connection) => connection.user2.Likes)
+            .reduce((accum, current) => {
+                const { ticker } = current.Stock;
+                return {
+                    ...accum,
+                    [ticker]: (accum[ticker] || 0) + 1
+                };
+            }, {});
+
+        const friendsDislikesCount = connections
+            .flatMap((connection) => connection.user2.Dislikes)
+            .reduce((accum, current) => {
+                const { ticker } = current.Stock;
+                return {
+                    ...accum,
+                    [ticker]: (accum[ticker] || 0) + 1
+                };
+            }, {});
+
+        const stocksRanking = stocksInDatabase.map((currentStock) => {
+            let points = 0;
+
+            if (followsMap[currentStock.ticker]) {
+                points += FOLLOW_POINTS;
+            }
+
+            if (likesMap[currentStock.ticker]) {
+                points += LIKE_POINTS;
+            }
+
+            if (dislikesMap[currentStock.ticker]) {
+                points += DISLIKE_POINTS;
+            }
+
+            if (friendsFollowsCount[currentStock.ticker]) {
+                points +=
+                    friendsFollowsCount[currentStock.ticker] *
+                    FOLLOW_FRIEND_POINTS;
+            }
+
+            if (friendsLikesCount[currentStock.ticker]) {
+                points +=
+                    friendsLikesCount[currentStock.ticker] * LIKE_FRIEND_POINTS;
+            }
+
+            if (friendsDislikesCount[currentStock.ticker]) {
+                points +=
+                    friendsDislikesCount[currentStock.ticker] *
+                    DISLIKE_FRIEND_POINTS *
+                    (friendsDislikesCount[currentStock.ticker] % 2 === 0
+                        ? -1
+                        : 1);
+            }
+
+            const { ticker, name, logo, sector, price } =
+                currentStock.dataValues;
+            const stockWithPoints = {
+                ticker,
+                name,
+                logo,
+                points,
+                sector,
+                price
+            };
+
+            return stockWithPoints;
+        });
+
+        stocksRanking.sort(compareStocksByPoints);
+
+        return { status: 200, data: { stocksRanking } };
     } catch (error) {
         return { status: 500, error };
     }

@@ -48,7 +48,7 @@ router.get("/post/comments/:id", async (req, res) => {
 });
 
 router.post("/post/comment/:id", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { id } = req.params;
     const { content } = req.body;
 
@@ -113,7 +113,7 @@ router.get("/posts", async (req, res) => {
 });
 
 router.post("/post", async (req, res) => {
-    const user = req.session.user;
+    const { user } = req.session;
     const { title, content } = req.body;
 
     try {
