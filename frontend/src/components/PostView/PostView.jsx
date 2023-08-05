@@ -1,14 +1,13 @@
 import "./PostView.css";
-import { useParams } from "react-router";
-import { NetworkError, formatDateTime } from "../../utils";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { setLoading } from "../../redux/loading";
-import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
+import { useParams, Link } from "react-router-dom";
 import PostComments from "../PostComments/PostComments";
+import { NetworkError, ServerError, formatDateTime } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 export default function PostView() {
     const [post, setPost] = useState({});

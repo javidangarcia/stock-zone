@@ -1,20 +1,26 @@
 import "./Discussions.css";
 import { useEffect, useState } from "react";
-import { NetworkError, ServerError, comparePostsByDate, formatDateTime } from "../../utils";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoading } from "../../redux/loading";
 import axios from "axios";
-import CreatePost from "../CreatePost/CreatePost";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CreatePost from "../CreatePost/CreatePost";
+import { setLoading } from "../../redux/loading";
+import {
+    NetworkError,
+    ServerError,
+    comparePostsByDate,
+    formatDateTime
+} from "../../utils";
 
 export default function Discussions() {
     const [posts, setPosts] = useState([]);
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.loading);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -42,6 +48,10 @@ export default function Discussions() {
         fetchPosts();
     }, []);
 
+    const handlePostClick = (postId) => {
+        navigate(`/discussions/${postId}`);
+    };
+
     return !loading ? (
         <Container>
             <Row>
@@ -52,10 +62,7 @@ export default function Discussions() {
             {posts.sort(comparePostsByDate).map((post) => (
                 <Row key={post.id} className="mb-3">
                     <Col>
-                        <Link
-                            className="user-link"
-                            to={`/discussions/${post.id}`}
-                        >
+                        <div onClick={() => handlePostClick(post.id)}>
                             <Card className="post-card">
                                 <Card.Body>
                                     <Card.Title>{post.title}</Card.Title>
@@ -76,7 +83,7 @@ export default function Discussions() {
                                     </small>
                                 </Card.Footer>
                             </Card>
-                        </Link>
+                        </div>
                     </Col>
                 </Row>
             ))}

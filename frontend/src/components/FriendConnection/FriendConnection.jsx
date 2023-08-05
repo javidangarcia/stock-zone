@@ -1,10 +1,9 @@
 import "./FriendConnection.css";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
-import { useSelector } from "react-redux";
-import { NetworkError, ServerError, ResponseError } from "../../utils";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
+import { NetworkError, ServerError, ResponseError } from "../../utils";
 import { setLoading } from "../../redux/loading";
 
 export default function FriendConnection({ username, profile, setProfile }) {
@@ -15,8 +14,8 @@ export default function FriendConnection({ username, profile, setProfile }) {
         try {
             dispatch(setLoading(true));
             const url = profile.friend
-            ? `${import.meta.env.VITE_HOST}/unfriend`
-            : `${import.meta.env.VITE_HOST}/friend`;
+                ? `${import.meta.env.VITE_HOST}/unfriend`
+                : `${import.meta.env.VITE_HOST}/friend`;
 
             const response = await axios.post(
                 url,

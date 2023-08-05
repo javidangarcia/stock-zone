@@ -9,7 +9,7 @@
 .stocks-you-follow h1 {
     margin: 0;
     font-size: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .stock-link {
@@ -18,5 +18,5 @@
 }
 
 .stock-you-follow {
-    width: 275px;
+    width: 220px;
 }

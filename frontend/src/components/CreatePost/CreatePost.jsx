@@ -1,14 +1,14 @@
 import "./CreatePost.css";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setLoading } from "../../redux/loading";
 import Button from "react-bootstrap/esm/Button";
 import axios from "axios";
-import { NetworkError, ServerError } from "../../utils";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { NetworkError, ServerError } from "../../utils";
+import { setLoading } from "../../redux/loading";
 
 export default function CreatePost({ setPosts }) {
     const [showCreatePost, setShowCreatePost] = useState(false);
@@ -75,7 +75,11 @@ export default function CreatePost({ setPosts }) {
                 Create Post
             </Button>
 
-            <Modal show={showCreatePost} onHide={() => setShowCreatePost(false)} centered>
+            <Modal
+                show={showCreatePost}
+                onHide={() => setShowCreatePost(false)}
+                centered
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Create Post</Modal.Title>
                 </Modal.Header>
@@ -110,7 +114,7 @@ export default function CreatePost({ setPosts }) {
                     <Button
                         variant="primary"
                         type="submit"
-                        onClick={createPost}
+                        onClick={() => createPost()}
                     >
                         Create
                     </Button>

@@ -11,10 +11,10 @@ import {
     getMarketNewsUrl,
     getStockNewsUrl,
     isValidArticle,
-    NetworkError,
-    ResponseError
+    NetworkError
 } from "../../utils";
 import { setLoading } from "../../redux/loading";
+import Swal from "sweetalert2";
 
 const ARTICLES_TO_SHOW = 5;
 const ARTICLES_SUMMARY_LIMIT = 1000;
@@ -47,8 +47,14 @@ export default function StockNews({ stocks }) {
                             isValidArticle(currentStock, article)
                     );
                     setStockNews(filteredStockNews);
-                } else {
-                    ResponseError(response.message);
+                }
+
+                if (response.status === 429) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "API Limit Reached",
+                        text: "Please try again later."
+                    });
                 }
 
                 dispatch(setLoading(false));
@@ -83,7 +89,11 @@ export default function StockNews({ stocks }) {
             {stockNews?.slice(0, articlesToShow).map((article) => (
                 <Card
                     key={article.id}
-                    className="mb-5 cursor-pointer"
+                    className={
+                        stocks.length > 0
+                            ? "mb-5 cursor-pointer news-with-stocks"
+                            : "mb-5 cursor-pointer news-only"
+                    }
                     onClick={() => window.open(article.url, "_blank")}
                     style={{ cursor: "pointer" }}
                 >

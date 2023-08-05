@@ -1,19 +1,18 @@
-import { NetworkError } from "../../utils";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { setLoading } from "../../redux/loading";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import InputGroup from "react-bootstrap/InputGroup";
+import { setLoading } from "../../redux/loading";
+import { NetworkError, ResponseError, ServerError } from "../../utils";
 
 export default function CreateComment({ postID, comments, setComments }) {
     const [showCreateComment, setShowCreateComment] = useState(false);
     const [commentInput, setCommentInput] = useState("");
     const dispatch = useDispatch();
-    const loading = useSelector((state) => state.loading);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

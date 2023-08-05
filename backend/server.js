@@ -46,7 +46,7 @@ app.use(
         saveUninitialized: false,
         store: sessionStore,
         cookie: {
-            sameSite: "none",
+            sameSite: false,
             secure: process.env.DEVELOPMENT === "prod",
             expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year in milliseconds
         }
@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3001, "0.0.0.0", () => {
+server.listen(3001, () => {
     console.log("Chat server is running.");
 });
 

@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import Follow from "../Follow/Follow";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
@@ -18,26 +20,29 @@ import {
 } from "../../utils";
 import StockChart from "../StockChart/StockChart";
 import { setLoading } from "../../redux/loading";
+import Swal from "sweetalert2";
 
 export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
-    const [stockNotFound, setStockNotFound] = useState(false);
     const dispatch = useDispatch();
+    const isFirstRender = useRef(true);
+    const [category, setCategory] = useState("chart");
+    const [stockInDatabase, setStockInDatabase] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchStockData = async () => {
             try {
                 dispatch(setLoading(true));
-                setStockNotFound(false);
-
                 const databaseResponse = await axios.get(
-                    `${import.meta.env.VITE_HOST}/stocks/${ticker}`,
+                    `${import.meta.env.VITE_HOST}/stock/${ticker}`,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
                 if (databaseResponse.status === 200) {
                     setStockData(databaseResponse.data.stock);
+                    setStockInDatabase(true);
                     dispatch(setLoading(false));
                     return;
                 }
@@ -60,21 +65,31 @@ export default function StockData() {
                 const overviewData = overviewResponse.data;
                 const priceData = priceResponse.data;
                 const logoData = logoResponse.data;
-                dispatch(setLoading(false));
 
                 if (Object.keys(overviewData).length === 0) {
-                    setStockNotFound(true);
+                    dispatch(setLoading(false));
+                    Swal.fire({
+                        icon: "error",
+                        title: "Stock Not Found",
+                        text: "The stock ticker you entered does not correspond to any existing company."
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigate("/search");
+                        }
+                    });
                     return;
                 }
 
                 if (overviewData.Note != null) {
+                    dispatch(setLoading(false));
+                    ResponseError(overviewData.Note);
                     return;
                 }
 
                 const stockSector = capitalize(overviewData.Sector);
 
                 const combinedStockData = {
-                    ticker: overviewData.Symbol,
+                    ticker: overviewData.Symbol.toUpperCase(),
                     name: overviewData.Name,
                     description: overviewData.Description,
                     sector: stockSector,
@@ -84,40 +99,41 @@ export default function StockData() {
 
                 setStockData(combinedStockData);
 
-                // POST stock data to database for later use
-                const response = axios.post(
-                    `${import.meta.env.VITE_HOST}/stocks`,
+                const response = await axios.post(
+                    `${import.meta.env.VITE_HOST}/stock`,
                     combinedStockData,
                     { withCredentials: true, validateStatus: () => true }
                 );
 
-                if (response.status === 404) {
+                if (response.status === 200) {
+                    setStockInDatabase(true);
+                }
+
+                if (response.status === 409) {
                     ResponseError(response.data.error);
                 }
 
                 if (response.status === 500) {
                     ServerError();
                 }
+
+                dispatch(setLoading(false));
             } catch (error) {
                 dispatch(setLoading(false));
                 NetworkError(error);
             }
         };
-        fetchStockData();
+
+        if (isFirstRender.current === false) {
+            fetchStockData();
+        } else {
+            isFirstRender.current = false;
+        }
     }, []);
 
     return (
         <div className="stock-data">
-            {stockNotFound ? (
-                <p
-                    className="alert alert-danger d-flex justify-content-center"
-                    role="alert"
-                >
-                    This stock does not exist.
-                </p>
-            ) : null}
-
-            {!stockNotFound && stockData.name ? (
+            {stockInDatabase ? (
                 <div className="container-fluid vh-100 p-0">
                     <div className="row h-100">
                         <div className="col-md-6 h-100">
@@ -150,8 +166,47 @@ export default function StockData() {
                             <p className="ms-5 me-5 mb-3">
                                 Sector: {stockData.sector}
                             </p>
-                            <StockChart ticker={ticker} />
-                            <Comments ticker={ticker} />
+                            <Tabs
+                                id="controlled-tab-example"
+                                activeKey={category}
+                                onSelect={(k) => setCategory(k)}
+                                className="mb-3 me-5 ms-5"
+                                fill
+                                justify
+                            >
+                                <Tab
+                                    eventKey="chart"
+                                    title={
+                                        <span
+                                            className={
+                                                category === "chart"
+                                                    ? "text-primary"
+                                                    : "text-dark"
+                                            }
+                                        >
+                                            Chart
+                                        </span>
+                                    }
+                                >
+                                    <StockChart ticker={ticker} />
+                                </Tab>
+                                <Tab
+                                    eventKey="comments"
+                                    title={
+                                        <span
+                                            className={
+                                                category === "comments"
+                                                    ? "text-primary"
+                                                    : "text-dark"
+                                            }
+                                        >
+                                            Comments
+                                        </span>
+                                    }
+                                >
+                                    <Comments ticker={ticker} />
+                                </Tab>
+                            </Tabs>
                         </div>
 
                         <div className="col-md-6 d-flex align-items-center justify-content-end h-100">
