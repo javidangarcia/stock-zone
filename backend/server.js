@@ -46,7 +46,7 @@ app.use(
         saveUninitialized: false,
         store: sessionStore,
         cookie: {
-            sameSite: false,
+            sameSite: process.env.DEVELOPMENT === "prod" ? "none" : false,
             secure: process.env.DEVELOPMENT === "prod",
             expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year in milliseconds
         }
@@ -72,8 +72,7 @@ app.use(postRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,
-        credentials: true
+        origin: process.env.FRONTEND_URL
     }
 });
 
@@ -94,7 +93,7 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3001, () => {
+server.listen(3001, "0.0.0.0", () => {
     console.log("Chat server is running.");
 });
 

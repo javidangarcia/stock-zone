@@ -15,54 +15,6 @@ const LIKE_FRIEND_POINTS = 10;
 const DISLIKE_FRIEND_POINTS = -10;
 const MAX_PAGE_SIZE = 10;
 
-export async function GetRanking(user, page) {
-    try {
-        if (page !== 1) {
-            const currentRanking = await Ranking.findOne({
-                where: { UserId: user.id }
-            });
-            const currentRankingByPage =
-                currentRanking.dataValues.ranking.slice(
-                    (page - 1) * MAX_PAGE_SIZE,
-                    page * MAX_PAGE_SIZE
-                );
-            return {
-                status: 200,
-                data: { stocksRanking: currentRankingByPage }
-            };
-        }
-
-        const response = await RankingAlgorithmV4(user);
-
-        if (response.status === 500) {
-            return { status: 500, error: response.error };
-        }
-
-        const { stocksRanking } = response.data;
-
-        const rankingInDatabase = await Ranking.findOne({
-            where: { UserId: user.id }
-        });
-
-        if (rankingInDatabase !== null) {
-            rankingInDatabase.ranking = stocksRanking;
-            await rankingInDatabase.save();
-        } else {
-            const rankingData = {
-                ranking: stocksRanking,
-                UserId: user.id
-            };
-            await Ranking.create(rankingData);
-        }
-
-        const topTenStocks = stocksRanking.slice(0, MAX_PAGE_SIZE);
-
-        return { status: 200, data: { stocksRanking: topTenStocks } };
-    } catch (error) {
-        return { status: 500, error };
-    }
-}
-
 export async function RankingAlgorithmV4(user) {
     try {
         const [stocksInDatabase, follows, likes, dislikes, connections] =
@@ -560,6 +512,54 @@ export async function RankingAlgorithmV1(user) {
 
         stocksRanking.sort(compareStocksByPoints);
         const topTenStocks = stocksRanking.slice(0, 10);
+
+        return { status: 200, data: { stocksRanking: topTenStocks } };
+    } catch (error) {
+        return { status: 500, error };
+    }
+}
+
+export async function GetRanking(user, page) {
+    try {
+        if (page !== 1) {
+            const currentRanking = await Ranking.findOne({
+                where: { UserId: user.id }
+            });
+            const currentRankingByPage =
+                currentRanking.dataValues.ranking.slice(
+                    (page - 1) * MAX_PAGE_SIZE,
+                    page * MAX_PAGE_SIZE
+                );
+            return {
+                status: 200,
+                data: { stocksRanking: currentRankingByPage }
+            };
+        }
+
+        const response = await RankingAlgorithmV4(user);
+
+        if (response.status === 500) {
+            return { status: 500, error: response.error };
+        }
+
+        const { stocksRanking } = response.data;
+
+        const rankingInDatabase = await Ranking.findOne({
+            where: { UserId: user.id }
+        });
+
+        if (rankingInDatabase !== null) {
+            rankingInDatabase.ranking = stocksRanking;
+            await rankingInDatabase.save();
+        } else {
+            const rankingData = {
+                ranking: stocksRanking,
+                UserId: user.id
+            };
+            await Ranking.create(rankingData);
+        }
+
+        const topTenStocks = stocksRanking.slice(0, MAX_PAGE_SIZE);
 
         return { status: 200, data: { stocksRanking: topTenStocks } };
     } catch (error) {

@@ -14,7 +14,7 @@ export default function CreateComment({ postID, comments, setComments }) {
     const [commentInput, setCommentInput] = useState("");
     const dispatch = useDispatch();
 
-    const handleSubmit = async (event) => {
+    async function createComment(event) {
         event.preventDefault();
 
         if (commentInput === "") {
@@ -107,7 +107,7 @@ export default function CreateComment({ postID, comments, setComments }) {
                     <Button
                         variant="primary"
                         type="submit"
-                        onClick={handleSubmit}
+                        onClick={(event) => createComment(event)}
                     >
                         Comment
                     </Button>

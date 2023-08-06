@@ -114,7 +114,7 @@ export default function CreatePost({ setPosts }) {
                     <Button
                         variant="primary"
                         type="submit"
-                        onClick={() => createPost()}
+                        onClick={(event) => createPost(event)}
                     >
                         Create
                     </Button>

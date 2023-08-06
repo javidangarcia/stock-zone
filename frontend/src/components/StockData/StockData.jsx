@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
@@ -26,7 +26,7 @@ export default function StockData() {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({});
     const dispatch = useDispatch();
-    const isFirstRender = useRef(true);
+    const [hasRendered, setHasRendered] = useState(false);
     const [category, setCategory] = useState("chart");
     const [stockInDatabase, setStockInDatabase] = useState(false);
     const navigate = useNavigate();
@@ -124,12 +124,12 @@ export default function StockData() {
             }
         };
 
-        if (isFirstRender.current === false) {
+        if (hasRendered) {
             fetchStockData();
         } else {
-            isFirstRender.current = false;
+            setHasRendered(true);
         }
-    }, []);
+    }, [hasRendered]);
 
     return (
         <div className="stock-data">

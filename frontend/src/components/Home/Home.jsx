@@ -1,5 +1,5 @@
 import "./Home.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import StockNews from "../StockNews/StockNews";
@@ -12,7 +12,6 @@ export default function Home() {
     const [stocks, setStocks] = useState([]);
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
-    const isFirstRender = useRef(true);
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
@@ -52,11 +51,7 @@ export default function Home() {
             }
         };
 
-        if (isFirstRender.current === false) {
-            fetchStocksYouFollow();
-        } else {
-            isFirstRender.current = false;
-        }
+        fetchStocksYouFollow();
     }, []);
 
     return stocks.length > 0 ? (
