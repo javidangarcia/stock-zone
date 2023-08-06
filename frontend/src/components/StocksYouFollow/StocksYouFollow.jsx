@@ -15,7 +15,7 @@ export default function StocksYouFollow({ stocks }) {
             {stocks
                 .slice(0, Math.min(displayedStocks, stocks.length))
                 .map((stock) => (
-                    <div className="mb-4">
+                    <div key={stock.id} className="mb-4">
                         <Link
                             to={`/search/stocks/${stock.ticker}`}
                             className="stock-link"

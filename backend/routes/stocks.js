@@ -24,7 +24,7 @@ router.get("/stocks", async (req, res) => {
 });
 
 // Create a new stock in database
-router.post("/stocks", async (req, res) => {
+router.post("/stock", async (req, res) => {
     const { ticker } = req.body;
 
     try {
@@ -47,7 +47,7 @@ router.post("/stocks", async (req, res) => {
 });
 
 // Get a specific stock from database
-router.get("/stocks/:ticker", async (req, res) => {
+router.get("/stock/:ticker", async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
     const { user } = req.session;
 

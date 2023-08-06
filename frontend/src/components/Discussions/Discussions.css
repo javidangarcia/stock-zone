@@ -1,4 +1,5 @@
 .post-card {
     max-width: 70%;
     margin: 0 auto;
+    cursor: pointer;
 }

@@ -5,12 +5,12 @@ import { PostComment } from "../models/postComment.js";
 
 const router = express.Router();
 
-router.get("/post/:id", async (req, res) => {
-    const { id } = req.params;
+router.get("/post/:postID", async (req, res) => {
+    const { postID } = req.params;
 
     try {
         const post = await Post.findOne({
-            where: { id },
+            where: { id: postID },
             include: [{ model: User }]
         });
 
@@ -25,11 +25,11 @@ router.get("/post/:id", async (req, res) => {
     }
 });
 
-router.get("/post/comments/:id", async (req, res) => {
-    const { id } = req.params;
+router.get("/post/comments/:postID", async (req, res) => {
+    const { postID } = req.params;
 
     try {
-        const post = await Post.findOne({ where: { id } });
+        const post = await Post.findOne({ where: { id: postID } });
 
         if (post === null) {
             res.status(404).json({ error: "This Post Does Not Exist." });

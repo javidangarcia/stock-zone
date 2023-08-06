@@ -2,11 +2,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 25px 200px 0px 100px;
+    margin: 25px 150px 0px 150px;
     flex: 6;
 }
 
 .stock-news h1 {
     margin: 0px;
     font-size: 30px;
+}
+
+.news-only {
+    width: 50%;
+}
+
+.news-with-stocks {
+    width: 90%;
+}
+
+.card-body {
+    padding: 15px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-img-top {
+    flex: 1;
+    object-fit: cover;
 }

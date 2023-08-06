@@ -66,7 +66,7 @@ export default function Ranking() {
                 Recommended based on your profile and history.
             </p>
             {stocksRanking?.map((stock, index) => (
-                <div className="mb-4">
+                <div key={index} className="mb-4">
                     <Link
                         to={`/search/stocks/${stock.ticker}`}
                         className="stock-link"

@@ -63,7 +63,7 @@ export default function Comments({ ticker }) {
             }
 
             if (response.status === 404) {
-                ResponseError(response);
+                ResponseError(response.data.error);
             }
 
             if (response.status === 500) {

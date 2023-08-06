@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ApexCharts from "react-apexcharts";
 import axios from "axios";
 import ToggleButton from "react-bootstrap/ToggleButton";
@@ -14,6 +14,7 @@ export default function StockChart({ ticker }) {
     const [chartData, setChartData] = useState({});
     const [oneYearData, setOneYearData] = useState([]);
     const [oneMonthData, setOneMonthData] = useState([]);
+    const isFirstRender = useRef(true);
 
     const createDaysChart = (historicalData) => {
         const dates = historicalData
@@ -121,7 +122,12 @@ export default function StockChart({ ticker }) {
                 NetworkError(error);
             }
         };
-        fetchOneYearData();
+
+        if (isFirstRender.current === false) {
+            fetchOneYearData();
+        } else {
+            isFirstRender.current = false;
+        }
     }, []);
 
     async function fiveDays() {
