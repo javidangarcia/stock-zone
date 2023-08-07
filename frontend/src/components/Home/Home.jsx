@@ -2,16 +2,19 @@ import "./Home.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 import { setLoading } from "../../redux/loading";
 import { NetworkError, ServerError, ResponseError } from "../../utils";
-import Swal from "sweetalert2";
 
 export default function Home() {
     const [stocks, setStocks] = useState([]);
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
+    const [newsView, setNewsView] = useState(false);
+    const [stocksView, setStocksView] = useState(false);
+    const [hasRendered, setHasRendered] = useState(false);
 
     useEffect(() => {
         const fetchStocksYouFollow = async () => {
@@ -27,12 +30,14 @@ export default function Home() {
                 if (response.status === 200) {
                     if (response.data.stocksYouFollow.length > 0) {
                         setStocks(response.data.stocksYouFollow);
+                        setStocksView(true);
                     } else {
                         Swal.fire({
                             icon: "info",
                             title: "Get Started with Stock Zone",
                             text: "Follow any stock to get started."
                         });
+                        setNewsView(true);
                     }
                 }
 
@@ -51,15 +56,23 @@ export default function Home() {
             }
         };
 
-        fetchStocksYouFollow();
-    }, []);
+        if (hasRendered) {
+            fetchStocksYouFollow();
+        } else {
+            setHasRendered(true);
+        }
+    }, [hasRendered]);
 
-    return stocks.length > 0 ? (
+    return (
         <div className="home">
-            <StockNews stocks={stocks} />
-            <StocksYouFollow stocks={stocks} />
+            {newsView ? <StockNews stocks={stocks} /> : null}
+
+            {stocksView ? (
+                <>
+                    <StockNews stocks={stocks} />
+                    <StocksYouFollow stocks={stocks} />
+                </>
+            ) : null}
         </div>
-    ) : (
-        <StockNews stocks={stocks} />
     );
 }

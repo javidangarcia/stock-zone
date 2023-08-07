@@ -5,6 +5,8 @@ import axios from "axios";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import Chat from "../Chat/Chat";
 import { setLoading } from "../../redux/loading";
 import { NetworkError, ServerError } from "../../utils";
@@ -18,6 +20,19 @@ export default function ChatRoom() {
     const [friends, setFriends] = useState([]);
     const [friend, setFriend] = useState({});
     const dispatch = useDispatch();
+    const [hasRendered, setHasRendered] = useState(false);
+    const navigate = useNavigate();
+
+    const joinRoom = (connection) => {
+        const roomID = [connection.user2.username, connection.user1.username]
+            .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+            .join("");
+
+        socket.emit("join_room", roomID);
+        setFriend(connection);
+        setRoom(roomID);
+        setShowChat(true);
+    };
 
     useEffect(() => {
         const fetchFriends = async () => {
@@ -33,6 +48,20 @@ export default function ChatRoom() {
 
                 if (response.status === 200) {
                     setFriends(response.data.friends);
+
+                    if (response.data.friends.length > 0) {
+                        joinRoom(response.data.friends[0]);
+                    } else {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Get Started with Messaging",
+                            text: "Add any user as a friend to get started."
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate(`/profile/${user.username}`);
+                            }
+                        });
+                    }
                 }
 
                 if (response.status === 500) {
@@ -45,24 +74,17 @@ export default function ChatRoom() {
                 NetworkError(error);
             }
         };
-        fetchFriends();
-    }, []);
 
-    const joinRoom = (connection) => {
-        const roomID = [connection.user2.username, connection.user1.username]
-            .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-            .join("");
+        if (hasRendered) {
+            fetchFriends();
+        } else {
+            setHasRendered(true);
+        }
+    }, [hasRendered]);
 
-        socket.emit("join_room", roomID);
-        setFriend(connection);
-        setRoom(roomID);
-        setShowChat(true);
-    };
-
-    return (
+    return friends.length > 0 ? (
         <div className="chat">
             <div className="friends-list">
-                <h3>Friends</h3>
                 <Card className="friends-card">
                     <ListGroup variant="flush">
                         {friends.map((connection) => (
@@ -71,7 +93,12 @@ export default function ChatRoom() {
                                 className="friends"
                                 onClick={() => joinRoom(connection)}
                             >
-                                {connection.user2.username}
+                                <img
+                                    src={connection.user2.picture}
+                                    alt={connection.user2.username}
+                                    className="friend-picture"
+                                />
+                                {connection.user2.fullName}
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
@@ -81,5 +108,5 @@ export default function ChatRoom() {
                 <Chat socket={socket} user={user} room={room} friend={friend} />
             )}
         </div>
-    );
+    ) : null;
 }

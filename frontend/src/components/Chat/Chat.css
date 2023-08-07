@@ -1,61 +1,112 @@
 .chat-section {
     width: 100%;
-    margin: 20px 40px 0px 40px;
+    margin: 20px auto;
+    max-width: 75%;
 }
 
 .chat-window {
-    height: 80vh;
+    height: 76vh;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f5f5f5;
 }
 
-#other {
+.your-messages {
     display: flex;
-    justify-content: right;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+    width: max-content;
 }
 
-#you .message-content {
+.friend-messages {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+    width: max-content;
+    margin-left: auto;
+}
+
+.message-content {
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    background-color: #eaeaea;
+    color: #333;
+}
+
+.message-content p {
+    margin: 5px;
+}
+
+.your-messages .message-content {
     background-color: #a7c957;
     color: white;
-    padding: 15px;
-    border-radius: 10px;
-    width: 200px;
 }
 
-#other .message-content {
+.friend-messages .message-content {
     background-color: cornflowerblue;
     color: white;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-#you p {
-    margin: 0px;
-}
-
-#other p {
-    margin: 0px;
-}
-
-.send-message {
-    display: flex;
-    width: 100%;
-    border: 2px solid black;
 }
 
 .message-footer {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-top: 5px;
+    color: #888;
+    font-size: 12px;
+    width: 100%;
 }
 
 .message-author {
-    padding-right: 5px;
-    padding-left: 10px;
-    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .message-time {
-    font-size: 10px;
+    flex-shrink: 0;
 }
 
-.message {
-    margin-bottom: 15px;
+.send-message {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.send-message:focus {
+    outline: none;
+    border-color: #4caf50;
+}
+
+.send-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background-color: #45a049;
+}
+
+.message-bubble {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    width: max-content;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 7px;
 }

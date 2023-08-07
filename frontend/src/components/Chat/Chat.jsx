@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { formatDateTime, NetworkError, ServerError } from "../../utils";
 import { setLoading } from "../../redux/loading";
 
@@ -85,24 +86,55 @@ export default function Chat({ socket, user, room, friend }) {
                 {messageList.map((messageContent) => (
                     <div
                         key={messageContent.id}
-                        className="message"
-                        id={
+                        className={
                             user.username === messageContent.author
-                                ? "you"
-                                : "other"
+                                ? "your-messages"
+                                : "friend-messages"
                         }
                     >
-                        <div>
-                            <div className="message-content">
-                                <p>{messageContent.content}</p>
-                            </div>
-                            <div className="message-footer">
-                                <p className="message-author">
-                                    {messageContent.author}
-                                </p>
-                                <p className="message-time">
-                                    {formatDateTime(messageContent.createdAt)}
-                                </p>
+                        <div className="message-bubble">
+                            <img
+                                src={
+                                    user.username === messageContent.author
+                                        ? user.picture
+                                        : friend.user2.picture
+                                }
+                                alt={`This is the profile of ${
+                                    user.username === messageContent.author
+                                        ? user.username
+                                        : friend.user2.username
+                                }.`}
+                                className="profile-picture"
+                            />
+                            <div>
+                                <div className="message-content">
+                                    <p>{messageContent.content}</p>
+                                </div>
+                                <div className="message-footer">
+                                    <Link
+                                        to={`/profile/${messageContent.author}`}
+                                        className="user-link"
+                                    >
+                                        <p
+                                            className={
+                                                user.username ===
+                                                messageContent.author
+                                                    ? "message-author text-success"
+                                                    : "message-author text-primary"
+                                            }
+                                        >
+                                            {user.username ===
+                                            messageContent.author
+                                                ? user.fullName
+                                                : friend.user2.fullName}
+                                        </p>
+                                    </Link>
+                                    <p className="message-time">
+                                        {formatDateTime(
+                                            messageContent.createdAt
+                                        )}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
