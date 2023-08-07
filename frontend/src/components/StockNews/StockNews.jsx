@@ -6,6 +6,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "react-bootstrap/Button";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import {
     formatDate,
     getMarketNewsUrl,
@@ -14,7 +15,6 @@ import {
     NetworkError
 } from "../../utils";
 import { setLoading } from "../../redux/loading";
-import Swal from "sweetalert2";
 
 const ARTICLES_TO_SHOW = 5;
 const ARTICLES_SUMMARY_LIMIT = 1000;

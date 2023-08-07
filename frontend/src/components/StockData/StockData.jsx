@@ -5,6 +5,7 @@ import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import Swal from "sweetalert2";
 import Follow from "../Follow/Follow";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
@@ -20,7 +21,6 @@ import {
 } from "../../utils";
 import StockChart from "../StockChart/StockChart";
 import { setLoading } from "../../redux/loading";
-import Swal from "sweetalert2";
 
 export default function StockData() {
     const { ticker } = useParams();

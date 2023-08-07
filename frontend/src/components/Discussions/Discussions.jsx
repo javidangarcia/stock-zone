@@ -62,28 +62,29 @@ export default function Discussions() {
             {posts.sort(comparePostsByDate).map((post) => (
                 <Row key={post.id} className="mb-3">
                     <Col>
-                        <div onClick={() => handlePostClick(post.id)}>
-                            <Card className="post-card">
-                                <Card.Body>
-                                    <Card.Title>{post.title}</Card.Title>
-                                    <Card.Text>{post.content}</Card.Text>
-                                </Card.Body>
-                                <Card.Footer className="d-flex justify-content-between align-items-center">
-                                    <small className="text-muted">
-                                        Posted by{" "}
-                                        <Link
-                                            className="user-link text-primary"
-                                            to={`/profile/${post.User.username}`}
-                                        >
-                                            {post.User.username}
-                                        </Link>{" "}
-                                    </small>
-                                    <small className="text-muted">
-                                        {formatDateTime(post.createdAt)}
-                                    </small>
-                                </Card.Footer>
-                            </Card>
-                        </div>
+                        <Card
+                            className="post-card"
+                            onClick={() => handlePostClick(post.id)}
+                        >
+                            <Card.Body>
+                                <Card.Title>{post.title}</Card.Title>
+                                <Card.Text>{post.content}</Card.Text>
+                            </Card.Body>
+                            <Card.Footer className="d-flex justify-content-between align-items-center">
+                                <small className="text-muted">
+                                    Posted by{" "}
+                                    <Link
+                                        className="user-link text-primary"
+                                        to={`/profile/${post.User.username}`}
+                                    >
+                                        {post.User.username}
+                                    </Link>{" "}
+                                </small>
+                                <small className="text-muted">
+                                    {formatDateTime(post.createdAt)}
+                                </small>
+                            </Card.Footer>
+                        </Card>
                     </Col>
                 </Row>
             ))}

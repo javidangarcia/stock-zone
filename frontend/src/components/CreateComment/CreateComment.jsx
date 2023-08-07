@@ -64,7 +64,7 @@ export default function CreateComment({ postID, comments, setComments }) {
             dispatch(setLoading(false));
             NetworkError(error);
         }
-    };
+    }
 
     return (
         <div>
