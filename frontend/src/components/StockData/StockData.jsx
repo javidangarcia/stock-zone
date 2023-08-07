@@ -30,11 +30,33 @@ export default function StockData() {
     const [category, setCategory] = useState("chart");
     const [stockInDatabase, setStockInDatabase] = useState(false);
     const navigate = useNavigate();
+    const [stockPrice, setStockPrice] = useState(null);
 
     useEffect(() => {
         const fetchStockData = async () => {
             try {
                 dispatch(setLoading(true));
+
+                const stockPriceResponse = await axios.get(
+                    getStockPriceUrl(ticker)
+                );
+
+                if (stockPriceResponse.data.c === 0) {
+                    dispatch(setLoading(false));
+                    Swal.fire({
+                        icon: "error",
+                        title: "Stock Not Found",
+                        text: "The stock ticker you entered does not correspond to any existing company."
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigate("/search");
+                        }
+                    });
+                    return;
+                }
+
+                setStockPrice(stockPriceResponse.data.c);
+
                 const databaseResponse = await axios.get(
                     `${import.meta.env.VITE_HOST}/stock/${ticker}`,
                     { withCredentials: true, validateStatus: () => true }
@@ -52,37 +74,23 @@ export default function StockData() {
                 }
 
                 const stockOverviewUrl = getStockOverviewUrl(ticker);
-                const stockPriceUrl = getStockPriceUrl(ticker);
                 const stockLogoUrl = getStockLogoUrl(ticker);
 
-                const [overviewResponse, priceResponse, logoResponse] =
-                    await Promise.all([
-                        axios.get(stockOverviewUrl),
-                        axios.get(stockPriceUrl),
-                        axios.get(stockLogoUrl)
-                    ]);
+                const [overviewResponse, logoResponse] = await Promise.all([
+                    axios.get(stockOverviewUrl),
+                    axios.get(stockLogoUrl)
+                ]);
 
                 const overviewData = overviewResponse.data;
-                const priceData = priceResponse.data;
                 const logoData = logoResponse.data;
-
-                if (Object.keys(overviewData).length === 0) {
-                    dispatch(setLoading(false));
-                    Swal.fire({
-                        icon: "error",
-                        title: "Stock Not Found",
-                        text: "The stock ticker you entered does not correspond to any existing company."
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            navigate("/search");
-                        }
-                    });
-                    return;
-                }
 
                 if (overviewData.Note != null) {
                     dispatch(setLoading(false));
-                    ResponseError(overviewData.Note);
+                    Swal.fire({
+                        icon: "error",
+                        title: "API Limit Reached",
+                        text: `${overviewData.Note}`
+                    });
                     return;
                 }
 
@@ -93,7 +101,7 @@ export default function StockData() {
                     name: overviewData.Name,
                     description: overviewData.Description,
                     sector: stockSector,
-                    price: priceData.c,
+                    price: stockPriceResponse.data.c,
                     logo: logoData.logo
                 };
 
@@ -142,7 +150,7 @@ export default function StockData() {
                             </p>
                             <div className="d-flex align-items-center ms-5 mb-2">
                                 <p className="h2 text-primary me-2 mb-0">
-                                    ${stockData.price?.toFixed(2)}
+                                    ${stockPrice?.toFixed(2)}
                                 </p>
                                 <Follow
                                     ticker={ticker}

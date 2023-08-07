@@ -11,6 +11,7 @@ export default function StockCarousel() {
     const [stocks, setStocks] = useState([]);
     const [stocksNotFound, setStocksNotFound] = useState(false);
     const dispatch = useDispatch();
+    const [hasRendered, setHasRendered] = useState(false);
 
     useEffect(() => {
         const fetchStocks = async () => {
@@ -38,8 +39,14 @@ export default function StockCarousel() {
                 NetworkError(error);
             }
         };
-        fetchStocks();
-    }, []);
+
+
+        if (hasRendered) {
+            fetchStocks();
+        } else {
+            setHasRendered(true);
+        }
+    }, [hasRendered]);
 
     return (
         <>

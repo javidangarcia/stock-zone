@@ -1,12 +1,13 @@
 import "./Ranking.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading } from "../../redux/loading";
 import { NetworkError, ServerError, ResponseError } from "../../utils";
+import Swal from "sweetalert2";
 
 const DEFAULT_RANKING_PAGE = 1;
 const MAX_PAGE_SIZE = 10;
@@ -17,6 +18,8 @@ export default function Ranking() {
     const [showLoadMore, setShowLoadMore] = useState(true);
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.loading);
+    const [hasRendered, setHasRendered] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRanking = async () => {
@@ -42,7 +45,19 @@ export default function Ranking() {
                     }
                 }
 
-                if (response.status === 422 || response.status === 401) {
+                if (response.status === 422) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Get Started with Ranking",
+                        text: "Explore at least 10 stocks to get started."
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigate("/search");
+                        }
+                    });
+                }
+
+                if (response.status === 401) {
                     ResponseError(response.data.error);
                 }
 
@@ -56,10 +71,15 @@ export default function Ranking() {
                 NetworkError(error);
             }
         };
-        fetchRanking();
-    }, [page]);
 
-    return (
+        if (hasRendered) {
+            fetchRanking();
+        } else {
+            setHasRendered(true);
+        }
+    }, [page, hasRendered]);
+
+    return stocksRanking.length > 0 ? (
         <div className="d-flex flex-column align-items-center justify-content-center">
             <h1 className="mt-4">Popular Stocks</h1>
             <p className="mb-4">
@@ -103,5 +123,5 @@ export default function Ranking() {
                 </Button>
             ) : null}
         </div>
-    );
+    ) : null;
 }
