@@ -24,6 +24,7 @@ export default function StockNews({ stocks }) {
     const [currentStock, setCurrentStock] = useState(null);
     const [articlesToShow, setArticlesToShow] = useState(ARTICLES_TO_SHOW);
     const dispatch = useDispatch();
+    const [hasRendered, setHasRendered] = useState(false);
 
     useEffect(() => {
         const fetchStockNews = async () => {
@@ -63,8 +64,13 @@ export default function StockNews({ stocks }) {
                 NetworkError();
             }
         };
-        fetchStockNews();
-    }, [currentStock]);
+
+        if (hasRendered) {
+            fetchStockNews();
+        } else {
+            setHasRendered(true);
+        }
+    }, [currentStock, hasRendered]);
 
     return (
         <div className="stock-news">

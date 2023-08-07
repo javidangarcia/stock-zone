@@ -538,6 +538,10 @@ export async function GetRanking(user, page) {
 
         const response = await RankingAlgorithmV4(user);
 
+        if (response.status === 422) {
+            return { status: 422, error: response.error };
+        }
+
         if (response.status === 500) {
             return { status: 500, error: response.error };
         }
