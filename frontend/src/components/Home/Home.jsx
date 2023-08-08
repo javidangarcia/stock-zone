@@ -32,12 +32,14 @@ export default function Home() {
                         setStocks(response.data.stocksYouFollow);
                         setStocksView(true);
                     } else {
+                        dispatch(setLoading(false));
                         Swal.fire({
                             icon: "info",
                             title: "Get Started with Stock Zone",
                             text: "Follow any stock to get started."
                         });
                         setNewsView(true);
+                        return;
                     }
                 }
 

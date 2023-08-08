@@ -84,6 +84,20 @@ export default function StockData() {
                 const overviewData = overviewResponse.data;
                 const logoData = logoResponse.data;
 
+                if (Object.keys(overviewData).length === 0) {
+                    dispatch(setLoading(false));
+                    Swal.fire({
+                        icon: "error",
+                        title: "Stock Not Found",
+                        text: "The stock ticker you entered does not correspond to any existing company."
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigate("/search");
+                        }
+                    });
+                    return;
+                }
+
                 if (overviewData.Note != null) {
                     dispatch(setLoading(false));
                     Swal.fire({

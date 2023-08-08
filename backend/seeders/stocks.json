@@ -1,0 +1,194 @@
+[
+    {
+        "ticker": "META",
+        "name": "Meta Platforms Inc.",
+        "description": "Meta Platforms, Inc. develops products that enable people to connect and share with friends and family through mobile devices, PCs, virtual reality headsets, wearables and home devices around the world. The company is headquartered in Menlo Park, California.",
+        "sector": "Technology",
+        "price": 312.83,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/FB.svg"
+    },
+    {
+        "ticker": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "description": "Alphabet Inc. is an American multinational conglomerate headquartered in Mountain View, California. It was created through a restructuring of Google on October 2, 2015, and became the parent company of Google and several former Google subsidiaries. The two co-founders of Google remained as controlling shareholders, board members, and employees at Alphabet. Alphabet is the world's fourth-largest technology company by revenue and one of the world's most valuable companies.",
+        "sector": "Technology",
+        "price": 131.6899,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/GOOG.svg"
+    },
+    {
+        "ticker": "AAPL",
+        "name": "Apple Inc",
+        "description": "Apple Inc. is an American multinational technology company that specializes in consumer electronics, computer software, and online services. Apple is the world's largest technology company by revenue (totalling $274.5 billion in 2020) and, since January 2021, the world's most valuable company. As of 2021, Apple is the world's fourth-largest PC vendor by unit sales, and fourth-largest smartphone manufacturer. It is one of the Big Five American information technology companies, along with Amazon, Google, Microsoft, and Facebook.",
+        "sector": "Technology",
+        "price": 178.51,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/AAPL.svg"
+    },
+    {
+        "ticker": "AMZN",
+        "name": "Amazon.com Inc",
+        "description": "Amazon.com, Inc. is an American multinational technology company which focuses on e-commerce, cloud computing, digital streaming, and artificial intelligence. It is one of the Big Five companies in the U.S. information technology industry, along with Google, Apple, Microsoft, and Facebook. The company has been referred to as one of the most influential economic and cultural forces in the world, as well as the world's most valuable brand.",
+        "sector": "Trade & Services",
+        "price": 142.25,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/AMZN.svg"
+    },
+    {
+        "ticker": "TSLA",
+        "name": "Tesla Inc",
+        "description": "Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. Tesla's current products include electric cars, battery energy storage from home to grid-scale, solar panels and solar roof tiles, as well as other related products and services. In 2020, Tesla had the highest sales in the plug-in and battery electric passenger car segments, capturing 16% of the plug-in market (which includes plug-in hybrids) and 23% of the battery-electric (purely electric) market. Through its subsidiary Tesla Energy, the company develops and is a major installer of solar photovoltaic energy generation systems in the United States. Tesla Energy is also one of the largest global suppliers of battery energy storage systems, with 3 GWh of battery storage supplied in 2020.",
+        "sector": "Manufacturing",
+        "price": 250.35,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/TSLA.svg"
+    },
+    {
+        "ticker": "MSFT",
+        "name": "Microsoft Corporation",
+        "description": "Microsoft Corporation is an American multinational technology company which produces computer software, consumer electronics, personal computers, and related services. Its best known software products are the Microsoft Windows line of operating systems, the Microsoft Office suite, and the Internet Explorer and Edge web browsers. Its flagship hardware products are the Xbox video game consoles and the Microsoft Surface lineup of touchscreen personal computers. Microsoft ranked No. 21 in the 2020 Fortune 500 rankings of the largest United States corporations by total revenue; it was the world's largest software maker by revenue as of 2016. It is considered one of the Big Five companies in the U.S. information technology industry, along with Google, Apple, Amazon, and Facebook.",
+        "sector": "Technology",
+        "price": 330.11,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/MSFT.svg"
+    },
+    {
+        "ticker": "M",
+        "name": "Macy’s Inc",
+        "description": "Macy's, Inc., an omnichannel retail organization, operates stores, websites, and mobile apps under the Macy's, Bloomingdale's and bluemercury brands. The company is headquartered in New York, New York.",
+        "sector": "Trade & Services",
+        "price": 16.04,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/M.svg"
+    },
+    {
+        "ticker": "MS",
+        "name": "Morgan Stanley",
+        "description": "Morgan Stanley is an American multinational investment bank and financial services company headquartered at 1585 Broadway in the Morgan Stanley Building, Midtown Manhattan, New York City.",
+        "sector": "Finance",
+        "price": 89.08,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/MS.svg"
+    },
+    {
+        "ticker": "JPM",
+        "name": "JPMorgan Chase & Co",
+        "description": "JPMorgan Chase & Co. is an American multinational investment bank and financial services holding company headquartered in New York City. JPMorgan Chase is incorporated in Delaware. As a Bulge Bracket bank, it is a major provider of various investment banking and financial services. It is one of America's Big Four banks, along with Bank of America, Citigroup, and Wells Fargo. JPMorgan Chase is considered to be a universal bank and a custodian bank. The J.P. Morgan brand is used by the investment banking, asset management, private banking, private wealth management, and treasury services divisions.",
+        "sector": "Finance",
+        "price": 156.76,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/JPM.svg"
+    },
+    {
+        "ticker": "PYPL",
+        "name": "PayPal Holdings Inc",
+        "description": "PayPal Holdings, Inc. is an American company operating an online payments system in the majority of countries that support online money transfers, and serves as an electronic alternative to traditional paper methods like checks and money orders. The company operates as a payment processor for online vendors, auction sites, and many other commercial users, for which it charges a fee.",
+        "sector": "Trade & Services",
+        "price": 64.42,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/PYPL.svg"
+    },
+    {
+        "ticker": "NFLX",
+        "name": "Netflix Inc",
+        "description": "Netflix, Inc. is an American over-the-top content platform and production company headquartered in Los Gatos, California. Netflix was founded in 1997 by Reed Hastings and Marc Randolph in Scotts Valley, California. The company's primary business is a subscription-based streaming service offering online streaming from a library of films and television series, including those produced in-house.",
+        "sector": "Trade & Services",
+        "price": 440.76,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/NFLX.svg"
+    },
+    {
+        "ticker": "QCOM",
+        "name": "Qualcomm Incorporated",
+        "description": "Qualcomm is an American multinational corporation headquartered in San Diego, California, and incorporated in Delaware. It creates semiconductors, software, and services related to wireless technology. It owns patents critical to the 5G, 4G, CDMA2000, TD-SCDMA and WCDMA mobile communications standards.",
+        "sector": "Manufacturing",
+        "price": 119.34,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/QCOM.svg"
+    },
+    {
+        "ticker": "Z",
+        "name": "Zillow Group Inc Class C",
+        "description": "Zillow Group, Inc., a digital real estate company, operates real estate brands on mobile apps and websites in the United States. The company is headquartered in Seattle, Washington.",
+        "sector": "Trade & Services",
+        "price": 55.99,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/ZG.svg"
+    },
+    {
+        "ticker": "ZM",
+        "name": "Zoom Video Communications Inc",
+        "description": "Zoom Video Communications, Inc. provides a premier video communications platform in the Americas, Asia Pacific, Europe, the Middle East, and Africa. The company is headquartered in San Jose, California.",
+        "sector": "Technology",
+        "price": 68.66,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/ZM.svg"
+    },
+    {
+        "ticker": "AM",
+        "name": "Antero Midstream Partners LP",
+        "description": "Antero Midstream Corporation owns, operates and develops midstream energy infrastructure. The company is headquartered in Denver, Colorado.",
+        "sector": "Energy & Transportation",
+        "price": 11.97,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/AM.svg"
+    },
+    {
+        "ticker": "D",
+        "name": "Dominion Energy Inc",
+        "description": "Dominion Energy, Inc., commonly referred to as Dominion, is an American power and energy company headquartered in Richmond, Virginia that supplies electricity in parts of Virginia, North Carolina, and South Carolina and supplies natural gas to parts of Utah, West Virginia, Ohio, Pennsylvania, North Carolina, South Carolina, and Georgia. Dominion also has generation facilities in Indiana, Illinois, Connecticut, and Rhode Island.",
+        "sector": "Energy & Transportation",
+        "price": 49.14,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/D.svg"
+    },
+    {
+        "ticker": "MC",
+        "name": "Moelis & Co",
+        "description": "Moelis & Company is an investment banking advisory firm in the United States, Europe, and internationally. The company is headquartered in New York, New York.",
+        "sector": "Finance",
+        "price": 48.45,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/MC.svg"
+    },
+    {
+        "ticker": "K",
+        "name": "Kellogg Company",
+        "description": "The Kellogg Company, doing business as Kellogg's, is an American multinational food manufacturing company headquartered in Battle Creek, Michigan, United States.",
+        "sector": "Manufacturing",
+        "price": 64.81,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/K.svg"
+    },
+    {
+        "ticker": "CVS",
+        "name": "CVS Health Corp",
+        "description": "CVS Health (previously CVS Corporation and CVS Caremark Corporation) is an American healthcare company that owns CVS Pharmacy, a retail pharmacy chain; CVS Caremark, a pharmacy benefits manager; Aetna, a health insurance provider, among many other brands. The company's headquarters is in Woonsocket, Rhode Island.",
+        "sector": "Trade & Services",
+        "price": 73.91,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/CVS.svg"
+    },
+    {
+        "ticker": "WMT",
+        "name": "Walmart Inc",
+        "description": "Walmart Inc. is an American multinational retail corporation that operates a chain of hypermarkets, discount department stores, and grocery stores from the United States, headquartered in Bentonville, Arkansas. It also owns and operates Sam's Club retail warehouses.",
+        "sector": "Trade & Services",
+        "price": 160.49,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/WMT.svg"
+    },
+    {
+        "ticker": "YOU",
+        "name": "Clear Secure Inc",
+        "description": "Clear Secure, Inc. is focused on operating as a holding company for Alclear Holdings LLC providing a member-centric secure identity platform using biometric data in the United States. The company is headquartered in New York, New York.",
+        "sector": "Technology",
+        "price": 23.39,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/950802031546.svg"
+    },
+    {
+        "ticker": "BOX",
+        "name": "Box Inc",
+        "description": "Box, Inc. provides a cloud content management platform that enables organizations of various sizes to manage and share their content from anywhere and on any device. The company is headquartered in Redwood City, California.",
+        "sector": "Technology",
+        "price": 31.12,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/BOX.svg"
+    },
+    {
+        "ticker": "V",
+        "name": "Visa Inc. Class A",
+        "description": "Visa Inc. is an American multinational financial services corporation headquartered in Foster City, California, United States. It facilitates electronic funds transfers throughout the world, most commonly through Visa-branded credit cards, debit cards and prepaid cards. Visa is one of the world's most valuable companies.",
+        "sector": "Trade & Services",
+        "price": 241.51,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/V.svg"
+    },
+    {
+        "ticker": "C",
+        "name": "Citigroup Inc",
+        "description": "Citigroup Inc. is an American multinational investment bank and financial services corporation headquartered in New York City. The company was formed by the merger of banking giant Citicorp and financial conglomerate Travelers Group in 1998; Travelers was subsequently spun off from the company in 2002. Citigroup owns Citicorp, the holding company for Citibank, as well as several international subsidiaries. Citigroup is incorporated in Delaware.",
+        "sector": "Finance",
+        "price": 45.765,
+        "logo": "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/C.svg"
+    }
+]

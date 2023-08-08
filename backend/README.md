@@ -1,6 +1,6 @@
 # Instructions for Starting Express Backend
 
--   Create a postgres database, then go to database.js
--   Modify database name, username, and password for Sequelize
+-   Follow instructions in .env.template and rename to .env
+-   OPTIONAL: Run node seed.js in terminal
 -   Run npm install in terminal
 -   Run npm run start in terminal
