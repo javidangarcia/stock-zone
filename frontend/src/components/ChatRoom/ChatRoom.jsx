@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Chat from "../Chat/Chat";
 import { setLoading } from "../../redux/loading";
 import { NetworkError, ServerError } from "../../utils";
+import { Dropdown } from "react-bootstrap";
 
 const socket = io.connect(`${import.meta.env.VITE_SOCKET}`);
 
@@ -93,12 +94,38 @@ export default function ChatRoom() {
                                 className="friends"
                                 onClick={() => joinRoom(connection)}
                             >
-                                <img
-                                    src={connection.user2.picture}
-                                    alt={connection.user2.username}
-                                    className="friend-picture"
-                                />
-                                {connection.user2.fullName}
+                                <div className="d-flex justify-content-between mb-1 mt-1">
+                                    <div className="d-flex align-items-center justify-content-center">
+                                        <img
+                                            src={connection.user2.picture}
+                                            alt={connection.user2.username}
+                                            className="friend-picture"
+                                        />
+                                        <p className="m-0">
+                                            {connection.user2.fullName}
+                                        </p>
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Toggle
+                                            variant="link"
+                                            id={`dropdown-${connection.user2.id}`}
+                                            bsPrefix="none"
+                                        >
+                                            <i className="fas fa-chevron-down"></i>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/profile/${connection.user2.username}`
+                                                    )
+                                                }
+                                            >
+                                                View Profile
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </div>
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
