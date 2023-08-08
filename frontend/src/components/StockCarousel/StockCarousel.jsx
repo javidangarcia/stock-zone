@@ -52,11 +52,11 @@ export default function StockCarousel() {
         <>
             {stocksNotFound ? (
                 <div
-                    className="alert alert-danger d-flex justify-content-center"
+                    className="alert alert-info d-flex justify-content-center w-50 no-stocks"
                     role="alert"
                 >
                     There are no stocks currently in the database, search for a
-                    stock to gain access to the table.
+                    stock to gain access to the carousel.
                 </div>
             ) : null}
 
