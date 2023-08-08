@@ -148,7 +148,7 @@ const seedDatabase = async () => {
         const likeRelationships = [];
         const dislikeRelationships = [];
         const followRelationships = [];
-        const friendRelationships = [];
+        const friendRelationships = new Set();
 
         createdUsers.forEach((user) => {
             const numStocksToLike = Math.floor(
@@ -161,7 +161,7 @@ const seedDatabase = async () => {
                 Math.random() * (createdStocks.length + 1)
             );
             const numFriends = Math.floor(
-                Math.random() * (createdUsers.length + 1)
+                Math.random() * (createdUsers.length - 1)
             );
 
             const randomStocks = [...createdStocks];
@@ -186,7 +186,9 @@ const seedDatabase = async () => {
             const stocksToLike = randomStocks.slice(0, numStocksToLike);
             const stocksToDislike = randomStocks.slice(0, numStocksToDislike);
             const stocksToFollow = randomStocks.slice(0, numStocksToFollow);
-            const friends = randomUsers.slice(0, numFriends);
+            const friends = randomUsers
+                .filter((randomUser) => randomUser.id !== user.id)
+                .slice(0, numFriends);
 
             stocksToLike.forEach((stock) => {
                 likeRelationships.push({
@@ -210,11 +212,20 @@ const seedDatabase = async () => {
             });
 
             friends.forEach((friend) => {
-                friendRelationships.push({
-                    UserId1: user.id,
-                    UserId2: friend.id
-                });
+                const relationshipKey1 = `${user.id}-${friend.id}`;
+                const relationshipKey2 = `${friend.id}-${user.id}`;
+
+                friendRelationships.add(relationshipKey1);
+                friendRelationships.add(relationshipKey2);
             });
+        });
+
+        const friendRelationshipsArray = Array.from(friendRelationships).map((relationshipKey) => {
+            const [UserId1, UserId2] = relationshipKey.split('-');
+            return {
+                UserId1: parseInt(UserId1),
+                UserId2: parseInt(UserId2)
+            };
         });
 
         await Like.bulkCreate(likeRelationships);
@@ -226,7 +237,7 @@ const seedDatabase = async () => {
         await Follow.bulkCreate(followRelationships);
         console.log("Follow relationships have been seeded!");
 
-        await Friend.bulkCreate(friendRelationships);
+        await Friend.bulkCreate(friendRelationshipsArray);
         console.log("Friend relationships have been seeded!");
     } catch (error) {
         console.error("Error seeding data:", error);
