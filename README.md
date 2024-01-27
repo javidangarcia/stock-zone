@@ -1,8 +1,11 @@
-# Stock Zone (Meta U Capstone)
+# Stock Zone (Meta University)
+
 ## User Roles
+
 **Investor:** A user that wants to research stocks, follow stocks, and connect with other users.
 
 ## User Stories
+
 1. As an investor, I want to create a profile and log in so that I can connect with other users and get personalized news on my feed based on stocks I follow.
 
 2. As an investor, I want to search and explore for stocks so that I can research, follow them, and make informed investment decisions.
