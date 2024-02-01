@@ -52,3 +52,9 @@ CREATE TABLE IF NOT EXISTS comments (
     userid int NOT NULL REFERENCES users(id),
     stockid int NOT NULL REFERENCES stocks(id)
 );
+
+CREATE TABLE IF NOT EXISTS friends (
+    id SERIAL PRIMARY KEY,
+    senderid int NOT NULL REFERENCES users(id),
+    receiverid int NOT NULL REFERENCES users(id)
+);
