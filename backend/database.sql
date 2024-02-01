@@ -25,3 +25,17 @@ CREATE TABLE IF NOT EXISTS follows (
     stockid INT REFERENCES stocks(id),
     UNIQUE(userid, stockid)
 );
+
+CREATE TABLE IF NOT EXISTS likes (
+    id SERIAL PRIMARY KEY,
+    userid INT REFERENCES users(id),
+    stockid INT REFERENCES stocks(id),
+    UNIQUE(userid, stockid)
+);
+
+CREATE TABLE IF NOT EXISTS dislikes (
+    id SERIAL PRIMARY KEY,
+    userid INT REFERENCES users(id),
+    stockid INT REFERENCES stocks(id),
+    UNIQUE(userid, stockid)
+);

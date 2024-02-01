@@ -6,8 +6,7 @@
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon server.js",
-        "lint": "eslint ../backend --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+        "start": "nodemon server.js"
     },
     "keywords": [],
     "author": "",
@@ -24,16 +23,7 @@
         "socket.io": "^4.7.1"
     },
     "devDependencies": {
-        "eslint": "^8.46.0",
-        "eslint-config-airbnb": "^19.0.4",
-        "eslint-config-prettier": "^8.9.0",
-        "eslint-plugin-react": "^7.33.1",
-        "prettier": "^3.0.0"
-    },
-    "prettier": {
-        "tabWidth": 4,
-        "useTabs": false,
-        "trailingComma": "none",
-        "printWidth": 80
+        "nodemon": "^3.0.3",
+        "prettier": "3.2.4"
     }
 }

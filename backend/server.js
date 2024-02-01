@@ -4,8 +4,9 @@ import cors from "cors";
 import session from "express-session";
 import { Server } from "socket.io";
 import authRoutes from "./routes/auth.js";
-// import stockRoutes from "./routes/stocks.js";
+import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
+import actionRoutes from "./routes/interactions.js";
 import { checkSession } from "./utils.js";
 
 const app = express();
@@ -15,7 +16,7 @@ const port = process.env.PORT || 3000;
 app.use(
     cors({
         origin: process.env.FRONTEND_URL,
-        credentials: true
+        credentials: true,
     })
 );
 app.use(express.json());
@@ -24,11 +25,12 @@ app.use(
         secret: process.env.SECRET,
         resave: false,
         saveUninitialized: false,
+        name: "authCookie",
         cookie: {
             sameSite: process.env.DEVELOPMENT === "prod" ? "none" : false,
             secure: process.env.DEVELOPMENT === "prod",
-            expires: 500 * 1000
-        }
+            expires: 2 * 60 * 60 * 1000,
+        },
     })
 );
 
@@ -37,11 +39,9 @@ app.use(authRoutes);
 app.use(checkSession);
 
 app.use(userRoutes);
-// app.use(stockRoutes);
-// app.use(followRoutes);
+app.use(stockRoutes);
+app.use(actionRoutes);
 // app.use(friendRoutes);
-// app.use(likeRoutes);
-// app.use(dislikeRoutes);
 // app.use(rankingRoutes);
 // app.use(commentRoutes);
 // app.use(messageRoutes);

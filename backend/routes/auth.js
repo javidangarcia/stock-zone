@@ -16,7 +16,7 @@ router.post("/users/register", async (req, res) => {
 
         if (existingUser.rows.length > 0) {
             res.status(409).json({
-                error: "Username or email already exists."
+                error: "Username or email already exists.",
             });
             return;
         }
@@ -35,12 +35,12 @@ router.post("/users/register", async (req, res) => {
             name,
             username,
             email,
-            picture: PROFILE_PICTURE
+            picture: PROFILE_PICTURE,
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: "Internal server error. Please try again later."
+            error: "Internal server error. Please try again later.",
         });
     }
 });
@@ -76,12 +76,12 @@ router.post("/users/login", async (req, res) => {
             name: existingUser.rows[0].name,
             username,
             email: existingUser.rows[0].email,
-            picture: existingUser.rows[0].picture
+            picture: existingUser.rows[0].picture,
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: "Internal server error. Please try again later."
+            error: "Internal server error. Please try again later.",
         });
     }
 });
@@ -89,11 +89,12 @@ router.post("/users/login", async (req, res) => {
 router.post("/users/logout", async (req, res) => {
     try {
         req.session.destroy();
+        res.clearCookie("authCookie");
         res.status(200).json({ message: "Logout successful" });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: "Internal server error. Please try again later."
+            error: "Internal server error. Please try again later.",
         });
     }
 });
