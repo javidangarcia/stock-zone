@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { PROFILE_PICTURE } from "../utils.js";
-import { pool } from "../database.js";
+import { pool } from "../database/db.js";
 
 const router = express.Router();
 

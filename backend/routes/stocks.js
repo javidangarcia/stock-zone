@@ -1,5 +1,5 @@
 import express from "express";
-import { pool } from "../database.js";
+import { pool } from "../database/db.js";
 
 const router = express.Router();
 
@@ -175,6 +175,77 @@ router.get("/stocks/:ticker/dislikers", async (req, res) => {
         );
 
         res.status(200).json(users.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
+    }
+});
+
+router.get("/stocks/:ticker/comments", async (req, res) => {
+    try {
+        const ticker = req.params.ticker?.toUpperCase();
+
+        const stock = await pool.query(
+            "SELECT * FROM stocks WHERE ticker = $1",
+            [ticker]
+        );
+
+        if (stock.rows.length === 0) {
+            res.status(409).json({
+                error: "This stock does not exist in the database.",
+            });
+            return;
+        }
+
+        const stockId = stock.rows[0].id;
+
+        const comments = await pool.query(
+            `SELECT comments.id AS commentid, comments.content, users.id AS userid, 
+                    users.name, users.username, users.email, users.picture FROM comments
+            INNER JOIN users
+            ON users.id = comments.userid
+            WHERE comments.stockid = $1`,
+            [stockId]
+        );
+
+        res.status(200).json(comments.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
+    }
+});
+
+router.post("/stocks/:ticker/comments", async (req, res) => {
+    try {
+        const ticker = req.params.ticker?.toUpperCase();
+        const { content } = req.body;
+        const { user } = req.session;
+
+        const stock = await pool.query(
+            "SELECT * FROM stocks WHERE ticker = $1",
+            [ticker]
+        );
+
+        if (stock.rows.length === 0) {
+            res.status(409).json({
+                error: "This stock does not exist in the database.",
+            });
+            return;
+        }
+
+        const userId = user.id;
+        const stockId = stock.rows[0].id;
+
+        const newComment = await pool.query(
+            "INSERT INTO comments (content, userid, stockid) VALUES ($1, $2, $3) RETURNING *",
+            [content, userId, stockId]
+        );
+
+        res.status(200).json(newComment.rows[0]);
     } catch (error) {
         console.error(error);
         res.status(500).json({

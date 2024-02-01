@@ -8,10 +8,18 @@ import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
 import actionRoutes from "./routes/interactions.js";
 import { checkSession } from "./utils.js";
+import pgSession from "connect-pg-simple";
+import { pool } from "./database/db.js";
 
 const app = express();
 
 const port = process.env.PORT || 3000;
+
+const pgStore = pgSession(session);
+const sessionStore = new pgStore({
+    pool,
+    tableName: "sessions",
+});
 
 app.use(
     cors({
@@ -22,12 +30,13 @@ app.use(
 app.use(express.json());
 app.use(
     session({
+        store: sessionStore,
         secret: process.env.SECRET,
         resave: false,
         saveUninitialized: false,
         name: "authCookie",
         cookie: {
-            sameSite: process.env.DEVELOPMENT === "prod" ? "none" : false,
+            sameSite: process.env.DEVELOPMENT === "prod" ? "None" : "Lax",
             secure: process.env.DEVELOPMENT === "prod",
             expires: 2 * 60 * 60 * 1000,
         },
@@ -43,7 +52,6 @@ app.use(stockRoutes);
 app.use(actionRoutes);
 // app.use(friendRoutes);
 // app.use(rankingRoutes);
-// app.use(commentRoutes);
 // app.use(messageRoutes);
 // app.use(postRoutes);
 
