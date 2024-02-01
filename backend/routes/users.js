@@ -1,137 +1,67 @@
 import express from "express";
-import { Op } from "sequelize";
-import bcrypt from "bcrypt";
-import { User } from "../models/user.js";
-import { PROFILE_PICTURE } from "../utils.js";
-import { Friend } from "../models/friend.js";
+import { pool } from "../database.js";
 
 const router = express.Router();
 
-router.get("/user/:username", async (req, res) => {
-    const { username } = req.params;
-
+router.get("/users/:username", async (req, res) => {
     try {
-        const user = await User.findOne({
-            where: { username }
-        });
+        const { username } = req.params;
 
-        if (user === null) {
-            res.status(404).json({ error: "This user doesn't exist." });
-            return;
-        }
+        const existingUser = await pool.query(
+            "SELECT * FROM users WHERE username = $1",
+            [username]
+        );
 
-        const currentUser = req.session.user;
-
-        const friend = await Friend.findOne({
-            where: { UserId1: currentUser.id, UserId2: user.id }
-        });
-
-        if (friend !== null) {
-            res.status(200).json({
-                user: {
-                    fullName: user.fullName,
-                    username: user.username,
-                    email: user.email,
-                    picture: PROFILE_PICTURE,
-                    friend: true
-                }
-            });
+        if (existingUser.rows.length === 0) {
+            res.status(404).json({ error: "This user does not exist." });
             return;
         }
 
         res.status(200).json({
-            user: {
-                fullName: user.fullName,
-                username: user.username,
-                email: user.email,
-                picture: PROFILE_PICTURE,
-                friend: false
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.post("/users/signup", async (req, res) => {
-    const { fullName, username, password, email } = req.body;
-
-    const user = await User.findOne({
-        where: { [Op.or]: [{ username }, { email }] }
-    });
-
-    if (user !== null) {
-        res.status(409).json({ error: "Username or email already exists." });
-        return;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-        const newUser = await User.create({
-            fullName,
+            id: existingUser.rows[0].id,
+            name: existingUser.rows[0].name,
             username,
-            email,
-            password: hashedPassword,
-            picture: PROFILE_PICTURE
-        });
-
-        req.session.user = newUser;
-
-        res.status(200).json({
-            user: {
-                fullName,
-                username,
-                email,
-                picture: PROFILE_PICTURE
-            }
+            email: existingUser.rows[0].email,
+            picture: existingUser.rows[0].picture
         });
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later."
+        });
     }
 });
 
-router.post("/users/login", async (req, res) => {
-    const { username, password } = req.body;
-
+router.get("/users/:username/following", async (req, res) => {
     try {
-        const user = await User.findOne({
-            where: { username }
-        });
+        const { username } = req.params;
 
-        if (user === null) {
-            res.status(401).json({ error: "Invalid username or password." });
+        const existingUser = await pool.query(
+            "SELECT * FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (existingUser.rows.length === 0) {
+            res.status(404).json({ error: "This user does not exist." });
             return;
         }
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
+        const userId = existingUser.rows[0].id;
 
-        if (!isValidPassword) {
-            res.status(401).json({ error: "Invalid username or password." });
-            return;
-        }
+        const stocks = await pool.query(
+            `SELECT stocks.* FROM stocks 
+             INNER JOIN follows 
+             ON stocks.id = follows.stockid 
+             WHERE follows.userid = $1`,
+            [userId]
+        );
 
-        req.session.user = user;
-
-        res.status(200).json({
-            user: {
-                fullName: user.fullName,
-                username,
-                email: user.email,
-                picture: user.picture
-            }
+        res.status(200).json(stocks.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later."
         });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.post("/users/logout", async (req, res) => {
-    try {
-        const session = req.session.destroy();
-        res.status(200).json({ session });
-    } catch (error) {
-        res.status(500).json({ error });
     }
 });
 
