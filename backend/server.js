@@ -8,6 +8,7 @@ import stockRoutes from "./routes/stocks.js";
 import userRoutes from "./routes/users.js";
 import actionRoutes from "./routes/interactions.js";
 import friendRoutes from "./routes/friends.js";
+import postRoutes from "./routes/posts.js";
 import { checkSession } from "./utils.js";
 import pgSession from "connect-pg-simple";
 import { pool } from "./database/db.js";
@@ -52,9 +53,9 @@ app.use(friendRoutes);
 app.use(userRoutes);
 app.use(stockRoutes);
 app.use(actionRoutes);
+app.use(postRoutes);
 // app.use(rankingRoutes);
 // app.use(messageRoutes);
-// app.use(postRoutes);
 
 // // Chat App
 // const server = http.createServer(app);
