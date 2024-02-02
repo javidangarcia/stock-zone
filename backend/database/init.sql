@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS stockzone;
-
 CREATE TABLE IF NOT EXISTS sessions (
     sid varchar(255) NOT NULL PRIMARY KEY,
     sess json NOT NULL,

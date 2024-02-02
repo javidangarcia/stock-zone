@@ -16,8 +16,6 @@ import { Server } from "socket.io";
 
 const app = express();
 
-const port = process.env.PORT || 3000;
-
 const pgStore = pgSession(session);
 const sessionStore = new pgStore({
     pool,
@@ -26,7 +24,7 @@ const sessionStore = new pgStore({
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: process.env.FRONTEND,
         credentials: true,
     })
 );
@@ -69,7 +67,8 @@ app.use(rankingRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,
+        origin: process.env.FRONTEND,
+        credentials: true,
     },
 });
 
@@ -90,10 +89,13 @@ io.on("connection", socket => {
     });
 });
 
-server.listen(3001, "0.0.0.0", () => {
-    console.log("chat server is running on port 3001");
+const chatPort = process.env.CHAT_PORT || 3001;
+const appPort = process.env.APP_PORT || 3000;
+
+server.listen(chatPort, () => {
+    console.log(`Chat server is running on port ${chatPort}.`);
 });
 
-app.listen(port, () => {
-    console.log(`app is listening on port ${port}`);
+app.listen(appPort, () => {
+    console.log(`Express app is listening on port ${appPort}.`);
 });

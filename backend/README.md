@@ -1,5 +1,10 @@
-# Instructions for Starting Express Backend
+# Instructions for running express app
 
--   Follow instructions in .env.template
--   Run npm install in terminal
--   Run npm run start in terminal
+-   cd backend
+-   follow instructions in .env.template
+-   npm install
+-   cd database
+-   psql -U {user_name} -d {database_name} < init.sql
+-   psql -U {user_name} -d {database_name} < seed.sql
+-   cd ..
+-   npm run start
