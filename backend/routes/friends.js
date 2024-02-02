@@ -1,92 +1,119 @@
 import express from "express";
-import { Friend } from "../models/friend.js";
-import { User } from "../models/user.js";
+import { pool } from "../database/db.js";
 
 const router = express.Router();
 
-router.get("/friends", async (req, res) => {
-    const { user } = req.session;
-
+router.get("/users/friends", async (req, res) => {
     try {
-        const friends = await Friend.findAll({
-            where: { UserId1: user.id },
-            include: [
-                { model: User, as: "user1" },
-                { model: User, as: "user2" }
-            ]
+        const { user } = req.session;
+
+        const userId = user.id;
+
+        const friends = await pool.query(
+            `SELECT users.id, users.name, users.username, 
+                    users.email, users.picture FROM users
+            INNER JOIN friends
+            ON receiverid = users.id
+            WHERE senderid = $1`,
+            [userId]
+        );
+
+        res.status(200).json(friends.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
         });
-
-        res.status(200).json({ friends });
-    } catch (error) {
-        res.status(500).json({ error });
     }
 });
 
-router.post("/friend", async (req, res) => {
-    const { user } = req.session;
-    const { username } = req.body;
-
+router.post("/users/:username/friend", async (req, res) => {
     try {
-        const user2 = await User.findOne({ where: { username } });
+        const { username } = req.params;
+        const { user: currentUser } = req.session;
 
-        if (user2 === null) {
-            res.status(404).json({ error: "This user doesn't exist." });
+        const friendToAdd = await pool.query(
+            "SELECT * FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (friendToAdd.rows.length === 0) {
+            res.status(404).json({ error: "This user does not exist." });
             return;
         }
 
-        const friendData = {
-            UserId1: user.id,
-            UserId2: user2.id
-        };
+        const currentUserId = currentUser.id;
+        const friendToAddId = friendToAdd.rows[0].id;
 
-        const friend = await Friend.findOne({ where: friendData });
+        const existingFriendship = await pool.query(
+            "SELECT * FROM friends WHERE senderid = $1 AND receiverid = $2",
+            [currentUserId, friendToAddId]
+        );
 
-        if (friend !== null) {
+        if (existingFriendship.rows.length > 0) {
             res.status(409).json({
-                error: "You are already friends with this user."
+                error: "The current user already added this user as a friend.",
             });
             return;
         }
 
-        const newFriend = await Friend.create(friendData);
+        const newFriendship = await pool.query(
+            "INSERT INTO friends (senderid, receiverid) VALUES ($1, $2) RETURNING *",
+            [currentUserId, friendToAddId]
+        );
 
-        res.status(200).json({ newFriend });
+        res.status(200).json(newFriendship.rows[0]);
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
     }
 });
 
-router.post("/unfriend", async (req, res) => {
-    const { user } = req.session;
-    const { username } = req.body;
-
+router.delete("/users/:username/unfriend", async (req, res) => {
     try {
-        const user2 = await User.findOne({ where: { username } });
+        const { username } = req.params;
+        const { user: currentUser } = req.session;
 
-        if (user2 === null) {
-            res.status(404).json({ error: "This user doesn't exist." });
+        const friendToRemove = await pool.query(
+            "SELECT * FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (friendToRemove.rows.length === 0) {
+            res.status(404).json({ error: "This user does not exist." });
             return;
         }
 
-        const friendData = {
-            UserId1: user.id,
-            UserId2: user2.id
-        };
+        const currentUserId = currentUser.id;
+        const friendToRemoveId = friendToRemove.rows[0].id;
 
-        const friend = await Friend.findOne({ where: friendData });
+        const existingFriendship = await pool.query(
+            "SELECT * FROM friends WHERE senderid = $1 AND receiverid = $2",
+            [currentUserId, friendToRemoveId]
+        );
 
-        if (friend === null) {
+        if (existingFriendship.rows.length === 0) {
             res.status(409).json({
-                error: "You are not friends with this user."
+                error: "The current user has not added this user as a friend.",
             });
             return;
         }
 
-        await friend.destroy();
+        await pool.query(
+            "DELETE FROM friends WHERE senderid = $1 AND receiverid = $2",
+            [currentUserId, friendToRemoveId]
+        );
 
-        res.status(200).json({ friend });
+        res.status(200).json({
+            message: "This user has been successfully unfriended.",
+        });
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
     }
 });
 

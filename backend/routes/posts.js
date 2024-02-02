@@ -1,137 +1,136 @@
 import express from "express";
-import { Post } from "../models/post.js";
-import { User } from "../models/user.js";
-import { PostComment } from "../models/postComment.js";
+import { pool } from "../database/db.js";
 
 const router = express.Router();
 
-router.get("/post/:postID", async (req, res) => {
-    const { postID } = req.params;
-
-    try {
-        const post = await Post.findOne({
-            where: { id: postID },
-            include: [{ model: User }]
-        });
-
-        if (post === null) {
-            res.status(404).json({ error: "This Post Does Not Exist." });
-            return;
-        }
-
-        res.status(200).json({ post });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.get("/post/comments/:postID", async (req, res) => {
-    const { postID } = req.params;
-
-    try {
-        const post = await Post.findOne({ where: { id: postID } });
-
-        if (post === null) {
-            res.status(404).json({ error: "This Post Does Not Exist." });
-            return;
-        }
-
-        const comments = await PostComment.findAll({
-            where: { PostId: post.id },
-            include: [{ model: User }]
-        });
-
-        res.status(200).json({ comments });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.post("/post/comment/:id", async (req, res) => {
-    const { user } = req.session;
-    const { id } = req.params;
-    const { content } = req.body;
-
-    try {
-        const post = await Post.findOne({
-            where: { id },
-            include: [{ model: User }]
-        });
-
-        if (post === null) {
-            res.status(404).json({ error: "This Post Does Not Exist." });
-            return;
-        }
-
-        const commentData = {
-            content,
-            UserId: user.id,
-            PostId: post.id
-        };
-
-        const newComment = await PostComment.create(commentData);
-
-        const comment = await PostComment.findOne({
-            where: { id: newComment.id },
-            include: [{ model: User }]
-        });
-
-        res.status(200).json({ comment });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-router.get("/posts/user/:username", async (req, res) => {
-    const { username } = req.params;
-
-    try {
-        const user = await User.findOne({ where: { username } });
-
-        if (user === null) {
-            res.status(404).json({ error: "This user doesn't exist." });
-            return;
-        }
-
-        const posts = await Post.findAll({
-            where: { UserId: user.id }
-        });
-
-        res.status(200).json({ posts });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
 router.get("/posts", async (req, res) => {
     try {
-        const posts = await Post.findAll({ include: [{ model: User }] });
-        res.status(200).json({ posts });
+        const posts = await pool.query("SELECT * FROM posts");
+        res.status(200).json(posts.rows);
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
     }
 });
 
-router.post("/post", async (req, res) => {
-    const { user } = req.session;
-    const { title, content } = req.body;
-
+router.post("/posts", async (req, res) => {
     try {
-        const postData = {
-            title,
-            content,
-            UserId: user.id
-        };
-        const newPost = await Post.create(postData);
+        const { user } = req.session;
+        const { title, content } = req.body;
 
-        const post = await Post.findOne({
-            where: { id: newPost.id },
-            include: [{ model: User }]
-        });
+        if (!title || !content) {
+            res.status(400).json({
+                error: "Please provide title and content in request body.",
+            });
+            return;
+        }
 
-        res.status(200).json({ post });
+        const userId = user.id;
+
+        const newPost = await pool.query(
+            "INSERT INTO posts (title, content, userid) VALUES ($1, $2, $3) RETURNING *",
+            [title, content, userId]
+        );
+
+        res.status(200).json(newPost.rows[0]);
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
+    }
+});
+
+router.get("/posts/:postId", async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        const post = await pool.query("SELECT * FROM posts WHERE id = $1", [
+            postId,
+        ]);
+
+        if (post.rows.length === 0) {
+            res.status(404).json({ error: "This post does not exist." });
+            return;
+        }
+
+        res.status(200).json(post.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
+    }
+});
+
+router.get("/posts/:postId/replies", async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        const post = await pool.query("SELECT * FROM posts WHERE id = $1", [
+            postId,
+        ]);
+
+        if (post.rows.length === 0) {
+            res.status(404).json({ error: "This post does not exist." });
+            return;
+        }
+
+        const replies = await pool.query(
+            `SELECT replies.id, replies.content, users.id AS userid, users.name, 
+                    users.username, users.email, users.picture FROM replies
+            INNER JOIN users
+            ON users.id = replies.userid
+            WHERE replies.postid = $1`,
+            [postId]
+        );
+
+        res.status(200).json(replies.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
+    }
+});
+
+router.post("/posts/:postId/replies", async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { content } = req.body;
+        const { user } = req.session;
+
+        if (!content) {
+            res.status(400).json({
+                error: "Please provide content in request body.",
+            });
+            return;
+        }
+
+        const userId = user.id;
+
+        const post = await pool.query("SELECT * FROM posts WHERE id = $1", [
+            postId,
+        ]);
+
+        if (post.rows.length === 0) {
+            res.status(404).json({ error: "This post does not exist." });
+            return;
+        }
+
+        const newReply = await pool.query(
+            "INSERT INTO replies (content, userid, postid) VALUES ($1, $2, $3) RETURNING *",
+            [content, userId, postId]
+        );
+
+        res.status(200).json(newReply.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
     }
 });
 

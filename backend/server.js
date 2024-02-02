@@ -1,90 +1,86 @@
-import http from "http";
 import express from "express";
+import pgSession from "connect-pg-simple";
+import { pool } from "./database/db.js";
 import cors from "cors";
 import session from "express-session";
-import SequelizeStoreInit from "connect-session-sequelize";
-import cookieParser from "cookie-parser";
-import { Server } from "socket.io";
-import { sequelize } from "./database.js";
-import stockRoutes from "./routes/stocks.js";
-import userRoutes from "./routes/users.js";
-import followRoutes from "./routes/follows.js";
-import rankingRoutes from "./routes/rankings.js";
-import likeRoutes from "./routes/likes.js";
-import dislikeRoutes from "./routes/dislikes.js";
-import commentRoutes from "./routes/comments.js";
+import authRoutes from "./routes/auth.js";
 import friendRoutes from "./routes/friends.js";
-import messageRoutes from "./routes/messages.js";
-import { checkSession } from "./utils.js";
+import userRoutes from "./routes/users.js";
+import stockRoutes from "./routes/stocks.js";
+import actionRoutes from "./routes/interactions.js";
 import postRoutes from "./routes/posts.js";
+import messageRoutes from "./routes/messages.js";
+import rankingRoutes from "./routes/rankings.js";
+import http from "http";
+import { Server } from "socket.io";
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+const pgStore = pgSession(session);
+const sessionStore = new pgStore({
+    pool,
+    tableName: "sessions",
+});
 
-app.use(cookieParser());
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
-        credentials: true
+        origin: process.env.FRONTEND,
+        credentials: true,
     })
 );
 app.use(express.json());
-
-const SequelizeStore = SequelizeStoreInit(session.Store);
-const sessionStore = new SequelizeStore({
-    db: sequelize
-});
-
-app.set("trust proxy", 1);
-
-// Session middleware
 app.use(
     session({
-        secret: "stock-zone",
+        store: sessionStore,
+        secret: process.env.SECRET,
         resave: false,
         saveUninitialized: false,
-        store: sessionStore,
+        name: "authCookie",
         cookie: {
-            sameSite: process.env.DEVELOPMENT === "prod" ? "none" : false,
+            sameSite: process.env.DEVELOPMENT === "prod" ? "None" : "Lax",
             secure: process.env.DEVELOPMENT === "prod",
-            expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year in milliseconds
-        }
+            expires: 2 * 60 * 60 * 1000,
+        },
     })
 );
-sessionStore.sync();
 
-app.use(userRoutes);
+app.use(authRoutes);
+
+const checkSession = (req, res, next) => {
+    const { user } = req.session;
+    if (!user) {
+        res.status(401).json({ error: "Missing Session." });
+        return;
+    }
+    next();
+};
 
 app.use(checkSession);
-
-app.use(stockRoutes);
 app.use(friendRoutes);
-app.use(likeRoutes);
-app.use(followRoutes);
-app.use(dislikeRoutes);
-app.use(rankingRoutes);
-app.use(commentRoutes);
-app.use(messageRoutes);
+app.use(userRoutes);
+app.use(stockRoutes);
+app.use(actionRoutes);
 app.use(postRoutes);
+app.use(messageRoutes);
+app.use(rankingRoutes);
 
-// Chat App
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL
-    }
+        origin: process.env.FRONTEND,
+        credentials: true,
+    },
 });
 
-io.on("connection", (socket) => {
+io.on("connection", socket => {
     console.log(`User Connected: ${socket.id}`);
 
-    socket.on("join_room", (data) => {
+    socket.on("join_room", data => {
         socket.join(data);
         console.log(`User with ID: ${socket.id} joined room: ${data}`);
     });
 
-    socket.on("send_message", (data) => {
+    socket.on("send_message", data => {
         socket.to(data.room).emit("receive_message", data);
     });
 
@@ -93,12 +89,13 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3001, "0.0.0.0", () => {
-    console.log("Chat server is running.");
+const chatPort = process.env.CHAT_PORT || 3001;
+const appPort = process.env.APP_PORT || 3000;
+
+server.listen(chatPort, () => {
+    console.log(`Chat server is running on port ${chatPort}.`);
 });
 
-app.listen(port, () => {
-    console.log(`App is listening on port ${port}`);
+app.listen(appPort, () => {
+    console.log(`Express app is listening on port ${appPort}.`);
 });
-
-sequelize.sync({ alter: true });

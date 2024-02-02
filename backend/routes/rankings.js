@@ -1,25 +1,21 @@
 import express from "express";
-import { GetRanking } from "../ranking.js";
+import { getRanking } from "../handlers/rankings.js";
 
 const router = express.Router();
 
-router.get("/ranking/:page", async (req, res) => {
-    const { user } = req.session;
-    const { page } = req.params;
-
+router.get("/rankings/:page", async (req, res) => {
     try {
-        const response = await GetRanking(user, parseInt(page, 10));
+        const { page } = req.params;
+        const { user } = req.session;
 
-        if (response.status === 200) {
-            res.status(response.status).json(response.data);
-            return;
-        }
+        const stocksRanking = await getRanking(user, Number.parseInt(page, 10));
 
-        if (response.status === 422 || response.status === 500) {
-            res.status(response.status).json({ error: response.error });
-        }
+        res.status(200).json(stocksRanking);
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);
+        res.status(500).json({
+            error: "Internal server error. Please try again later.",
+        });
     }
 });
 
