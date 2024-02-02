@@ -1,7 +1,9 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { PROFILE_PICTURE } from "../utils.js";
 import { pool } from "../database/db.js";
+
+const PICTURE =
+    "https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg";
 
 const router = express.Router();
 
@@ -32,7 +34,7 @@ router.post("/users/register", async (req, res) => {
 
         const newUser = await pool.query(
             "INSERT INTO users (name, username, email, password, picture) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-            [name, username, email, hashedPassword, PROFILE_PICTURE]
+            [name, username, email, hashedPassword, PICTURE]
         );
 
         req.session.user = newUser.rows[0];

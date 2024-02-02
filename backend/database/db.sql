@@ -80,3 +80,10 @@ CREATE TABLE IF NOT EXISTS messages (
     senderid int NOT NULL REFERENCES users(id),
     receiverid int NOT NULL REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS rankings (
+    id SERIAL PRIMARY KEY,
+    ranking json[] NOT NULL,
+    userid int NOT NULL REFERENCES users(id),
+    UNIQUE (userid)
+);

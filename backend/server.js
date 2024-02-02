@@ -4,13 +4,13 @@ import { pool } from "./database/db.js";
 import cors from "cors";
 import session from "express-session";
 import authRoutes from "./routes/auth.js";
-import { checkSession } from "./utils.js";
 import friendRoutes from "./routes/friends.js";
 import userRoutes from "./routes/users.js";
 import stockRoutes from "./routes/stocks.js";
 import actionRoutes from "./routes/interactions.js";
 import postRoutes from "./routes/posts.js";
 import messageRoutes from "./routes/messages.js";
+import rankingRoutes from "./routes/rankings.js";
 import http from "http";
 import { Server } from "socket.io";
 
@@ -48,45 +48,52 @@ app.use(
 
 app.use(authRoutes);
 
-app.use(checkSession);
+const checkSession = (req, res, next) => {
+    const { user } = req.session;
+    if (!user) {
+        res.status(401).json({ error: "Missing Session." });
+        return;
+    }
+    next();
+};
 
+app.use(checkSession);
 app.use(friendRoutes);
 app.use(userRoutes);
 app.use(stockRoutes);
 app.use(actionRoutes);
 app.use(postRoutes);
 app.use(messageRoutes);
-// app.use(rankingRoutes);
+app.use(rankingRoutes);
 
-// // Chat App
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//     cors: {
-//         origin: process.env.FRONTEND_URL
-//     }
-// });
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL,
+    },
+});
 
-// io.on("connection", (socket) => {
-//     console.log(`User Connected: ${socket.id}`);
+io.on("connection", socket => {
+    console.log(`User Connected: ${socket.id}`);
 
-//     socket.on("join_room", (data) => {
-//         socket.join(data);
-//         console.log(`User with ID: ${socket.id} joined room: ${data}`);
-//     });
+    socket.on("join_room", data => {
+        socket.join(data);
+        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    });
 
-//     socket.on("send_message", (data) => {
-//         socket.to(data.room).emit("receive_message", data);
-//     });
+    socket.on("send_message", data => {
+        socket.to(data.room).emit("receive_message", data);
+    });
 
-//     socket.on("disconnect", () => {
-//         console.log("User Disconnected", socket.id);
-//     });
-// });
+    socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id);
+    });
+});
 
-// server.listen(3001, "0.0.0.0", () => {
-//     console.log("Chat server is running.");
-// });
+server.listen(3001, "0.0.0.0", () => {
+    console.log("chat server is running on port 3001");
+});
 
 app.listen(port, () => {
-    console.log(`App is listening on port ${port}`);
+    console.log(`app is listening on port ${port}`);
 });
