@@ -9,6 +9,13 @@ router.post("/users/register", async (req, res) => {
     try {
         const { name, username, email, password } = req.body;
 
+        if (!name || !username || !email || !password) {
+            res.status(400).json({
+                error: "Please provide name, username, email, and password in request body.",
+            });
+            return;
+        }
+
         const existingUser = await pool.query(
             "SELECT * FROM users WHERE username = $1 OR email = $2",
             [username, email]
@@ -48,6 +55,13 @@ router.post("/users/register", async (req, res) => {
 router.post("/users/login", async (req, res) => {
     try {
         const { username, password } = req.body;
+
+        if (!username || !password) {
+            res.status(400).json({
+                error: "Please provide username and password in request body.",
+            });
+            return;
+        }
 
         const existingUser = await pool.query(
             "SELECT * FROM users WHERE username = $1",
@@ -90,7 +104,9 @@ router.post("/users/logout", async (req, res) => {
     try {
         req.session.destroy();
         res.clearCookie("authCookie");
-        res.status(200).json({ message: "Logout successful" });
+        res.status(200).json({
+            message: "The user has been successfully logged out.",
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({

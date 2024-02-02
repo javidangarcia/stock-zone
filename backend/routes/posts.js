@@ -20,6 +20,13 @@ router.post("/posts", async (req, res) => {
         const { user } = req.session;
         const { title, content } = req.body;
 
+        if (!title || !content) {
+            res.status(400).json({
+                error: "Please provide title and content in request body.",
+            });
+            return;
+        }
+
         const userId = user.id;
 
         const newPost = await pool.query(
@@ -94,6 +101,13 @@ router.post("/posts/:postId/replies", async (req, res) => {
         const { postId } = req.params;
         const { content } = req.body;
         const { user } = req.session;
+
+        if (!content) {
+            res.status(400).json({
+                error: "Please provide content in request body.",
+            });
+            return;
+        }
 
         const userId = user.id;
 

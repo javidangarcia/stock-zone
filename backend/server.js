@@ -1,17 +1,18 @@
-import http from "http";
 import express from "express";
-import cors from "cors";
-import session from "express-session";
-import { Server } from "socket.io";
-import authRoutes from "./routes/auth.js";
-import stockRoutes from "./routes/stocks.js";
-import userRoutes from "./routes/users.js";
-import actionRoutes from "./routes/interactions.js";
-import friendRoutes from "./routes/friends.js";
-import postRoutes from "./routes/posts.js";
-import { checkSession } from "./utils.js";
 import pgSession from "connect-pg-simple";
 import { pool } from "./database/db.js";
+import cors from "cors";
+import session from "express-session";
+import authRoutes from "./routes/auth.js";
+import { checkSession } from "./utils.js";
+import friendRoutes from "./routes/friends.js";
+import userRoutes from "./routes/users.js";
+import stockRoutes from "./routes/stocks.js";
+import actionRoutes from "./routes/interactions.js";
+import postRoutes from "./routes/posts.js";
+import messageRoutes from "./routes/messages.js";
+import http from "http";
+import { Server } from "socket.io";
 
 const app = express();
 
@@ -54,8 +55,8 @@ app.use(userRoutes);
 app.use(stockRoutes);
 app.use(actionRoutes);
 app.use(postRoutes);
+app.use(messageRoutes);
 // app.use(rankingRoutes);
-// app.use(messageRoutes);
 
 // // Chat App
 // const server = http.createServer(app);

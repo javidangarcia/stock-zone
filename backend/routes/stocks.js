@@ -27,6 +27,13 @@ router.post("/stocks", async (req, res) => {
     try {
         const { ticker, name, description, sector, price, logo } = req.body;
 
+        if (!ticker || !name || !description || !sector || !price || !logo) {
+            res.status(400).json({
+                error: "Please provide ticker, name, description, sector, price, and logo in request body.",
+            });
+            return;
+        }
+
         const stock = await pool.query(
             "SELECT * FROM stocks WHERE ticker = $1",
             [ticker]
@@ -224,6 +231,13 @@ router.post("/stocks/:ticker/comments", async (req, res) => {
         const ticker = req.params.ticker?.toUpperCase();
         const { content } = req.body;
         const { user } = req.session;
+
+        if (!content) {
+            res.status(400).json({
+                error: "Please provide content in request body.",
+            });
+            return;
+        }
 
         const stock = await pool.query(
             "SELECT * FROM stocks WHERE ticker = $1",

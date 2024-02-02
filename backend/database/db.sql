@@ -72,3 +72,11 @@ CREATE TABLE IF NOT EXISTS replies (
     userid int NOT NULL REFERENCES users(id),
     postid int NOT NULL REFERENCES posts(id)
 );
+
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    room varchar(255) NOT NULL,
+    content varchar(500) NOT NULL,
+    senderid int NOT NULL REFERENCES users(id),
+    receiverid int NOT NULL REFERENCES users(id)
+);
