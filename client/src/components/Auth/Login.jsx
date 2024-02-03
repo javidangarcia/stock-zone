@@ -1,57 +1,37 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
 import { setLoading } from "../../redux/loading";
-import { NetworkError, ResponseError, ServerError } from "../../utils";
+import { ResponseError } from "../../utils";
+import { signIn } from "../../api/auth";
 
-export default function LoginForm() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+export default function Login() {
+    const [userCredentials, setUserCredentials] = useState({
+        username: "",
+        password: "",
+    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    async function handleLogin(event) {
+    const handleLogin = async event => {
         event.preventDefault();
 
-        try {
-            dispatch(setLoading(true));
-            const userData = {
-                username,
-                password
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/users/login`,
-                userData,
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                const user = response.data?.user;
-
-                dispatch(setUser(user));
-
+        dispatch(setLoading(true));
+        signIn(userCredentials)
+            .then(data => {
+                dispatch(setUser(data));
                 navigate("/");
-            }
-
-            if (response.status === 401) {
-                ResponseError(response.data.error);
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
-    }
+            })
+            .catch(error => {
+                ResponseError(error.message);
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
 
     return (
         <div
@@ -64,12 +44,11 @@ export default function LoginForm() {
                         src={appLogo}
                         alt="This is the logo of Stock Zone."
                         className="app-logo me-2 d-flex justify-content-center"
+                        style={{ height: "50px", width: "50px" }}
                     />
                     Stock Zone
                 </div>
-                <h2 className="mb-4 text-center fs-5">
-                    Log in to your account
-                </h2>
+                <h2 className="mb-4 text-center fs-5">Login to your account</h2>
                 <form onSubmit={handleLogin}>
                     <div className="row mb-3">
                         <div className="col">
@@ -82,9 +61,12 @@ export default function LoginForm() {
                                     type="text"
                                     className="form-control"
                                     id="username"
-                                    value={username}
-                                    onChange={(e) =>
-                                        setUsername(e.target.value)
+                                    value={userCredentials.username}
+                                    onChange={e =>
+                                        setUserCredentials({
+                                            ...userCredentials,
+                                            username: e.target.value,
+                                        })
                                     }
                                     required
                                 />
@@ -102,9 +84,12 @@ export default function LoginForm() {
                                     type="password"
                                     className="form-control"
                                     id="password"
-                                    value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
+                                    value={userCredentials.password}
+                                    onChange={e =>
+                                        setUserCredentials({
+                                            ...userCredentials,
+                                            password: e.target.value,
+                                        })
                                     }
                                     required
                                 />
@@ -124,8 +109,8 @@ export default function LoginForm() {
                 </form>
                 <p className="mt-3 text-center">
                     Don&apos;t have an account?{" "}
-                    <Link className="text-decoration-none" to="/signup">
-                        Sign Up
+                    <Link className="text-decoration-none" to="/register">
+                        Register
                     </Link>
                 </p>
             </div>

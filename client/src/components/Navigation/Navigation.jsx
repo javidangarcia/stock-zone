@@ -14,13 +14,13 @@ import { NetworkError } from "../../utils";
 export default function Navigation() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
+    const user = useSelector(state => state.user);
 
-    const handleLogout = async (event) => {
+    const handleLogout = async event => {
         event.preventDefault();
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/users/logout`,
+                `${import.meta.env.VITE_SERVER}/users/logout`,
                 null,
                 { withCredentials: true }
             );

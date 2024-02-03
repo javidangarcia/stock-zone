@@ -1,13 +1,12 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import Register from "../Auth/Register";
+import Login from "../Auth/Login";
 import Navigation from "../Navigation/Navigation";
 import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
-import SignUpForm from "../SignUpForm/SignUpForm";
-import LoginForm from "../LoginForm/LoginForm";
 import Ranking from "../Ranking/Ranking";
 import Profile from "../Profile/Profile";
 import Loading from "../Loading/Loading";
@@ -22,7 +21,7 @@ export default function App() {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
-    const requireAuth = (element) => (user != null ? element : <LoginForm />);
+    const requireAuth = (element) => (user != null ? element : <Login />);
 
     return (
         <div className="app">
@@ -30,8 +29,8 @@ export default function App() {
                 {user != null ? <Navigation /> : null}
                 <Loading />
                 <Routes>
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/signup" element={<SignUpForm />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
 
                     <Route path="/" element={requireAuth(<Home />)} />
                     <Route path="/home" element={requireAuth(<Home />)} />
