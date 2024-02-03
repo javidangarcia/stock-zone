@@ -1,6 +1,6 @@
 import express from "express";
 import pgSession from "connect-pg-simple";
-import { pool } from "./database/db.js";
+import { pool } from "./db/db.js";
 import cors from "cors";
 import session from "express-session";
 import authRoutes from "./routes/auth.js";
@@ -24,7 +24,7 @@ const sessionStore = new pgStore({
 
 app.use(
     cors({
-        origin: process.env.FRONTEND,
+        origin: process.env.CLIENT,
         credentials: true,
     })
 );
@@ -67,7 +67,7 @@ app.use(rankingRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND,
+        origin: process.env.CLIENT,
         credentials: true,
     },
 });

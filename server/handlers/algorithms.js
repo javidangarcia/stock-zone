@@ -1,4 +1,4 @@
-import { pool } from "../database/db.js";
+import { pool } from "../db/db.js";
 
 const FOLLOW_POINTS = 25;
 const LIKE_POINTS = 20;

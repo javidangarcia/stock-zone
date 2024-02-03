@@ -1,5 +1,5 @@
 import { RankingAlgorithmV5 } from "./algorithms.js";
-import { pool } from "../database/db.js";
+import { pool } from "../db/db.js";
 
 export const getRanking = async (user, pageNumber, pageSize = 5) => {
     try {
