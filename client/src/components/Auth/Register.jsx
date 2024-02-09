@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
-import { ResponseError } from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
 import { setLoading } from "../../redux/loading";
 import { registerUser } from "../../api/auth";
+import { toast } from "react-toastify";
 
 export default function Register() {
     const [registerBody, setRegisterBody] = useState({
@@ -21,6 +21,8 @@ export default function Register() {
     const handleRegister = async event => {
         event.preventDefault();
 
+        toast.dismiss();
+
         dispatch(setLoading(true));
         registerUser(registerBody)
             .then(data => {
@@ -28,7 +30,7 @@ export default function Register() {
                 navigate("/");
             })
             .catch(error => {
-                ResponseError(error.message);
+                toast.error(error.message);
             })
             .finally(() => {
                 dispatch(setLoading(false));

@@ -1,69 +1,39 @@
 import "./Home.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 import { setLoading } from "../../redux/loading";
-import { NetworkError, ServerError, ResponseError } from "../../utils";
+import { fetchStocksFollowedByUser } from "../../api/users";
+import { toast } from "react-toastify";
 
 export default function Home() {
     const [stocks, setStocks] = useState([]);
-    const user = useSelector((state) => state.user);
+    const user = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [newsView, setNewsView] = useState(false);
     const [stocksView, setStocksView] = useState(false);
-    const [hasRendered, setHasRendered] = useState(false);
 
     useEffect(() => {
-        const fetchStocksYouFollow = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/follows/user/${
-                        user.username
-                    }`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    if (response.data.stocksYouFollow.length > 0) {
-                        setStocks(response.data.stocksYouFollow);
-                        setStocksView(true);
-                    } else {
-                        dispatch(setLoading(false));
-                        Swal.fire({
-                            icon: "info",
-                            title: "Get Started with Stock Zone",
-                            text: "Follow any stock to get started."
-                        });
-                        setNewsView(true);
-                        return;
-                    }
+        dispatch(setLoading(true));
+        fetchStocksFollowedByUser(user)
+            .then(data => {
+                if (data.length > 0) {
+                    setStocks(data);
+                    setStocksView(true);
+                } else {
+                    toast.info("Follow any stock to get started.");
+                    setNewsView(true);
                 }
-
-                if (response.status === 404) {
-                    ResponseError(response.data.error);
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+            })
+            .catch(error => {
+                toast.error(error.message);
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-
-        if (hasRendered) {
-            fetchStocksYouFollow();
-        } else {
-            setHasRendered(true);
-        }
-    }, [hasRendered]);
+            });
+    }, []);
 
     return (
         <div className="home">

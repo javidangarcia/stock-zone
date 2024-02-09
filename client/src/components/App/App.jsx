@@ -13,21 +13,34 @@ import Loading from "../Loading/Loading";
 import ChatRoom from "../ChatRoom/ChatRoom";
 import Discussions from "../Discussions/Discussions";
 import PostView from "../PostView/PostView";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
-    const user = useSelector((state) => state.user);
+    const user = useSelector(state => state.user);
 
     useEffect(() => {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
-    const requireAuth = (element) => (user != null ? element : <Login />);
+    const requireAuth = element => (user != null ? element : <Login />);
+
+    const toastOptions = {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    };
 
     return (
         <div className="app">
             <BrowserRouter>
                 {user != null ? <Navigation /> : null}
                 <Loading />
+                <ToastContainer {...toastOptions} />
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

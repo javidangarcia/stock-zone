@@ -3,6 +3,7 @@ export const registerUser = async registerBody => {
         `${import.meta.env.VITE_SERVER}/users/register`,
         {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -10,25 +11,34 @@ export const registerUser = async registerBody => {
         }
     );
 
-    const data = await response.json();
+    if (response.status === 400) throw new Error("Please fill out all fields.");
 
-    if (!response.ok) throw new Error(data.error);
+    if (response.status === 409)
+        throw new Error("This username or email already exists.");
 
-    return data;
+    if (response.status === 500)
+        throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
 };
 
 export const signIn = async userCredentials => {
     const response = await fetch(`${import.meta.env.VITE_SERVER}/users/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(userCredentials),
     });
 
-    const data = await response.json();
+    if (response.status === 400) throw new Error("Please fill out all fields.");
 
-    if (!response.ok) throw new Error(data.error);
+    if (response.status === 401)
+        throw new Error("Invalid username or password.");
 
-    return data;
+    if (response.status === 500)
+        throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
 };

@@ -1,52 +1,34 @@
 import "./SearchQuery.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { isValidStock, NetworkError, ResponseError } from "../../utils";
+import { isValidStock } from "../../utils";
+import { fetchSearchMatches } from "../../api/search";
+import { toast } from "react-toastify";
 
-export default function SearchQuery({ searchInput }) {
+export default function SearchQuery({ searchQuery }) {
     const [showDropdown, setShowDropdown] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchMatches, setSearchMatches] = useState([]);
 
     useEffect(() => {
-        const fetchSearchResults = async () => {
-            if (searchInput !== "") {
-                try {
-                    const stockSearchUrl = new URL(
-                        "https://api.twelvedata.com/symbol_search"
-                    );
-                    stockSearchUrl.searchParams.append("symbol", searchInput);
-                    stockSearchUrl.searchParams.append("outputsize", 5);
-                    stockSearchUrl.searchParams.append(
-                        "apikey",
-                        import.meta.env.VITE_TWELVE
-                    );
-                    const response = await axios.get(stockSearchUrl, {
-                        validateStatus: () => true
-                    });
+        if (!searchQuery) {
+            setShowDropdown(false);
+            return;
+        }
 
-                    if (response.data.status === "ok") {
-                        setSearchResults(response.data.data);
-                        setShowDropdown(true);
-                    }
-
-                    if (response.data.status === "error") {
-                        ResponseError(response.message);
-                    }
-                } catch (error) {
-                    NetworkError(error);
-                }
-            } else {
-                setSearchResults([]);
-                setShowDropdown(false);
-            }
-        };
-        fetchSearchResults();
-    }, [searchInput]);
+        toast.dismiss();
+        fetchSearchMatches(searchQuery)
+            .then(data => {
+                setSearchMatches(data.data);
+                setShowDropdown(true);
+            })
+            .catch(error => {
+                toast.error(error.message);
+            });
+    }, [searchQuery]);
 
     return showDropdown ? (
         <div className="search-dropdown">
-            {searchResults?.map((stock) => {
+            {searchMatches.map(stock => {
                 if (isValidStock(stock)) {
                     return (
                         <Link

@@ -5,30 +5,29 @@ import StockCarousel from "../StockCarousel/StockCarousel";
 import SearchQuery from "../SearchQuery/SearchQuery";
 
 export default function Search() {
-    const [searchInput, setSearchInput] = useState("");
-
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
-    const handleSearchSubmit = async (event) => {
+    const handleSearch = async event => {
         event.preventDefault();
-        navigate(`stocks/${searchInput}`);
+        navigate(`stocks/${searchQuery}`);
     };
 
     return (
         <div>
             <div className="search-container">
-                <form className="search-bar" onSubmit={handleSearchSubmit}>
+                <form className="search-bar" onSubmit={handleSearch}>
                     <input
                         type="text"
                         placeholder="Search for a Stock..."
-                        value={searchInput}
-                        onChange={(event) => setSearchInput(event.target.value)}
+                        value={searchQuery}
+                        onChange={event => setSearchQuery(event.target.value)}
                     />
                     <button type="submit">
                         <i className="fa fa-search" />
                     </button>
                 </form>
-                <SearchQuery searchInput={searchInput} />
+                <SearchQuery searchQuery={searchQuery} />
             </div>
             <StockCarousel />
         </div>

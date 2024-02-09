@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
 import { setLoading } from "../../redux/loading";
-import { ResponseError } from "../../utils";
 import { signIn } from "../../api/auth";
+import { toast } from "react-toastify";
 
 export default function Login() {
     const [userCredentials, setUserCredentials] = useState({
@@ -19,6 +19,8 @@ export default function Login() {
     const handleLogin = async event => {
         event.preventDefault();
 
+        toast.dismiss();
+
         dispatch(setLoading(true));
         signIn(userCredentials)
             .then(data => {
@@ -26,7 +28,7 @@ export default function Login() {
                 navigate("/");
             })
             .catch(error => {
-                ResponseError(error.message);
+                toast.error(error.message);
             })
             .finally(() => {
                 dispatch(setLoading(false));

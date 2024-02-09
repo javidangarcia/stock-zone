@@ -66,7 +66,7 @@ export const formatDateToMonthDay = inputDate => {
 
 export const getCurrentTime = () => new Date().getTime();
 
-function getTwoWeeksAgoDate() {
+export function getTwoWeeksAgoDate() {
     const today = new Date();
     const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
     const year = twoWeeksAgo.getFullYear();
@@ -112,23 +112,6 @@ export function getStockLogoUrl(ticker) {
     stockLogoUrl.searchParams.append("symbol", ticker);
     stockLogoUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
     return stockLogoUrl.href;
-}
-
-export function getMarketNewsUrl() {
-    const marketNewsUrl = new URL("https://finnhub.io/api/v1/news");
-    marketNewsUrl.searchParams.append("category", "forex");
-    marketNewsUrl.searchParams.append("minId", "10");
-    marketNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
-    return marketNewsUrl.href;
-}
-
-export function getStockNewsUrl(currentStock) {
-    const stockNewsUrl = new URL("https://finnhub.io/api/v1/company-news");
-    stockNewsUrl.searchParams.append("symbol", currentStock.ticker);
-    stockNewsUrl.searchParams.append("from", getTwoWeeksAgoDate());
-    stockNewsUrl.searchParams.append("to", getCurrentDate());
-    stockNewsUrl.searchParams.append("token", import.meta.env.VITE_FINNHUB);
-    return stockNewsUrl.href;
 }
 
 // Error Alerts
