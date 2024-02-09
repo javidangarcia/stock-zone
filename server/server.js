@@ -15,6 +15,8 @@ import http from "http";
 import { Server } from "socket.io";
 
 const app = express();
+const expressPort = process.env.EXPRESS_PORT || 3000;
+const socketPort = process.env.SOCKET_PORT || 8000;
 
 const pgStore = pgSession(session);
 const sessionStore = new pgStore({
@@ -24,21 +26,23 @@ const sessionStore = new pgStore({
 
 app.use(
     cors({
-        origin: process.env.CLIENT,
+        origin: "*",
         credentials: true,
     })
 );
+
 app.use(express.json());
+
 app.use(
     session({
         store: sessionStore,
-        secret: process.env.SECRET,
+        secret: process.env.SESSION_SECRET || "secret",
         resave: false,
         saveUninitialized: false,
-        name: "authCookie",
+        name: "session",
         cookie: {
-            sameSite: process.env.DEVELOPMENT === "prod" ? "None" : "Lax",
-            secure: process.env.DEVELOPMENT === "prod",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            secure: process.env.NODE_ENV === "production",
             expires: 2 * 60 * 60 * 1000,
         },
     })
@@ -67,7 +71,7 @@ app.use(rankingRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.CLIENT,
+        origin: "*",
         credentials: true,
     },
 });
@@ -89,13 +93,10 @@ io.on("connection", socket => {
     });
 });
 
-const chatPort = process.env.CHAT_PORT || 3001;
-const appPort = process.env.APP_PORT || 3000;
-
-server.listen(chatPort, () => {
-    console.log(`Chat server is running on port ${chatPort}.`);
+server.listen(socketPort, () => {
+    console.log(`Chat server is running on port ${socketPort}.`);
 });
 
-app.listen(appPort, () => {
-    console.log(`Express app is listening on port ${appPort}.`);
+app.listen(expressPort, () => {
+    console.log(`Express app is listening on port ${socketPort}.`);
 });
