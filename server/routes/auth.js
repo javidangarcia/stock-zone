@@ -44,7 +44,7 @@ router.post("/users/register", async (req, res) => {
             name,
             username,
             email,
-            picture: PROFILE_PICTURE,
+            picture: PICTURE,
         });
     } catch (error) {
         console.error(error);
@@ -105,7 +105,7 @@ router.post("/users/login", async (req, res) => {
 router.post("/users/logout", async (req, res) => {
     try {
         req.session.destroy();
-        res.clearCookie("authCookie");
+        res.clearCookie("session");
         res.status(200).json({
             message: "The user has been successfully logged out.",
         });

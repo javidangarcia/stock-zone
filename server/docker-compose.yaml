@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+    postgres:
+        image: postgres:16
+        container_name: postgres-container
+        volumes:
+            - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+        ports:
+            - "${POSTGRES_PORT:-5432}:5432"
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-postgres}
+            POSTGRES_DB: "${POSTGRES_DB:-stockzone}"
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-awesome}
+    express:
+        build: .
+        container_name: express-container
+        ports:
+            - "${EXPRESS_PORT:-3000}:3000"
+        volumes:
+            - ./:/app
+            - /app/node_modules
