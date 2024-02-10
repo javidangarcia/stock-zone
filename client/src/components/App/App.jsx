@@ -8,7 +8,7 @@ import Home from "../Home/Home";
 import Search from "../Search/Search";
 import StockData from "../StockData/StockData";
 import Ranking from "../Ranking/Ranking";
-import Profile from "../Profile/Profile";
+import UserProfile from "../UserProfile/UserProfile";
 import Loading from "../Loading/Loading";
 import ChatRoom from "../ChatRoom/ChatRoom";
 import Discussions from "../Discussions/Discussions";
@@ -61,10 +61,13 @@ export default function App() {
                         path="/search/stocks/:ticker"
                         element={requireAuth(<StockData />)}
                     />
-                    <Route path="/profile" element={requireAuth(<Profile />)} />
+                    <Route
+                        path="/profile"
+                        element={requireAuth(<UserProfile />)}
+                    />
                     <Route
                         path="/profile/:username"
-                        element={requireAuth(<Profile />)}
+                        element={requireAuth(<UserProfile />)}
                     />
                     <Route path="/chat" element={requireAuth(<ChatRoom />)} />
                 </Routes>

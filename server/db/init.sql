@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS comments (
     id SERIAL PRIMARY KEY,
     content varchar(500) NOT NULL,
     userid int NOT NULL REFERENCES users(id),
-    stockid int NOT NULL REFERENCES stocks(id)
+    stockid int NOT NULL REFERENCES stocks(id),
+    createdAt TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS friends (
@@ -61,14 +62,16 @@ CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
     title varchar(255) NOT NULL,
     content varchar(2000) NOT NULL,
-    userid int NOT NULL REFERENCES users(id)
+    userid int NOT NULL REFERENCES users(id),
+    createdAt TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS replies (
     id SERIAL PRIMARY KEY,
     content varchar(500) NOT NULL,
     userid int NOT NULL REFERENCES users(id),
-    postid int NOT NULL REFERENCES posts(id)
+    postid int NOT NULL REFERENCES posts(id),
+    createdAt TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS messages (
@@ -76,7 +79,8 @@ CREATE TABLE IF NOT EXISTS messages (
     room varchar(255) NOT NULL,
     content varchar(500) NOT NULL,
     senderid int NOT NULL REFERENCES users(id),
-    receiverid int NOT NULL REFERENCES users(id)
+    receiverid int NOT NULL REFERENCES users(id),
+    createdAt TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS rankings (

@@ -28,7 +28,7 @@ export const formatDateTime = dateTimeString => {
 };
 
 export const compareCommentsByDate = (firstDate, secondDate) =>
-    new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
+    new Date(secondDate.createdat) - new Date(firstDate.createdat);
 
 export const getCurrentDate = () => {
     const currentDate = new Date();

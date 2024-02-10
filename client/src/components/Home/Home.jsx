@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 import { setLoading } from "../../redux/loading";
-import { fetchStocksFollowedByUser } from "../../api/users";
+import { fetchFollowedStocks } from "../../api/users";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        fetchStocksFollowedByUser(user)
+        fetchFollowedStocks(user.username)
             .then(data => {
                 if (data.length > 0) {
                     setStocks(data);

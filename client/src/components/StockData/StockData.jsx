@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import Swal from "sweetalert2";
 import Comments from "../Comments/Comments";
 import StockChart from "../StockChart/StockChart";
 import { setLoading } from "../../redux/loading";
@@ -17,7 +16,6 @@ export default function StockData() {
     const [stockData, setStockData] = useState({});
     const dispatch = useDispatch();
     const [category, setCategory] = useState("chart");
-    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -53,7 +51,7 @@ export default function StockData() {
                         <p className="ms-5 me-5 mb-3">
                             Sector: {stockData.sector}
                         </p>
-                        {/* <Tabs
+                        <Tabs
                             id="controlled-tab-example"
                             activeKey={category}
                             onSelect={k => setCategory(k)}
@@ -75,7 +73,7 @@ export default function StockData() {
                                     </span>
                                 }
                             >
-                                <StockChart ticker={ticker} />
+                                {/* <StockChart ticker={ticker} /> */}
                             </Tab>
                             <Tab
                                 eventKey="comments"
@@ -93,7 +91,7 @@ export default function StockData() {
                             >
                                 <Comments ticker={ticker} />
                             </Tab>
-                        </Tabs> */}
+                        </Tabs>
                     </div>
 
                     <div className="col-md-6 d-flex align-items-center justify-content-end h-100">
