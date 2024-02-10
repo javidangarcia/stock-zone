@@ -9,6 +9,8 @@ export const fetchStocksFollowedByUser = async user => {
         }
     );
 
+    if (response.status === 401) throw new Error("Missing session.");
+
     if (response.status === 404) throw new Error("This user does not exist.");
 
     if (response.status === 500)

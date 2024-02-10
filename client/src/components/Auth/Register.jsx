@@ -21,8 +21,6 @@ export default function Register() {
     const handleRegister = async event => {
         event.preventDefault();
 
-        toast.dismiss();
-
         dispatch(setLoading(true));
         registerUser(registerBody)
             .then(data => {
@@ -30,7 +28,7 @@ export default function Register() {
                 navigate("/");
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             })
             .finally(() => {
                 dispatch(setLoading(false));

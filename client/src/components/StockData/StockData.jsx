@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
@@ -11,9 +10,7 @@ import StockChart from "../StockChart/StockChart";
 import { setLoading } from "../../redux/loading";
 import { fetchStockData } from "../../api/stockdata";
 import { toast } from "react-toastify";
-import Follow from "../InteractionButtons/Follow";
-import Like from "../InteractionButtons/Like";
-import Dislike from "../InteractionButtons/Dislike";
+import Interactions from "../Interactions/Interactions";
 
 export default function StockData() {
     const { ticker } = useParams();
@@ -23,14 +20,13 @@ export default function StockData() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        toast.dismiss();
         dispatch(setLoading(true));
         fetchStockData(ticker)
             .then(data => {
                 setStockData(data);
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             })
             .finally(() => {
                 dispatch(setLoading(false));
@@ -49,9 +45,7 @@ export default function StockData() {
                             <p className="h2 text-primary me-2 mb-0">
                                 ${stockData.price.toFixed(2)}
                             </p>
-                            <Follow ticker={ticker} />
-                            <Like ticker={ticker} />
-                            <Dislike ticker={ticker} />
+                            <Interactions ticker={ticker} />
                         </div>
                         <p className="ms-5 me-5 mb-2">
                             {stockData.description}

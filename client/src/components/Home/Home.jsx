@@ -23,12 +23,14 @@ export default function Home() {
                     setStocks(data);
                     setStocksView(true);
                 } else {
-                    toast.info("Follow any stock to get started.");
+                    toast.info("Follow any stock to get started.", {
+                        toastId: "info",
+                    });
                     setNewsView(true);
                 }
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             })
             .finally(() => {
                 dispatch(setLoading(false));

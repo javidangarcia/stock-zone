@@ -77,6 +77,8 @@ export const fetchStockData = async stock => {
         }
     );
 
+    if (response.status === 401) throw new Error("Missing session.");
+
     if (response.status === 409) {
         const overview = await fetchStockOverview(stock);
         const logo = await fetchStockLogo(stock);

@@ -19,8 +19,6 @@ export default function Login() {
     const handleLogin = async event => {
         event.preventDefault();
 
-        toast.dismiss();
-
         dispatch(setLoading(true));
         signIn(userCredentials)
             .then(data => {
@@ -28,7 +26,7 @@ export default function Login() {
                 navigate("/");
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             })
             .finally(() => {
                 dispatch(setLoading(false));

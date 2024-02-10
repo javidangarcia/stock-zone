@@ -20,7 +20,6 @@ export default function StockNews({ stocks }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        toast.dismiss();
         fetchStockNews(currentStock)
             .then(data => {
                 const filteredStockNews = data.filter(
@@ -32,7 +31,7 @@ export default function StockNews({ stocks }) {
                 setStockNews(filteredStockNews);
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             })
             .finally(() => {
                 dispatch(setLoading(false));

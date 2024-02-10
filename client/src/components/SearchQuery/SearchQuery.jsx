@@ -15,14 +15,13 @@ export default function SearchQuery({ searchQuery }) {
             return;
         }
 
-        toast.dismiss();
         fetchSearchMatches(searchQuery)
             .then(data => {
                 setSearchMatches(data.data);
                 setShowDropdown(true);
             })
             .catch(error => {
-                toast.error(error.message);
+                toast.error(error.message, { toastId: "error" });
             });
     }, [searchQuery]);
 

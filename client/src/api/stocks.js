@@ -3,6 +3,8 @@ export const fetchStocks = async () => {
         credentials: "include",
     });
 
+    if (response.status === 401) throw new Error("Missing session.");
+
     if (response.status === 404)
         throw new Error("There are no stocks in the database.");
 
@@ -19,6 +21,8 @@ export const fetchStockFollowers = async stock => {
             credentials: "include",
         }
     );
+
+    if (response.status === 401) throw new Error("Missing session.");
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -37,6 +41,8 @@ export const fetchStockLikers = async stock => {
         }
     );
 
+    if (response.status === 401) throw new Error("Missing session.");
+
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
 
@@ -53,6 +59,8 @@ export const fetchStockDislikers = async stock => {
             credentials: "include",
         }
     );
+
+    if (response.status === 401) throw new Error("Missing session.");
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");

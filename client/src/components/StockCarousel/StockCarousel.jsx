@@ -12,11 +12,10 @@ export default function StockCarousel() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        toast.dismiss();
         dispatch(setLoading(true));
         fetchStocks()
             .then(data => setStocks(data))
-            .catch(error => toast.error(error.message))
+            .catch(error => toast.error(error.message, { toastId: "error" }))
             .finally(() => dispatch(setLoading(false)));
     }, []);
 
