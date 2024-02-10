@@ -20,7 +20,7 @@ export default function StockCarousel() {
             .finally(() => dispatch(setLoading(false)));
     }, []);
 
-    return (
+    return stocks.length > 0 ? (
         <Carousel
             className="carousel mb-5"
             data-bs-theme="light"
@@ -47,5 +47,5 @@ export default function StockCarousel() {
                 </Carousel.Item>
             ))}
         </Carousel>
-    );
+    ) : null;
 }

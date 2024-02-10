@@ -18,7 +18,8 @@ export const fetchStockNews = async stock => {
 
     const response = await fetch(newsUrl);
 
-    if (response.status === 429) throw new Error("API limit reached.");
+    if (response.status === 429)
+        throw new Error("API limit reached for stock news.");
 
     if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
 
