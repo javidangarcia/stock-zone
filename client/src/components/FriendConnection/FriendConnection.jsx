@@ -1,66 +1,78 @@
 import "./FriendConnection.css";
-import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
-import Swal from "sweetalert2";
-import { NetworkError, ServerError, ResponseError } from "../../utils";
 import { setLoading } from "../../redux/loading";
+import { useEffect, useState } from "react";
+import { addFriend, fetchFriends, removeFriend } from "../../api/users";
+import { toast } from "react-toastify";
 
-export default function FriendConnection({ username, profile, setProfile }) {
-    const user = useSelector((state) => state.user);
+export default function FriendConnection({ profile }) {
+    const { username } = profile;
+    const [friends, setFriends] = useState([]);
+    const user = useSelector(state => state.user);
     const dispatch = useDispatch();
 
-    const handleFriend = async () => {
-        try {
-            dispatch(setLoading(true));
-            const url = profile.friend
-                ? `${import.meta.env.VITE_HOST}/unfriend`
-                : `${import.meta.env.VITE_HOST}/friend`;
+    useEffect(() => {
+        dispatch(setLoading(true));
+        fetchFriends()
+            .then(data => {
+                setFriends(data);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    }, []);
 
-            const response = await axios.post(
-                url,
-                { username },
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: `You ${
-                        profile.friend
-                            ? `have unfriended ${username}!`
-                            : `are now friends with ${username}!`
-                    }`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setProfile({ ...profile, friend: !profile.friend });
-            }
-
-            if (response.status === 404 || response.status === 409) {
-                ResponseError(response.data.error);
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
+    const handleAddFriend = async () => {
+        dispatch(setLoading(true));
+        addFriend(username)
+            .then(() => {
+                setFriends([...friends, { ...profile }]);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
     };
 
-    return (
-        <div className={username === user.username ? "hidden" : ""}>
+    const handleRemoveFriend = async () => {
+        dispatch(setLoading(true));
+        removeFriend(username)
+            .then(() => {
+                setFriends(
+                    friends.filter(friend => friend.username !== username)
+                );
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
+
+    return username !== user.username ? (
+        <div>
             <Button
                 className="friend-button"
                 variant="primary"
-                onClick={handleFriend}
+                onClick={() => {
+                    if (friends.some(friend => friend.username === username)) {
+                        handleRemoveFriend();
+                    } else {
+                        handleAddFriend();
+                    }
+                }}
             >
-                {profile.friend ? "Remove Friend" : "Add Friend"}
+                {friends.some(friend => friend.username === username)
+                    ? "Remove Friend"
+                    : "Add Friend"}
             </Button>
         </div>
-    );
+    ) : null;
 }

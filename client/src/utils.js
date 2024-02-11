@@ -1,7 +1,4 @@
-import Swal from "sweetalert2";
 import { format } from "date-fns";
-
-// Functions
 
 export const capitalize = string => {
     return string
@@ -85,28 +82,3 @@ export function isValidArticle(currentStock, article) {
 
 export const comparePostsByDate = (firstDate, secondDate) =>
     new Date(secondDate.createdat) - new Date(firstDate.createdat);
-
-// Error Alerts
-
-export function ResponseError(message) {
-    Swal.fire({
-        icon: "error",
-        text: `${message}`,
-    });
-}
-
-export function ServerError() {
-    Swal.fire({
-        icon: "error",
-        title: "Internal Server Error",
-        text: "Please try again later.",
-    });
-}
-
-export function NetworkError(error) {
-    Swal.fire({
-        icon: "error",
-        title: `${error.message}`,
-        text: "Please try again later.",
-    });
-}

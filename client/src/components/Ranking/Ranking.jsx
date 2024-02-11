@@ -46,11 +46,7 @@ export default function Ranking() {
                     >
                         <Card key={stock.id} className="stock-rank-card">
                             <div>
-                                <Card.Img
-                                    variant="top"
-                                    src={stock.logo}
-                                    onLoad={() => handleLogoLoad(index)}
-                                />
+                                <Card.Img variant="top" src={stock.logo} />
                                 <p
                                     className={`stock-rank fs-3 ${
                                         index === 0 ? "text-primary" : ""

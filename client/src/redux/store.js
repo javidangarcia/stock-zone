@@ -5,6 +5,6 @@ import userReducer from "./user";
 export default configureStore({
     reducer: {
         loading: loadingReducer,
-        user: userReducer
-    }
+        user: userReducer,
+    },
 });

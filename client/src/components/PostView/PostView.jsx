@@ -7,6 +7,7 @@ import PostComments from "../PostComments/PostComments";
 import { formatDateTime } from "../../utils";
 import { setLoading } from "../../redux/loading";
 import { fetchPostsById } from "../../api/posts";
+import { toast } from "react-toastify";
 
 export default function PostView() {
     const [post, setPost] = useState({});

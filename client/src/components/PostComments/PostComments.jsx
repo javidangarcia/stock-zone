@@ -5,6 +5,7 @@ import { setLoading } from "../../redux/loading";
 import { formatDateTime, compareCommentsByDate } from "../../utils";
 import CreateComment from "../CreateComment/CreateComment";
 import { fetchPostReplies } from "../../api/posts";
+import { toast } from "react-toastify";
 
 export default function PostComments({ postId }) {
     const [replies, setReplies] = useState([]);

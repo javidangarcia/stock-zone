@@ -42,3 +42,18 @@ export const signIn = async userCredentials => {
 
     return await response.json();
 };
+
+export const signOut = async () => {
+    const response = await fetch(
+        `${import.meta.env.VITE_SERVER}/users/logout`,
+        {
+            method: "POST",
+            credentials: "include",
+        }
+    );
+
+    if (response.status === 500)
+        throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
+};

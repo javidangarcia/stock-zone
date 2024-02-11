@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
-import axios from "axios";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import {
-    formatDateToMonth,
-    formatDateToMonthDay,
-    NetworkError,
-    ResponseError
-} from "../../utils";
+import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
 
 export default function StockChart({ ticker }) {
     const [chartData, setChartData] = useState({});
@@ -16,14 +10,14 @@ export default function StockChart({ ticker }) {
     const [oneMonthData, setOneMonthData] = useState([]);
     const [hasRendered, setHasRendered] = useState(false);
 
-    const createDaysChart = (historicalData) => {
+    const createDaysChart = historicalData => {
         const dates = historicalData
-            ?.map((interval) => formatDateToMonthDay(interval.datetime))
+            ?.map(interval => formatDateToMonthDay(interval.datetime))
             .slice()
             .reverse();
 
         const prices = historicalData
-            ?.map((interval) => parseFloat(interval.close).toFixed(2))
+            ?.map(interval => parseFloat(interval.close).toFixed(2))
             .slice()
             .reverse();
 
@@ -32,36 +26,36 @@ export default function StockChart({ ticker }) {
                 xaxis: {
                     categories: dates,
                     labels: {
-                        rotate: 0
-                    }
+                        rotate: 0,
+                    },
                 },
                 tooltip: {
                     y: {
                         formatter(val) {
                             return `$${val}`;
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             series: [
                 {
                     name: "Stock Price",
-                    data: prices
-                }
-            ]
+                    data: prices,
+                },
+            ],
         };
 
         setChartData(newChartData);
     };
 
-    const createMonthsChart = (historicalData) => {
+    const createMonthsChart = historicalData => {
         const dates = historicalData
-            ?.map((interval) => formatDateToMonth(interval.datetime))
+            ?.map(interval => formatDateToMonth(interval.datetime))
             .slice()
             .reverse();
 
         const prices = historicalData
-            ?.map((interval) => parseFloat(interval.close).toFixed(2))
+            ?.map(interval => parseFloat(interval.close).toFixed(2))
             .slice()
             .reverse();
 
@@ -70,23 +64,23 @@ export default function StockChart({ ticker }) {
                 xaxis: {
                     categories: dates,
                     labels: {
-                        rotate: 0
-                    }
+                        rotate: 0,
+                    },
                 },
                 tooltip: {
                     y: {
                         formatter(val) {
                             return `$${val}`;
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             series: [
                 {
                     name: "Stock Price",
-                    data: prices
-                }
-            ]
+                    data: prices,
+                },
+            ],
         };
 
         setChartData(newChartData);
@@ -107,7 +101,7 @@ export default function StockChart({ ticker }) {
                 );
 
                 const response = await axios.get(priceUrl, {
-                    validateStatus: () => true
+                    validateStatus: () => true,
                 });
 
                 if (response.data.status === "ok") {
@@ -145,7 +139,7 @@ export default function StockChart({ ticker }) {
             priceUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
 
             const response = await axios.get(priceUrl, {
-                validateStatus: () => true
+                validateStatus: () => true,
             });
 
             if (response.data.status === "ok") {
@@ -173,7 +167,7 @@ export default function StockChart({ ticker }) {
             priceUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
 
             const response = await axios.get(priceUrl, {
-                validateStatus: () => true
+                validateStatus: () => true,
             });
 
             if (response.data.status === "ok") {

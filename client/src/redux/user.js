@@ -5,8 +5,8 @@ export const userSlice = createSlice({
     initialState: JSON.parse(localStorage.getItem("user")) || null,
     reducers: {
         setUser: (state, action) => action.payload,
-        clearUser: () => null
-    }
+        clearUser: () => null,
+    },
 });
 
 export const { setUser, clearUser } = userSlice.actions;

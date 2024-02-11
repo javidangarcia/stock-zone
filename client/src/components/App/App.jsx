@@ -22,11 +22,11 @@ export default function App() {
         localStorage.setItem("user", JSON.stringify(user));
     }, [user]);
 
-    const requireAuth = element => (user != null ? element : <Login />);
+    const requireAuth = element => (user ? element : <Login />);
 
     const toastOptions = {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -38,9 +38,9 @@ export default function App() {
     return (
         <div className="app">
             <BrowserRouter>
-                {user != null ? <Navigation /> : null}
                 <Loading />
                 <ToastContainer {...toastOptions} />
+                {user ? <Navigation /> : null}
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

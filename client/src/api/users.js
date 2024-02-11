@@ -1,5 +1,4 @@
 export const fetchUserProfile = async username => {
-    console.log(username);
     const response = await fetch(
         `${import.meta.env.VITE_SERVER}/users/${username}`,
         {
@@ -67,6 +66,66 @@ export const fetchDislikedStocks = async username => {
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
+};
+
+export const fetchFriends = async () => {
+    const response = await fetch(
+        `${import.meta.env.VITE_SERVER}/users/friends`,
+        {
+            credentials: "include",
+        }
+    );
+
+    if (response.status === 401) throw new Error("Missing session.");
+
+    if (response.status === 500)
+        throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
+};
+
+export const addFriend = async username => {
+    const response = await fetch(
+        `${import.meta.env.VITE_SERVER}/users/${username}/friend`,
+        {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (response.status === 401) throw new Error("Missing session.");
+
+    if (response.status === 409)
+        throw new Error("You are already friends with this user.");
+
+    if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
+
+    return await response.json();
+};
+
+export const removeFriend = async username => {
+    const response = await fetch(
+        `${import.meta.env.VITE_SERVER}/users/${username}/unfriend`,
+        {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (response.status === 401) throw new Error("Missing session.");
+
+    if (response.status === 409)
+        throw new Error("You are not friends with this user.");
+
+    if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
 
     return await response.json();
 };

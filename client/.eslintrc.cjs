@@ -1,31 +1,21 @@
 module.exports = {
-    env: {
-        browser: true,
-        es2021: true
-    },
+    root: true,
+    env: { browser: true, es2020: true },
     extends: [
         "eslint:recommended",
         "plugin:react/recommended",
-        "airbnb",
-        "prettier",
         "plugin:react/jsx-runtime",
-        "eslint-config-prettier"
+        "plugin:react-hooks/recommended",
     ],
-    overrides: [
-        {
-            env: {
-                node: true
-            },
-            files: [".eslintrc.{js,cjs}"],
-            parserOptions: {
-                sourceType: "script"
-            }
-        }
-    ],
-    parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module"
+    ignorePatterns: ["dist", ".eslintrc.cjs"],
+    parserOptions: { ecmaVersion: "latest", sourceType: "module" },
+    settings: { react: { version: "18.2" } },
+    plugins: ["react-refresh"],
+    rules: {
+        "react/jsx-no-target-blank": "off",
+        "react-refresh/only-export-components": [
+            "warn",
+            { allowConstantExport: true },
+        ],
     },
-    plugins: ["react"],
-    rules: { "react/prop-types": "off", "import/prefer-default-export": [0] }
 };

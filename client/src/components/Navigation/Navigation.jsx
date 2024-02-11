@@ -1,5 +1,4 @@
 import "./Navigation.css";
-import axios from "axios";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -9,30 +8,24 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useSelector, useDispatch } from "react-redux";
 import appLogo from "../../assets/stock-zone.png";
 import { clearUser } from "../../redux/user";
-import { NetworkError } from "../../utils";
+import { toast } from "react-toastify";
+import { signOut } from "../../api/auth";
 
 export default function Navigation() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
 
-    const handleLogout = async event => {
-        event.preventDefault();
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_SERVER}/users/logout`,
-                null,
-                { withCredentials: true }
-            );
-
-            if (response.status === 200) {
+    const handleLogout = () => {
+        signOut()
+            .then(() => {
                 localStorage.clear();
                 dispatch(clearUser());
                 navigate("/login");
-            }
-        } catch (error) {
-            NetworkError(error);
-        }
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            });
     };
 
     return (

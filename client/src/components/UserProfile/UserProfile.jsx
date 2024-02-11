@@ -32,11 +32,7 @@ export default function UserProfile() {
                 <Card>
                     <div className="position-relative">
                         <Card.Img variant="top" src={profile.picture} />
-                        {/* <FriendConnection
-                            username={username}
-                            profile={profile}
-                            setProfile={setProfile}
-                        /> */}
+                        <FriendConnection profile={profile} />
                     </div>
                     <Card.Body className="text-center">
                         <Card.Title className="m-0">{profile.name}</Card.Title>

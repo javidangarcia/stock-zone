@@ -16,7 +16,8 @@ services:
         build: .
         container_name: express-container
         ports:
-            - "${EXPRESS_PORT:-3000}:3000"
+            - "${EXPRESS_PORT:-3000}:${EXPRESS_PORT:-3000}"
+            - "${SOCKET_PORT:-8000}:${SOCKET_PORT:-8000}"
         volumes:
             - ./:/app
             - /app/node_modules

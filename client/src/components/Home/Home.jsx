@@ -1,7 +1,6 @@
 import "./Home.css";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Swal from "sweetalert2";
 import StockNews from "../StockNews/StockNews";
 import StocksYouFollow from "../StocksYouFollow/StocksYouFollow";
 import { setLoading } from "../../redux/loading";
