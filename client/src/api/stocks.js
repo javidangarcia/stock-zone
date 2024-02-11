@@ -105,10 +105,13 @@ export const sendStockComments = async (stock, content) => {
 
     if (response.status === 400) throw new Error("Please fill out all fields.");
 
+    if (response.status === 401) throw new Error("Missing session.");
+
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
 
-    if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
+    if (response.status === 500)
+        throw new Error("Oops! Something went wrong on our end.");
 
     return await response.json();
 };

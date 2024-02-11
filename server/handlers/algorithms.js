@@ -13,55 +13,59 @@ const compareStocksByPoints = (firstStock, secondStock) => {
 
 export async function RankingAlgorithmV5(userId) {
     try {
-        const stocksInDatabase = await pool.query("SELECT * FROM stocks");
-
-        const stocksYouFollow = await pool.query(
-            `SELECT stocks.* FROM stocks 
-             INNER JOIN follows 
-             ON stocks.id = follows.stockid 
-             WHERE follows.userid = $1`,
-            [userId]
-        );
-
-        const stocksYouLike = await pool.query(
-            `SELECT stocks.* FROM stocks 
-             INNER JOIN likes 
-             ON stocks.id = likes.stockid 
-             WHERE likes.userid = $1`,
-            [userId]
-        );
-
-        const stocksYouDislike = await pool.query(
-            `SELECT stocks.* FROM stocks 
-             INNER JOIN dislikes 
-             ON stocks.id = dislikes.stockid 
-             WHERE dislikes.userid = $1`,
-            [userId]
-        );
-
-        const stocksThatFriendsFollow = await pool.query(
-            `SELECT stocks.* FROM stocks
-            INNER JOIN follows ON stocks.id = follows.stockid
-            INNER JOIN friends ON follows.userid = friends.receiverid
-            WHERE friends.senderid = $1`,
-            [userId]
-        );
-
-        const stocksThatFriendsLike = await pool.query(
-            `SELECT stocks.* FROM stocks
-            INNER JOIN likes ON stocks.id = likes.stockid
-            INNER JOIN friends ON likes.userid = friends.receiverid
-            WHERE friends.senderid = $1`,
-            [userId]
-        );
-
-        const stocksThatFriendsDislike = await pool.query(
-            `SELECT stocks.* FROM stocks
-            INNER JOIN dislikes ON stocks.id = dislikes.stockid
-            INNER JOIN friends ON dislikes.userid = friends.receiverid
-            WHERE friends.senderid = $1`,
-            [userId]
-        );
+        const [
+            stocksInDatabase,
+            stocksYouFollow,
+            stocksYouLike,
+            stocksYouDislike,
+            stocksThatFriendsFollow,
+            stocksThatFriendsLike,
+            stocksThatFriendsDislike
+        ] = await Promise.all([
+            pool.query("SELECT * FROM stocks"),
+            pool.query(
+                `SELECT stocks.* FROM stocks 
+                 INNER JOIN follows 
+                 ON stocks.id = follows.stockid 
+                 WHERE follows.userid = $1`,
+                [userId]
+            ),
+            pool.query(
+                `SELECT stocks.* FROM stocks 
+                 INNER JOIN likes 
+                 ON stocks.id = likes.stockid 
+                 WHERE likes.userid = $1`,
+                [userId]
+            ),
+            pool.query(
+                `SELECT stocks.* FROM stocks 
+                 INNER JOIN dislikes 
+                 ON stocks.id = dislikes.stockid 
+                 WHERE dislikes.userid = $1`,
+                [userId]
+            ),
+            pool.query(
+                `SELECT stocks.* FROM stocks
+                INNER JOIN follows ON stocks.id = follows.stockid
+                INNER JOIN friends ON follows.userid = friends.receiverid
+                WHERE friends.senderid = $1`,
+                [userId]
+            ),
+            pool.query(
+                `SELECT stocks.* FROM stocks
+                INNER JOIN likes ON stocks.id = likes.stockid
+                INNER JOIN friends ON likes.userid = friends.receiverid
+                WHERE friends.senderid = $1`,
+                [userId]
+            ),
+            pool.query(
+                `SELECT stocks.* FROM stocks
+                INNER JOIN dislikes ON stocks.id = dislikes.stockid
+                INNER JOIN friends ON dislikes.userid = friends.receiverid
+                WHERE friends.senderid = $1`,
+                [userId]
+            )
+        ]);
 
         const stocksYouFollowMap = stocksYouFollow.rows.reduce(
             (accum, current) => {

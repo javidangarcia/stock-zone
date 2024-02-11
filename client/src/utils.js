@@ -84,7 +84,7 @@ export function isValidArticle(currentStock, article) {
 }
 
 export const comparePostsByDate = (firstDate, secondDate) =>
-    new Date(secondDate.createdAt) - new Date(firstDate.createdAt);
+    new Date(secondDate.createdat) - new Date(firstDate.createdat);
 
 // Error Alerts
 

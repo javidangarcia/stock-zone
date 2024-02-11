@@ -1,52 +1,30 @@
 import "./PostView.css";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
 import Card from "react-bootstrap/Card";
 import { useParams, Link } from "react-router-dom";
 import PostComments from "../PostComments/PostComments";
-import { NetworkError, ServerError, formatDateTime } from "../../utils";
+import { formatDateTime } from "../../utils";
 import { setLoading } from "../../redux/loading";
+import { fetchPostsById } from "../../api/posts";
 
 export default function PostView() {
     const [post, setPost] = useState({});
-    const { postID } = useParams();
+    const { postId } = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/post/${postID}`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    setPost(response.data.post);
-                }
-
-                if (response.status === 404) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: `${response.data.error}`
-                    });
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+        dispatch(setLoading(true));
+        fetchPostsById(postId)
+            .then(data => {
+                setPost(data);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-
-        fetchPost();
+            });
     }, []);
 
     return Object.keys(post).length > 0 ? (
@@ -57,19 +35,19 @@ export default function PostView() {
                         Posted by{" "}
                         <Link
                             className="user-link text-primary"
-                            to={`/profile/${post.User.username}`}
+                            to={`/profile/${post.username}`}
                         >
-                            {post.User.username}
+                            {post.username}
                         </Link>{" "}
                     </small>
                     <small className="text-muted">
-                        {formatDateTime(post.createdAt)}
+                        {formatDateTime(post.createdat)}
                     </small>
                 </Card.Header>
                 <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
                     <Card.Text>{post.content}</Card.Text>
-                    <PostComments postID={postID} />
+                    <PostComments postId={postId} />
                 </Card.Body>
             </Card>
         </div>

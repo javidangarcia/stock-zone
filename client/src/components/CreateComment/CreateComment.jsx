@@ -1,115 +1,81 @@
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import Swal from "sweetalert2";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import InputGroup from "react-bootstrap/InputGroup";
 import { setLoading } from "../../redux/loading";
-import { NetworkError, ResponseError, ServerError } from "../../utils";
+import { createReplies } from "../../api/posts";
+import { toast } from "react-toastify";
 
-export default function CreateComment({ postID, comments, setComments }) {
-    const [showCreateComment, setShowCreateComment] = useState(false);
-    const [commentInput, setCommentInput] = useState("");
+export default function CreateComment({ postId, replies, setReplies }) {
+    const [showCreateReply, setShowCreateReply] = useState(false);
+    const [replyInput, setReplyInput] = useState("");
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
 
-    async function createComment(event) {
-        event.preventDefault();
-
-        if (commentInput === "") {
-            Swal.fire({
-                icon: "error",
-                title: "Missing Field",
-                text: "Please make sure to fill in the content field before creating a comment."
-            });
-            return;
-        }
-
-        try {
-            dispatch(setLoading(true));
-            const commentData = {
-                content: commentInput
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/post/comment/${postID}`,
-                commentData,
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Successfully Created a Comment!",
-                    showConfirmButton: false,
-                    timer: 1500
+    const createReply = () => {
+        dispatch(setLoading(true));
+        createReplies(postId, replyInput)
+            .then(data => {
+                const { id, ...userData } = user;
+                setReplies([...replies, { ...data, ...userData }]);
+                setShowCreateReply(false);
+                setReplyInput("");
+                toast.success("Successfully replied to this post!", {
+                    toastId: "success",
                 });
-                const newComments = [...comments, response.data.comment];
-                setComments(newComments);
-                setCommentInput("");
-                setShowCreateComment(false);
-            }
-
-            if (response.status === 404) {
-                ResponseError(response);
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
-    }
+            })
+            .catch(error => toast.error(error.message, { toastId: "error" }))
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
 
     return (
         <div>
             <Button
                 className="w-100"
                 variant="primary"
-                onClick={() => setShowCreateComment(true)}
+                onClick={() => setShowCreateReply(true)}
             >
-                Leave a Comment
+                Leave a Reply
             </Button>
             <Modal
-                show={showCreateComment}
-                onHide={() => setShowCreateComment(false)}
+                show={showCreateReply}
+                onHide={() => setShowCreateReply(false)}
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Write a Comment</Modal.Title>
+                    <Modal.Title>Write a Reply</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <InputGroup>
                         <Form.Control
                             as="textarea"
                             aria-label="With textarea"
-                            value={commentInput}
-                            onChange={(event) =>
-                                setCommentInput(event.target.value)
+                            value={replyInput}
+                            onChange={event =>
+                                setReplyInput(event.target.value)
                             }
                             style={{ height: "200px" }}
-                            placeholder="Write a Comment..."
+                            placeholder="Write a Reply..."
                         />
                     </InputGroup>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
                         variant="secondary"
-                        onClick={() => setShowCreateComment(false)}
+                        onClick={() => setShowCreateReply(false)}
                     >
                         Close
                     </Button>
                     <Button
                         variant="primary"
                         type="submit"
-                        onClick={(event) => createComment(event)}
+                        onClick={createReply}
                     >
-                        Comment
+                        Reply
                     </Button>
                 </Modal.Footer>
             </Modal>

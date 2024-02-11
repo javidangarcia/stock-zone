@@ -54,7 +54,7 @@ export default function App() {
                         element={requireAuth(<Discussions />)}
                     />
                     <Route
-                        path="/discussions/:postID"
+                        path="/discussions/:postId"
                         element={requireAuth(<PostView />)}
                     />
                     <Route

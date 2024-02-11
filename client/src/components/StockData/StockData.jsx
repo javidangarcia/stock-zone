@@ -73,7 +73,7 @@ export default function StockData() {
                                     </span>
                                 }
                             >
-                                {/* <StockChart ticker={ticker} /> */}
+                                <StockChart ticker={ticker} />
                             </Tab>
                             <Tab
                                 eventKey="comments"

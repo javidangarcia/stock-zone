@@ -1,83 +1,55 @@
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { setLoading } from "../../redux/loading";
-import {
-    NetworkError,
-    ServerError,
-    formatDateTime,
-    compareCommentsByDate
-} from "../../utils";
+import { formatDateTime, compareCommentsByDate } from "../../utils";
 import CreateComment from "../CreateComment/CreateComment";
+import { fetchPostReplies } from "../../api/posts";
 
-export default function PostComments({ postID }) {
-    const [comments, setComments] = useState([]);
+export default function PostComments({ postId }) {
+    const [replies, setReplies] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/post/comments/${postID}`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    setComments(response.data.comments);
-                }
-
-                if (response.status === 404) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: `${response.data.error}`
-                    });
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+        dispatch(setLoading(true));
+        fetchPostReplies(postId)
+            .then(data => {
+                setReplies(data);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-        fetchComments();
+            });
     }, []);
 
     return (
         <div>
             <CreateComment
-                postID={postID}
-                comments={comments}
-                setComments={setComments}
+                postId={postId}
+                replies={replies}
+                setReplies={setReplies}
             />
-            {comments?.sort(compareCommentsByDate).map((comment) => (
-                <div className="comment-details mt-3" key={comment.id}>
+            {replies.sort(compareCommentsByDate).map(reply => (
+                <div className="comment-details mt-3" key={reply.id}>
                     <div className="comment-picture">
                         <img
-                            src={comment.User.picture}
-                            alt={`This is the profile associated with ${comment.User.username}`}
+                            src={reply.picture}
+                            alt={`This is the profile associated with ${reply.username}`}
                         />
                     </div>
                     <div className="comment-content">
                         <Link
-                            to={`/profile/${comment.User.username}`}
+                            to={`/profile/${reply.username}`}
                             className="user-link"
                         >
-                            <p className="comment-name">
-                                {comment.User.fullName}
-                            </p>
+                            <p className="comment-name">{reply.name}</p>
                         </Link>
                         <p className="comment-date">
-                            {formatDateTime(comment.createdAt)}
+                            {formatDateTime(reply.createdat)}
                         </p>
-                        <p className="comment-content">{comment.content}</p>
+                        <p className="comment-content">{reply.content}</p>
                     </div>
                 </div>
             ))}

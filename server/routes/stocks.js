@@ -209,8 +209,8 @@ router.get("/stocks/:ticker/comments", async (req, res) => {
         const stockId = stock.rows[0].id;
 
         const comments = await pool.query(
-            `SELECT comments.id, comments.content, comments.createdat, users.id AS userid, 
-                    users.name, users.username, users.email, users.picture FROM comments
+            `SELECT comments.*, users.name, users.username, 
+            users.email, users.picture FROM comments
             INNER JOIN users
             ON users.id = comments.userid
             WHERE comments.stockid = $1`,

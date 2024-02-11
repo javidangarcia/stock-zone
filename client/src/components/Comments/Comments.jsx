@@ -31,6 +31,9 @@ export default function Comments({ ticker }) {
                 setCommentInput("");
                 const { id, ...userData } = user;
                 setComments([...comments, { ...data, ...userData }]);
+                toast.success("Successfully commented on this stock!", {
+                    toastId: "success",
+                });
             })
             .catch(error => {
                 toast.error(error.message, { toastId: "error" });
