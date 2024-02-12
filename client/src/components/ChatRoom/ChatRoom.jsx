@@ -11,7 +11,7 @@ import { Dropdown } from "react-bootstrap";
 import { fetchFriends } from "../../api/users";
 import { toast } from "react-toastify";
 
-const socket = io.connect(`${import.meta.env.VITE_SOCKET}`);
+const socket = io.connect(`${import.meta.env.VITE_SERVER}`);
 
 export default function ChatRoom() {
     const user = useSelector(state => state.user);

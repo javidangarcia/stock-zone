@@ -3,6 +3,7 @@ services:
     postgres:
         image: postgres:16
         container_name: postgres-container
+        restart: unless-stopped
         volumes:
             - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
@@ -15,9 +16,11 @@ services:
     express:
         build: .
         container_name: express-container
+        restart: unless-stopped
         ports:
-            - "${EXPRESS_PORT:-3000}:${EXPRESS_PORT:-3000}"
-            - "${SOCKET_PORT:-8000}:${SOCKET_PORT:-8000}"
+            - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"
         volumes:
             - ./:/app
             - /app/node_modules
+        depends_on:
+            - postgres

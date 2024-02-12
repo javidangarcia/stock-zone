@@ -113,7 +113,6 @@ export default function StockChart({ ticker }) {
         dispatch(setLoading(true));
         fetchOneMonthData(ticker)
             .then(data => {
-                console.log(data);
                 setOneMonthData([...data.values]);
                 const fiveDaysData = data.values.slice(0, 5);
                 createChart(fiveDaysData, "days");

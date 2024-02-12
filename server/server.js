@@ -15,8 +15,7 @@ import http from "http";
 import { Server } from "socket.io";
 
 const app = express();
-const expressPort = process.env.EXPRESS_PORT || 3000;
-const socketPort = process.env.SOCKET_PORT || 8000;
+const port = process.env.SERVER_PORT || 3000;
 
 const pgStore = pgSession(session);
 const sessionStore = new pgStore({
@@ -32,6 +31,8 @@ app.use(
 );
 
 app.use(express.json());
+
+app.set("trust proxy", 1);
 
 app.use(
     session({
@@ -93,10 +94,6 @@ io.on("connection", socket => {
     });
 });
 
-server.listen(socketPort, () => {
-    console.log(`Chat server is running on port ${socketPort}.`);
-});
-
-app.listen(expressPort, () => {
-    console.log(`Express app is listening on port ${socketPort}.`);
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}.`);
 });

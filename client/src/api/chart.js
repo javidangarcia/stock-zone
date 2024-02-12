@@ -26,7 +26,6 @@ export const fetchOneMonthData = async stock => {
     priceUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
 
     const response = await fetch(priceUrl);
-    console.log(response);
 
     const data = await response.json();
 
