@@ -5,7 +5,12 @@ const router = express.Router();
 
 router.get("/posts", async (req, res) => {
     try {
-        const posts = await pool.query("SELECT * FROM posts");
+        const posts = await pool.query(
+            `SELECT posts.*, users.name, users.username, 
+            users.email, users.picture FROM posts 
+            INNER JOIN users 
+            ON posts.userid = users.id`);
+
         res.status(200).json(posts.rows);
     } catch (error) {
         console.error(error);
@@ -47,9 +52,14 @@ router.get("/posts/:postId", async (req, res) => {
     try {
         const { postId } = req.params;
 
-        const post = await pool.query("SELECT * FROM posts WHERE id = $1", [
-            postId,
-        ]);
+        const post = await pool.query(
+            `SELECT posts.*, users.name, users.username, 
+            users.email, users.picture FROM posts
+            INNER JOIN users
+            ON posts.userid = users.id
+            WHERE posts.id = $1 `,
+            [postId]
+        );
 
         if (post.rows.length === 0) {
             res.status(404).json({ error: "This post does not exist." });
@@ -79,8 +89,8 @@ router.get("/posts/:postId/replies", async (req, res) => {
         }
 
         const replies = await pool.query(
-            `SELECT replies.id, replies.content, users.id AS userid, users.name, 
-                    users.username, users.email, users.picture FROM replies
+            `SELECT replies.*, users.name, users.username, 
+            users.email, users.picture FROM replies
             INNER JOIN users
             ON users.id = replies.userid
             WHERE replies.postid = $1`,

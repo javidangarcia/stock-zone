@@ -26,7 +26,7 @@ const sessionStore = new pgStore({
 
 app.use(
     cors({
-        origin: "*",
+        origin: process.env.CLIENT_URL || "http://localhost:5173",
         credentials: true,
     })
 );
@@ -43,7 +43,7 @@ app.use(
         cookie: {
             sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             secure: process.env.NODE_ENV === "production",
-            expires: 2 * 60 * 60 * 1000,
+            expires: 24 * 60 * 60 * 1000,
         },
     })
 );
@@ -71,7 +71,7 @@ app.use(rankingRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: process.env.CLIENT_URL || "http://localhost:5173",
         credentials: true,
     },
 });

@@ -6,12 +6,6 @@
     flex: 3;
 }
 
-.stocks-you-follow h1 {
-    margin: 0;
-    font-size: 30px;
-    margin-bottom: 15px;
-}
-
 .stock-link {
     text-decoration: none;
     color: inherit;

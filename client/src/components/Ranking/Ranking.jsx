@@ -1,83 +1,36 @@
 import "./Ranking.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/loading";
-import { NetworkError, ServerError, ResponseError } from "../../utils";
-import Swal from "sweetalert2";
+import { fetchRanking } from "../../api/ranking";
+import { toast } from "react-toastify";
 
 const DEFAULT_RANKING_PAGE = 1;
-const MAX_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 5;
 
 export default function Ranking() {
     const [stocksRanking, setStocksRanking] = useState([]);
     const [page, setPage] = useState(DEFAULT_RANKING_PAGE);
     const [showLoadMore, setShowLoadMore] = useState(true);
     const dispatch = useDispatch();
-    const loading = useSelector((state) => state.loading);
-    const [hasRendered, setHasRendered] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchRanking = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/ranking/${page}`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    if (response.data.stocksRanking.length < MAX_PAGE_SIZE) {
-                        setShowLoadMore(false);
-                    }
-
-                    if (page === DEFAULT_RANKING_PAGE) {
-                        setStocksRanking(response.data.stocksRanking);
-                    } else {
-                        setStocksRanking((prevRanking) => [
-                            ...prevRanking,
-                            ...response.data.stocksRanking
-                        ]);
-                    }
-                }
-
-                if (response.status === 422) {
-                    Swal.fire({
-                        icon: "info",
-                        title: "Get Started with Ranking",
-                        text: "Explore at least 10 stocks to get started."
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            navigate("/search");
-                        }
-                    });
-                }
-
-                if (response.status === 401) {
-                    ResponseError(response.data.error);
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+        dispatch(setLoading(true));
+        fetchRanking(page)
+            .then(data => {
+                if (data.length < MAX_PAGE_SIZE) setShowLoadMore(false);
+                setStocksRanking([...stocksRanking, ...data]);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-
-        if (hasRendered) {
-            fetchRanking();
-        } else {
-            setHasRendered(true);
-        }
-    }, [page, hasRendered]);
+            });
+    }, [page]);
 
     return stocksRanking.length > 0 ? (
         <div className="d-flex flex-column align-items-center justify-content-center">
@@ -85,7 +38,7 @@ export default function Ranking() {
             <p className="mb-4">
                 Recommended based on your profile and history.
             </p>
-            {stocksRanking?.map((stock, index) => (
+            {stocksRanking.map((stock, index) => (
                 <div key={stock.id} className="mb-4">
                     <Link
                         to={`/search/stocks/${stock.ticker}`}
@@ -111,17 +64,16 @@ export default function Ranking() {
                     </Link>
                 </div>
             ))}
-            {!loading && showLoadMore ? (
+
+            {showLoadMore && (
                 <Button
                     className="mb-5 mt-4"
                     variant="outline-primary"
-                    onClick={() =>
-                        setPage((prev) => prev + DEFAULT_RANKING_PAGE)
-                    }
+                    onClick={() => setPage(prev => prev + DEFAULT_RANKING_PAGE)}
                 >
                     Load More
                 </Button>
-            ) : null}
+            )}
         </div>
     ) : null;
 }

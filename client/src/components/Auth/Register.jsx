@@ -1,71 +1,39 @@
 import { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useDispatch } from "react-redux";
-import {
-    capitalize,
-    NetworkError,
-    ServerError,
-    ResponseError
-} from "../../utils";
 import appLogo from "../../assets/stock-zone.png";
 import { setUser } from "../../redux/user";
 import { setLoading } from "../../redux/loading";
+import { registerUser } from "../../api/auth";
+import { toast } from "react-toastify";
 
-export default function SignUpForm() {
-    const [fullName, setFullName] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+export default function Register() {
+    const [registerBody, setRegisterBody] = useState({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+    });
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
 
-    async function handleSubmit(event) {
+    const handleRegister = async event => {
         event.preventDefault();
 
-        try {
-            dispatch(setLoading(true));
-            const userData = {
-                fullName: capitalize(fullName),
-                username,
-                password,
-                email
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/users/signup`,
-                userData,
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                setFullName("");
-                setUsername("");
-                setPassword("");
-                setEmail("");
-
-                const user = response.data?.user;
-                dispatch(setUser(user));
-
+        dispatch(setLoading(true));
+        registerUser(registerBody)
+            .then(data => {
+                dispatch(setUser(data));
                 navigate("/");
-            }
-
-            if (response.status === 409 || response.status === 400) {
-                ResponseError(response.data.error);
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
-    }
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
 
     return (
         <div
@@ -78,20 +46,26 @@ export default function SignUpForm() {
                         src={appLogo}
                         alt="This is the logo of Stock Zone."
                         className="app-logo me-2 d-flex justify-content-center"
+                        style={{ height: "50px", width: "50px" }}
                     />
                     Stock Zone
                 </div>
                 <h2 className="mb-4 text-center fs-5">Create an account</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleRegister}>
                     <div className="mb-3">
                         <label htmlFor="fullName" className="form-label w-100">
-                            Full Name
+                            Name
                             <input
                                 type="text"
                                 className="form-control"
                                 id="fullName"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}
+                                value={registerBody.name}
+                                onChange={e =>
+                                    setRegisterBody({
+                                        ...registerBody,
+                                        name: e.target.value,
+                                    })
+                                }
                                 required
                             />
                         </label>
@@ -103,8 +77,13 @@ export default function SignUpForm() {
                                 type="email"
                                 className="form-control"
                                 id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={registerBody.email}
+                                onChange={e =>
+                                    setRegisterBody({
+                                        ...registerBody,
+                                        email: e.target.value,
+                                    })
+                                }
                                 required
                             />
                         </label>
@@ -116,8 +95,13 @@ export default function SignUpForm() {
                                 type="text"
                                 className="form-control"
                                 id="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={registerBody.username}
+                                onChange={e =>
+                                    setRegisterBody({
+                                        ...registerBody,
+                                        username: e.target.value,
+                                    })
+                                }
                                 required
                             />
                         </label>
@@ -129,20 +113,25 @@ export default function SignUpForm() {
                                 type="password"
                                 className="form-control"
                                 id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={registerBody.password}
+                                onChange={e =>
+                                    setRegisterBody({
+                                        ...registerBody,
+                                        password: e.target.value,
+                                    })
+                                }
                                 required
                             />
                         </label>
                     </div>
                     <button type="submit" className="btn btn-primary col-12">
-                        Sign Up
+                        Register
                     </button>
                 </form>
                 <p className="mt-3 text-center">
                     Already have an account?{" "}
                     <Link className="text-decoration-none" to="/login">
-                        Log In
+                        Login
                     </Link>
                 </p>
             </div>

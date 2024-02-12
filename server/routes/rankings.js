@@ -3,7 +3,7 @@ import { getRanking } from "../handlers/rankings.js";
 
 const router = express.Router();
 
-router.get("/rankings/:page", async (req, res) => {
+router.get("/ranking/:page", async (req, res) => {
     try {
         const { page } = req.params;
         const { user } = req.session;

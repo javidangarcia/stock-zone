@@ -1,7 +1,6 @@
 import "./Discussions.css";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,62 +8,42 @@ import Card from "react-bootstrap/Card";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "../CreatePost/CreatePost";
 import { setLoading } from "../../redux/loading";
-import {
-    NetworkError,
-    ServerError,
-    comparePostsByDate,
-    formatDateTime
-} from "../../utils";
+import { comparePostsByDate, formatDateTime } from "../../utils";
+import { fetchPosts } from "../../api/posts";
+import { toast } from "react-toastify";
 
 export default function Discussions() {
     const [posts, setPosts] = useState([]);
     const dispatch = useDispatch();
-    const loading = useSelector((state) => state.loading);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/posts`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    setPosts(response.data.posts);
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+        dispatch(setLoading(true));
+        fetchPosts()
+            .then(data => {
+                setPosts(data);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-        fetchPosts();
+            });
     }, []);
 
-    const handlePostClick = (postId) => {
-        navigate(`/discussions/${postId}`);
-    };
-
-    return !loading ? (
+    return (
         <Container>
             <Row>
                 <Col>
-                    <CreatePost setPosts={setPosts} />
+                    <CreatePost posts={posts} setPosts={setPosts} />
                 </Col>
             </Row>
-            {posts.sort(comparePostsByDate).map((post) => (
+            {posts.sort(comparePostsByDate).map(post => (
                 <Row key={post.id} className="mb-3">
                     <Col>
                         <Card
                             className="post-card"
-                            onClick={() => handlePostClick(post.id)}
+                            onClick={() => navigate(`/discussions/${post.id}`)}
                         >
                             <Card.Body>
                                 <Card.Title>{post.title}</Card.Title>
@@ -75,13 +54,13 @@ export default function Discussions() {
                                     Posted by{" "}
                                     <Link
                                         className="user-link text-primary"
-                                        to={`/profile/${post.User.username}`}
+                                        to={`/profile/${post.username}`}
                                     >
-                                        {post.User.username}
+                                        {post.username}
                                     </Link>{" "}
                                 </small>
                                 <small className="text-muted">
-                                    {formatDateTime(post.createdAt)}
+                                    {formatDateTime(post.createdat)}
                                 </small>
                             </Card.Footer>
                         </Card>
@@ -89,5 +68,5 @@ export default function Discussions() {
                 </Row>
             ))}
         </Container>
-    ) : null;
+    );
 }

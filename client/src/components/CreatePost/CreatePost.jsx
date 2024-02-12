@@ -1,69 +1,39 @@
 import "./CreatePost.css";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/esm/Button";
-import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import Swal from "sweetalert2";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { NetworkError, ServerError } from "../../utils";
 import { setLoading } from "../../redux/loading";
+import { createPosts } from "../../api/posts";
+import { toast } from "react-toastify";
 
-export default function CreatePost({ setPosts }) {
+export default function CreatePost({ posts, setPosts }) {
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
 
-    async function createPost(event) {
-        event.preventDefault();
-
-        if (!title || !content) {
-            Swal.fire({
-                icon: "error",
-                title: "Missing Fields",
-                text: "Please make sure to fill in both the title and content fields before creating a post."
-            });
-            return;
-        }
-
-        try {
-            dispatch(setLoading(true));
-            const postData = {
-                title,
-                content
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/post`,
-                postData,
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Successfully Created a Post!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setPosts((prevPosts) => [...prevPosts, response.data.post]);
+    const createPost = () => {
+        dispatch(setLoading(true));
+        createPosts(title, content)
+            .then(data => {
+                const { id, ...userData } = user;
+                setPosts([...posts, { ...data, ...userData }]);
+                setShowCreatePost(false);
                 setTitle("");
                 setContent("");
-                setShowCreatePost(false);
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
-    }
+                toast.success("Successfully created a post!", {
+                    toastId: "success",
+                });
+            })
+            .catch(error => toast.error(error.message, { toastId: "error" }))
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
 
     return (
         <div className="d-flex justify-content-center">
@@ -89,7 +59,7 @@ export default function CreatePost({ setPosts }) {
                             aria-label="Default"
                             aria-describedby="inputGroup-sizing-default"
                             value={title}
-                            onChange={(event) => setTitle(event.target.value)}
+                            onChange={event => setTitle(event.target.value)}
                             placeholder="Title"
                         />
                     </InputGroup>
@@ -98,7 +68,7 @@ export default function CreatePost({ setPosts }) {
                             as="textarea"
                             aria-label="With textarea"
                             value={content}
-                            onChange={(event) => setContent(event.target.value)}
+                            onChange={event => setContent(event.target.value)}
                             style={{ height: "200px" }}
                             placeholder="Content"
                         />
@@ -114,7 +84,7 @@ export default function CreatePost({ setPosts }) {
                     <Button
                         variant="primary"
                         type="submit"
-                        onClick={(event) => createPost(event)}
+                        onClick={createPost}
                     >
                         Create
                     </Button>

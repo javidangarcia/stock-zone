@@ -1,10 +1,10 @@
 -- Seeding data into the users table
 INSERT INTO users (name, username, email, password, picture) VALUES
-('John Smith', 'johnsmith', 'johnsmith@example.com', 'meta123', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
-('Jane Johnson', 'janejohnson', 'janejohnson@example.com', 'meta123', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
-('Michael Brown', 'michaelbrown', 'michaelbrown@example.com', 'meta123', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
-('Emily Lee', 'emilylee', 'emilylee@example.com', 'meta123', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
-('William Wilson', 'williamwilson', 'williamwilson@example.com', 'meta123', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg');
+('John Smith', 'johnsmith', 'johnsmith@example.com', '$2b$10$ZRkNHialt/6V9hqQK0ikN.1e.Rl7Oibt.EDAMTpM7XrOv6uHnSsqK', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
+('Jane Johnson', 'janejohnson', 'janejohnson@example.com', '$2b$10$ZRkNHialt/6V9hqQK0ikN.1e.Rl7Oibt.EDAMTpM7XrOv6uHnSsqK', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
+('Michael Brown', 'michaelbrown', 'michaelbrown@example.com', '$2b$10$ZRkNHialt/6V9hqQK0ikN.1e.Rl7Oibt.EDAMTpM7XrOv6uHnSsqK', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
+('Emily Lee', 'emilylee', 'emilylee@example.com', '$2b$10$ZRkNHialt/6V9hqQK0ikN.1e.Rl7Oibt.EDAMTpM7XrOv6uHnSsqK', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg'),
+('William Wilson', 'williamwilson', 'williamwilson@example.com', '$2b$10$ZRkNHialt/6V9hqQK0ikN.1e.Rl7Oibt.EDAMTpM7XrOv6uHnSsqK', 'https://t3.ftcdn.net/jpg/00/64/67/52/360_F_64675209_7ve2XQANuzuHjMZXP3aIYIpsDKEbF5dD.jpg');
 
 
 -- Seeding data into the stocks table

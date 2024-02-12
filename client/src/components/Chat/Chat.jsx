@@ -1,93 +1,66 @@
 import "./Chat.css";
 import { useState, useEffect } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { formatDateTime, NetworkError, ServerError } from "../../utils";
+import { formatDateTime } from "../../utils";
 import { setLoading } from "../../redux/loading";
+import { fetchMessages, sendMessage } from "../../api/messages";
+import { toast } from "react-toastify";
 
-export default function Chat({ socket, user, room, friend }) {
-    const [currentMessage, setCurrentMessage] = useState("");
-    const [messageList, setMessageList] = useState([]);
+export default function Chat({ socket, room, friend }) {
+    const [messageInput, setMessageInput] = useState("");
+    const [messages, setMessages] = useState([]);
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await axios.get(
-                    `${import.meta.env.VITE_HOST}/messages/${friend.user2.id}`,
-                    { withCredentials: true, validateStatus: () => true }
-                );
-
-                if (response.status === 200) {
-                    setMessageList(response.data.messages);
-                }
-
-                if (response.status === 500) {
-                    ServerError();
-                }
-
+        dispatch(setLoading(true));
+        fetchMessages(friend.id)
+            .then(data => {
+                setMessages(data);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
                 dispatch(setLoading(false));
-            } catch (error) {
-                dispatch(setLoading(false));
-                NetworkError(error);
-            }
-        };
-        fetchMessages();
+            });
     }, [room]);
 
-    const sendMessage = async (event) => {
-        event.preventDefault();
-
-        try {
-            dispatch(setLoading(true));
-            const messageData = {
-                room,
-                author: user.username,
-                friendID: friend.user2.id,
-                content: currentMessage
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_HOST}/message`,
-                messageData,
-                { withCredentials: true, validateStatus: () => true }
-            );
-
-            if (response.status === 200) {
-                await socket.emit("send_message", response.data.message);
-                setMessageList((list) => [...list, response.data.message]);
-                setCurrentMessage("");
-            }
-
-            if (response.status === 500) {
-                ServerError();
-            }
-            dispatch(setLoading(false));
-        } catch (error) {
-            dispatch(setLoading(false));
-            NetworkError(error);
-        }
-    };
-
     useEffect(() => {
-        socket.on("receive_message", (data) => {
-            setMessageList((list) => [...list, data]);
+        socket.on("receive_message", data => {
+            setMessages(prevMessages => [...prevMessages, data]);
         });
 
         return () => socket.removeListener("receive_message");
     }, [socket]);
 
+    const handleSendMessage = event => {
+        event.preventDefault();
+        dispatch(setLoading(true));
+        sendMessage(friend.id, room, messageInput)
+            .then(data => {
+                socket.emit("send_message", data);
+                setMessageInput("");
+                setMessages([...messages, data]);
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    };
+
     return (
         <div className="chat-section">
             <ScrollToBottom className="chat-window">
-                {messageList.map((messageContent) => (
+                {messages.map(message => (
                     <div
-                        key={messageContent.id}
+                        key={message.id}
                         className={
-                            user.username === messageContent.author
+                            message.senderid === user.id
                                 ? "your-messages"
                                 : "friend-messages"
                         }
@@ -95,44 +68,44 @@ export default function Chat({ socket, user, room, friend }) {
                         <div className="message-bubble">
                             <img
                                 src={
-                                    user.username === messageContent.author
+                                    message.senderid === user.id
                                         ? user.picture
-                                        : friend.user2.picture
+                                        : friend.picture
                                 }
                                 alt={`This is the profile of ${
-                                    user.username === messageContent.author
+                                    message.senderid === user.id
                                         ? user.username
-                                        : friend.user2.username
+                                        : friend.username
                                 }.`}
                                 className="profile-picture"
                             />
                             <div>
                                 <div className="message-content">
-                                    <p>{messageContent.content}</p>
+                                    <p>{message.content}</p>
                                 </div>
                                 <div className="message-footer">
                                     <Link
-                                        to={`/profile/${messageContent.author}`}
+                                        to={`/profile/${
+                                            message.senderid === user.id
+                                                ? user.username
+                                                : friend.username
+                                        }`}
                                         className="user-link"
                                     >
                                         <p
                                             className={
-                                                user.username ===
-                                                messageContent.author
+                                                message.senderid === user.id
                                                     ? "message-author text-success"
                                                     : "message-author text-primary"
                                             }
                                         >
-                                            {user.username ===
-                                            messageContent.author
-                                                ? user.fullName
-                                                : friend.user2.fullName}
+                                            {message.senderid === user.id
+                                                ? user.name
+                                                : friend.name}
                                         </p>
                                     </Link>
                                     <p className="message-time">
-                                        {formatDateTime(
-                                            messageContent.createdAt
-                                        )}
+                                        {formatDateTime(message.createdat)}
                                     </p>
                                 </div>
                             </div>
@@ -140,13 +113,13 @@ export default function Chat({ socket, user, room, friend }) {
                     </div>
                 ))}
             </ScrollToBottom>
-            <form onSubmit={sendMessage}>
+            <form onSubmit={handleSendMessage}>
                 <input
                     className="send-message"
                     type="text"
-                    value={currentMessage}
+                    value={messageInput}
                     placeholder="Write a message..."
-                    onChange={(event) => setCurrentMessage(event.target.value)}
+                    onChange={event => setMessageInput(event.target.value)}
                     required
                 />
             </form>

@@ -13,14 +13,14 @@
     background-color: #f5f5f5;
 }
 
-.your-messages {
+.friend-messages {
     display: flex;
     justify-content: flex-start;
     margin-bottom: 5px;
     width: max-content;
 }
 
-.friend-messages {
+.your-messages {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 5px;

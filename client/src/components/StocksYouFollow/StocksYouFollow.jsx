@@ -11,10 +11,10 @@ export default function StocksYouFollow({ stocks }) {
 
     return stocks.length > 0 ? (
         <div className="stocks-you-follow">
-            <h1>Stocks You Follow</h1>
+            <h1 className="fs-3 m-0 mb-3">Stocks You Follow</h1>
             {stocks
                 .slice(0, Math.min(displayedStocks, stocks.length))
-                .map((stock) => (
+                .map(stock => (
                     <div key={stock.id} className="mb-4">
                         <Link
                             to={`/search/stocks/${stock.ticker}`}
@@ -38,7 +38,7 @@ export default function StocksYouFollow({ stocks }) {
                 <Button
                     variant="outline-primary"
                     onClick={() =>
-                        setDisplayedStocks((prev) => prev + STOCKS_TO_DISPLAY)
+                        setDisplayedStocks(prev => prev + STOCKS_TO_DISPLAY)
                     }
                     className="mb-4"
                 >
