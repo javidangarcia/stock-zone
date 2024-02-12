@@ -3,25 +3,35 @@ import ApexCharts from "react-apexcharts";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { formatDateToMonth, formatDateToMonthDay } from "../../utils";
+import { fetchOneMonthData, fetchOneYearData } from "../../api/chart";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../redux/loading";
 
 export default function StockChart({ ticker }) {
-    const [chartData, setChartData] = useState({});
+    const [chart, setChart] = useState({});
     const [oneYearData, setOneYearData] = useState([]);
     const [oneMonthData, setOneMonthData] = useState([]);
-    const [hasRendered, setHasRendered] = useState(false);
+    const dispatch = useDispatch();
 
-    const createDaysChart = historicalData => {
+    const createChart = (historicalData, chartType) => {
         const dates = historicalData
-            ?.map(interval => formatDateToMonthDay(interval.datetime))
+            .map(interval => {
+                if (chartType === "days") {
+                    return formatDateToMonthDay(interval.datetime);
+                } else {
+                    return formatDateToMonth(interval.datetime);
+                }
+            })
             .slice()
             .reverse();
 
         const prices = historicalData
-            ?.map(interval => parseFloat(interval.close).toFixed(2))
+            .map(interval => Number.parseFloat(interval.close).toFixed(2))
             .slice()
             .reverse();
 
-        const newChartData = {
+        const newChart = {
             options: {
                 xaxis: {
                     categories: dates,
@@ -45,152 +55,76 @@ export default function StockChart({ ticker }) {
             ],
         };
 
-        setChartData(newChartData);
+        setChart(newChart);
     };
 
-    const createMonthsChart = historicalData => {
-        const dates = historicalData
-            ?.map(interval => formatDateToMonth(interval.datetime))
-            .slice()
-            .reverse();
-
-        const prices = historicalData
-            ?.map(interval => parseFloat(interval.close).toFixed(2))
-            .slice()
-            .reverse();
-
-        const newChartData = {
-            options: {
-                xaxis: {
-                    categories: dates,
-                    labels: {
-                        rotate: 0,
-                    },
-                },
-                tooltip: {
-                    y: {
-                        formatter(val) {
-                            return `$${val}`;
-                        },
-                    },
-                },
-            },
-            series: [
-                {
-                    name: "Stock Price",
-                    data: prices,
-                },
-            ],
-        };
-
-        setChartData(newChartData);
+    const handleFiveDays = () => {
+        const fiveDaysData = [...oneMonthData].slice(0, 5);
+        createChart(fiveDaysData, "days");
     };
 
-    useEffect(() => {
-        const fetchOneYearData = async () => {
-            try {
-                const priceUrl = new URL(
-                    "https://api.twelvedata.com/time_series"
-                );
-                priceUrl.searchParams.append("symbol", ticker);
-                priceUrl.searchParams.append("interval", "1month");
-                priceUrl.searchParams.append("outputsize", 12);
-                priceUrl.searchParams.append(
-                    "apikey",
-                    import.meta.env.VITE_TWELVE
-                );
+    const handleOneMonth = () => {
+        createChart([...oneMonthData], "days");
+    };
 
-                const response = await axios.get(priceUrl, {
-                    validateStatus: () => true,
-                });
-
-                if (response.data.status === "ok") {
-                    createMonthsChart(response.data.values);
-                    setOneYearData(response.data.values);
-                }
-
-                if (response.data.status === "error") {
-                    ResponseError(response.data.message);
-                }
-            } catch (error) {
-                NetworkError(error);
-            }
-        };
-
-        if (hasRendered) {
-            fetchOneYearData();
-        } else {
-            setHasRendered(true);
-        }
-    }, [hasRendered]);
-
-    async function fiveDays() {
-        if (oneMonthData.length > 0) {
-            const fiveDaysData = [...oneMonthData].slice(0, 5);
-            createDaysChart(fiveDaysData);
+    const handleSixMonths = () => {
+        if (oneYearData.length > 0) {
+            const sixMonthsData = [...oneYearData].slice(0, 6);
+            createChart(sixMonthsData, "months");
             return;
         }
 
-        try {
-            const priceUrl = new URL("https://api.twelvedata.com/time_series");
-            priceUrl.searchParams.append("symbol", ticker);
-            priceUrl.searchParams.append("interval", "1day");
-            priceUrl.searchParams.append("outputsize", 21);
-            priceUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
-
-            const response = await axios.get(priceUrl, {
-                validateStatus: () => true,
+        dispatch(setLoading(true));
+        fetchOneYearData(ticker)
+            .then(data => {
+                setOneYearData([...data.values]);
+                const sixMonthsData = data.values.slice(0, 6);
+                createChart(sixMonthsData, "months");
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
             });
+    };
 
-            if (response.data.status === "ok") {
-                setOneMonthData(response.data.values);
-                createDaysChart(response.data.values);
-            }
-
-            if (response.data.status === "error") {
-                ResponseError(response.data.message);
-            }
-        } catch (error) {
-            NetworkError(error);
+    const handleOneYear = () => {
+        if (oneYearData.length > 0) {
+            createChart([...oneYearData], "months");
+            return;
         }
-    }
 
-    async function oneMonth() {
-        if (oneMonthData.length > 0) {
-            setChartData([...oneMonthData]);
-        }
-        try {
-            const priceUrl = new URL("https://api.twelvedata.com/time_series");
-            priceUrl.searchParams.append("symbol", ticker);
-            priceUrl.searchParams.append("interval", "1day");
-            priceUrl.searchParams.append("outputsize", 21);
-            priceUrl.searchParams.append("apikey", import.meta.env.VITE_TWELVE);
-
-            const response = await axios.get(priceUrl, {
-                validateStatus: () => true,
+        dispatch(setLoading(true));
+        fetchOneYearData(ticker)
+            .then(data => {
+                setOneYearData([...data.values]);
+                createChart(data.values, "months");
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
             });
+    };
 
-            if (response.data.status === "ok") {
-                setOneMonthData(response.data.values);
-                createDaysChart(response.data.values);
-            }
-
-            if (response.data.status === "error") {
-                ResponseError(response.data.message);
-            }
-        } catch (error) {
-            NetworkError(error);
-        }
-    }
-
-    function sixMonths() {
-        const sixMonthsData = [...oneYearData].slice(0, 6);
-        createMonthsChart(sixMonthsData);
-    }
-
-    function oneYear() {
-        createMonthsChart([...oneYearData]);
-    }
+    useEffect(() => {
+        dispatch(setLoading(true));
+        fetchOneMonthData(ticker)
+            .then(data => {
+                console.log(data);
+                setOneMonthData([...data.values]);
+                const fiveDaysData = data.values.slice(0, 5);
+                createChart(fiveDaysData, "days");
+            })
+            .catch(error => {
+                toast.error(error.message, { toastId: "error" });
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            });
+    }, []);
 
     return (
         <div className="me-5 ms-5">
@@ -198,45 +132,45 @@ export default function StockChart({ ticker }) {
                 className="d-flex justify-content-center"
                 type="radio"
                 name="options"
-                defaultValue={4}
+                defaultValue={1}
             >
                 <ToggleButton
                     id="tbg-radio-2"
                     value={1}
-                    onClick={() => fiveDays()}
+                    onClick={handleFiveDays}
                 >
                     5D
                 </ToggleButton>
                 <ToggleButton
                     id="tbg-radio-3"
                     value={2}
-                    onClick={() => oneMonth()}
+                    onClick={handleOneMonth}
                 >
                     1M
                 </ToggleButton>
                 <ToggleButton
                     id="tbg-radio-4"
                     value={3}
-                    onClick={() => sixMonths()}
+                    onClick={handleSixMonths}
                 >
                     6M
                 </ToggleButton>
                 <ToggleButton
                     id="tbg-radio-5"
                     value={4}
-                    onClick={() => oneYear()}
+                    onClick={handleOneYear}
                 >
                     1Y
                 </ToggleButton>
             </ToggleButtonGroup>
-            {chartData?.options && chartData?.series ? (
+            {Object.keys(chart).length > 0 && (
                 <ApexCharts
-                    options={chartData.options}
-                    series={chartData.series}
+                    options={chart.options}
+                    series={chart.series}
                     type="line"
                     height={400}
                 />
-            ) : null}
+            )}
         </div>
     );
 }

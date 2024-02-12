@@ -6,9 +6,13 @@ export const fetchSearchMatches = async searchQuery => {
 
     const response = await fetch(url);
 
-    if (response.status === 429) throw new Error("API limit reached.");
+    const data = await response.json();
 
-    if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
+    if (data.code === 429)
+        throw new Error("API limit reached for stock search.");
 
-    return await response.json();
+    if (data.status === "error")
+        throw new Error("Oops! Something went wrong on our end.");
+
+    return data;
 };
