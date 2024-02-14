@@ -6,7 +6,10 @@ export const fetchUserProfile = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This user does not exist.");
 
@@ -24,7 +27,10 @@ export const fetchFollowedStocks = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This user does not exist.");
 
@@ -42,7 +48,10 @@ export const fetchLikedStocks = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This user does not exist.");
 
@@ -60,7 +69,10 @@ export const fetchDislikedStocks = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This user does not exist.");
 
@@ -78,7 +90,10 @@ export const fetchFriends = async () => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");
@@ -98,7 +113,10 @@ export const addFriend = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 409)
         throw new Error("You are already friends with this user.");
@@ -120,7 +138,10 @@ export const removeFriend = async username => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 409)
         throw new Error("You are not friends with this user.");

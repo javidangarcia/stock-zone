@@ -3,7 +3,10 @@ export const fetchPosts = async () => {
         credentials: "include",
     });
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");
@@ -23,7 +26,10 @@ export const createPosts = async (title, content) => {
 
     if (response.status === 400) throw new Error("Please fill out all fields.");
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");
@@ -39,7 +45,10 @@ export const fetchPostsById = async postId => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This post does not exist.");
 
@@ -57,7 +66,10 @@ export const fetchPostReplies = async postId => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404) throw new Error("This post does not exist.");
 
@@ -82,7 +94,10 @@ export const createReplies = async (postId, content) => {
 
     if (response.status === 400) throw new Error("Please fill out all fields.");
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");

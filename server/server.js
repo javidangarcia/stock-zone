@@ -44,10 +44,14 @@ app.use(
         cookie: {
             sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             secure: process.env.NODE_ENV === "production",
-            expires: 24 * 60 * 60 * 1000,
+            expires: 365 * 24 * 60 * 60 * 1000,
         },
     })
 );
+
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Server is available for automated tasks." });
+})
 
 app.use(authRoutes);
 

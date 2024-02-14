@@ -6,7 +6,10 @@ export const fetchMessages = async friendId => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");
@@ -27,7 +30,10 @@ export const sendMessage = async (friendId, room, content) => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (!response.ok) throw new Error("Oops! Something went wrong on our end.");
 

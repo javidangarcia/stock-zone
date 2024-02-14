@@ -3,7 +3,10 @@ export const fetchStocks = async () => {
         credentials: "include",
     });
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("There are no stocks in the database.");
@@ -22,7 +25,10 @@ export const fetchStockFollowers = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -41,7 +47,10 @@ export const fetchStockLikers = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -60,7 +69,10 @@ export const fetchStockDislikers = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -79,7 +91,10 @@ export const fetchStockComments = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -105,7 +120,10 @@ export const sendStockComments = async (stock, content) => {
 
     if (response.status === 400) throw new Error("Please fill out all fields.");
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");

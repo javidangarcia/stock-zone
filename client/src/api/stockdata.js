@@ -77,7 +77,10 @@ export const fetchStockData = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 409) {
         const overview = await fetchStockOverview(stock);

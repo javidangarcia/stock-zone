@@ -6,7 +6,10 @@ export const fetchRanking = async page => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 500)
         throw new Error("Oops! Something went wrong on our end.");

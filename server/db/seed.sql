@@ -11,9 +11,9 @@ INSERT INTO users (name, username, email, password, picture) VALUES
 INSERT INTO stocks (ticker, name, description, sector, price, logo) VALUES
 ('META', 'Meta Platforms Inc.', 'Meta Platforms, Inc. develops products that enable people to connect and share with friends and family through mobile devices, PCs, virtual reality headsets, wearables and home devices around the world. The company is headquartered in Menlo Park, California.', 'Technology', 312.83, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/FB.svg'),
 ('GOOG', 'Alphabet Inc Class C', 'Alphabet Inc. is an American multinational conglomerate headquartered in Mountain View, California. It was created through a restructuring of Google on October 2, 2015, and became the parent company of Google and several former Google subsidiaries. The two co-founders of Google remained as controlling shareholders, board members, and employees at Alphabet. Alphabet is the world''s fourth-largest technology company by revenue and one of the world''s most valuable companies.', 'Technology', 131.6899, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/GOOG.svg'),
-('AMZN', 'Amazon.com Inc', 'Amazon.com, Inc. is an American multinational technology company which focuses on e-commerce, cloud computing, digital streaming, and artificial intelligence. It is one of the Big Five companies in the U.S. information technology industry, along with Google, Apple, Microsoft, and Facebook. The company has been referred to as one of the most influential economic and cultural forces in the world, as well as the world''s most valuable brand.', 'Trade & Services', 142.25, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/AMZN.svg'),
-('TSLA', 'Tesla Inc', 'Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. Tesla''s current products include electric cars, battery energy storage from home to grid-scale, solar panels and solar roof tiles, as well as other related products and services. In 2020, Tesla had the highest sales in the plug-in and battery electric passenger car segments, capturing 16% of the plug-in market (which includes plug-in hybrids) and 23% of the battery-electric (purely electric) market. Through its subsidiary Tesla Energy, the company develops and is a major installer of solar photovoltaic energy generation systems in the United States. Tesla Energy is also one of the largest global suppliers of battery energy storage systems, with 3 GWh of battery storage supplied in 2020.', 'Manufacturing', 250.35, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/TSLA.svg'),
-('MSFT', 'Microsoft Corporation', 'Microsoft Corporation is an American multinational technology company which produces computer software, consumer electronics, personal computers, and related services. Its best-known software products are the Microsoft Windows line of operating systems, the Microsoft Office suite, and the Internet Explorer and Edge web browsers. Its flagship hardware products are the Xbox video game consoles and the Microsoft Surface lineup of touchscreen personal computers. Microsoft ranked No. 21 in the 2020 Fortune 500 rankings of the largest United States corporations by total revenue; it was the world''s largest software maker by revenue as of 2016. It is considered one of the Big Five companies in the U.S. information technology industry, along with Google, Apple, Amazon, and Facebook.', 'Technology', 330.11, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/MSFT.svg');
+('NFLX', 'Netflix Inc', 'Netflix, Inc. is an American over-the-top content platform and production company headquartered in Los Gatos, California. Netflix was founded in 1997 by Reed Hastings and Marc Randolph in Scotts Valley, California. The company''s primary business is a subscription-based streaming service offering online streaming from a library of films and television series, including those produced in-house.', 'Trade & Services', 440.76, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/NFLX.svg'),
+('MSFT', 'Microsoft Corporation', 'Microsoft Corporation is an American multinational technology company which produces computer software, consumer electronics, personal computers, and related services. Its best-known software products are the Microsoft Windows line of operating systems, the Microsoft Office suite, and the Internet Explorer and Edge web browsers. Its flagship hardware products are the Xbox video game consoles and the Microsoft Surface lineup of touchscreen personal computers. Microsoft ranked No. 21 in the 2020 Fortune 500 rankings of the largest United States corporations by total revenue; it was the world''s largest software maker by revenue as of 2016. It is considered one of the Big Five companies in the U.S. information technology industry, along with Google, Apple, Amazon, and Facebook.', 'Technology', 330.11, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/MSFT.svg'),
+('AAPL', 'Apple Inc', 'Apple Inc. is an American multinational technology company that specializes in consumer electronics, computer software, and online services. Apple is the world''s largest technology company by revenue (totalling $274.5 billion in 2020) and, since January 2021, the world''s most valuable company. As of 2021, Apple is the world''s fourth-largest PC vendor by unit sales, and fourth-largest smartphone manufacturer. It is one of the Big Five American information technology companies, along with Amazon, Google, Microsoft, and Facebook.', 'Technology', 178.51, 'https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/AAPL.svg');
 
 
 -- Seeding data into the follows table
@@ -26,16 +26,16 @@ INSERT INTO follows (userid, stockid) VALUES
 
 -- Seeding data into the likes table
 INSERT INTO likes (userid, stockid) VALUES
-(1, 2), (1, 3), (1, 5), (2, 1), (2, 4),
-(2, 5), (3, 1), (3, 5), (3, 2), (4, 2),
-(4, 3), (4, 5), (5, 4), (5, 5), (5, 1);
+(1, 1), (1, 2), (1, 3), (2, 4), (2, 5), 
+(3, 1), (3, 2), (3, 3), (4, 4), (4, 5),
+(5, 1), (5, 2), (5, 3);
 
 
 -- Seeding data into the dislikes table
 INSERT INTO dislikes (userid, stockid) VALUES
-(1, 4), (1, 5), (1, 1), (2, 1), (2, 3),
-(2, 4), (3, 2), (3, 4), (3, 5), (4, 1),
-(4, 5), (4, 2), (5, 2), (5, 3), (5, 4);
+(1, 4), (1, 5), (2, 1), (2, 2), (2, 3),
+(3, 4), (3, 5), (4, 1), (4, 2), (4, 3),
+(5, 4), (5, 5);
 
 
 -- Seeding data into the comments table

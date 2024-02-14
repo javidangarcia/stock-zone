@@ -10,7 +10,10 @@ export const followStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -35,7 +38,10 @@ export const unfollowStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -60,7 +66,10 @@ export const likeStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -85,7 +94,10 @@ export const unlikeStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -110,7 +122,10 @@ export const dislikeStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
@@ -135,7 +150,10 @@ export const undislikeStock = async stock => {
         }
     );
 
-    if (response.status === 401) throw new Error("Missing session.");
+    if (response.status === 401)
+        throw new Error(
+            "Session has expired. Please sign out and sign back in."
+        );
 
     if (response.status === 404)
         throw new Error("This stock does not exist in the database.");
